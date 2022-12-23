@@ -1,0 +1,50 @@
+{{- if .Values.ksocGuard.enabled -}}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: ksoc-guard
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/ksoc-guard
+  labels:
+    app_name: ksoc-guard
+    app_version: {{ .Values.ksocGuard.image.tag | quote }}
+    maintained_by: ksoc
+webhooks:
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        name: ksoc-guard
+        namespace: {{ .Release.Namespace }}
+        path: /validate
+    failurePolicy: Ignore
+    timeoutSeconds: {{ .Values.ksocGuard.webhook.timeoutSeconds }}
+    name: guard.ksoc.com
+    {{- with .Values.ksocGuard.webhook.objectSelector}}
+    objectSelector:
+{{ toYaml . | indent 6 }}
+    {{- end }}
+    rules:
+      - apiGroups: [ "apps" ]
+        apiVersions: [ "v1" ]
+        operations: [ "CREATE", "UPDATE" ]
+        resources: [ "daemonsets", "deployments", "replicasets", "statefulsets" ]
+        scope: "Namespaced"
+      - apiGroups: [ "batch" ]
+        apiVersions: [ "v1" ]
+        operations: [ "CREATE", "UPDATE" ]
+        resources: [ "jobs", "cronjobs" ]
+        scope: "Namespaced"
+      - apiGroups: [ "rbac.authorization.k8s.io" ]
+        apiVersions: [ "v1" ]
+        operations: [ "CREATE", "UPDATE" ]
+        resources: [ "rolebindings", "clusterrolebindings", "roles", "clusterroles" ]
+        scope: "Namespaced"
+      - apiGroups: [ "" ]
+        apiVersions: [ "v1" ]
+        operations: [ "CREATE", "UPDATE" ]
+        resources: [ "pods", "namespaces" ]
+        scope: "Namespaced"
+    sideEffects: NoneOnDryRun
+{{- end -}}

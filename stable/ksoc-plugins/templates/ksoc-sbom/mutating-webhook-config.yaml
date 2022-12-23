@@ -1,0 +1,37 @@
+{{- if .Values.ksocSbom.enabled -}}
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: mutating-webhook-configuration
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/ksoc-sbom # needs to be cert name!
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: ksoc-sbom
+      namespace: {{ .Release.Namespace }}
+      path: /mutate-v1-pod
+  failurePolicy: Ignore
+  name: sbom.ksoc.com
+  timeoutSeconds: {{ .Values.ksocSbom.webhook.timeoutSeconds }}
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    - DELETE
+    resources:
+    - pods
+  sideEffects: NoneOnDryRun
+{{- end -}}

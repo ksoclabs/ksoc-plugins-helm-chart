@@ -1,0 +1,19 @@
+{{- if .Values.ksocSbom.enabled -}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ksoc-sbom
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+spec:
+  dnsNames:
+  - ksoc-sbom.{{ .Release.Namespace }}.svc
+  - ksoc-sbom.{{ .Release.Namespace }}.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: ksoc-selfsigned-issuer
+  secretName: ksoc-sbom-self-signed-cert
+{{- end -}}

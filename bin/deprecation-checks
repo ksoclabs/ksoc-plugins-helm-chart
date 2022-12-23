@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -euo pipefail
+
+mkdir -p /tmp/charts
+
+printf "Validating stable charts ... \n\n"
+
+for chart in stable/*; do
+
+  if [ "$chart" == 'stable/README.md' ]; then continue ; fi
+
+  printf "\nChecking %s\n" "${chart#*/}"
+
+  helm template "${chart}"  > /tmp/"${chart#*/}".yaml
+
+  conftest test -p /policies /tmp/"${chart#*/}".yaml
+
+done

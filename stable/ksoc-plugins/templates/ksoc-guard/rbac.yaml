@@ -1,0 +1,130 @@
+{{- if .Values.ksocGuard.enabled -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ksoc-guard
+  labels:
+    app_name: ksoc-guard
+    app_version: {{ .Values.ksocGuard.image.tag | quote }}
+    maintained_by: ksoc
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ksoc-guard
+  labels:
+    app_name: ksoc-guard
+    app_version: {{ .Values.ksocGuard.image.tag | quote }}
+    maintained_by: ksoc
+rules:
+  - apiGroups: [ "apiextensions.k8s.io" ]
+    resources: [ "customresourcedefinitions" ]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+  - apiGroups: [ "ksoc.com" ]
+    resources: [ "guardpolicies" ]
+    verbs: [ "get", "list", "watch", "update" ]
+  - apiGroups: [ "ksoc.com" ]
+    resources: [ "guardresults" ]
+    verbs: [ "create", "delete", "list", "watch" ]
+  - apiGroups: [ "ksoc.com" ]
+    resources: [ "guardpolicies/status", "guardresults/status" ]
+    verbs: [ "get" ]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ksoc-guard
+  labels:
+    app_name: ksoc-guard
+    app_version: {{ .Values.ksocGuard.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ksoc-guard
+subjects:
+- kind: ServiceAccount
+  name: ksoc-guard
+  namespace: ksoc
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-guard-kube-root-ca-reader
+  namespace: kube-system
+  labels:
+    app_name: ksoc-guard
+    app_version: {{ .Values.ksocGuard.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-kube-root-ca-reader
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-guard
+    namespace: {{ .Release.Namespace }}
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-guard-bootstrapper
+  labels:
+    app_name: ksoc-guard
+    app_version: {{ .Values.ksocGuard.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-bootstrapper-secrets-mutator
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-guard
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-guard-leader-election
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-guard
+    app_version: {{ .Values.ksocGuard.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-leader-election-role
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-guard
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ksoc-guard-proxy
+  labels:
+    app_name: ksoc-guard
+    app_version: {{ .Values.ksocGuard.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ksoc-proxy-role
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-guard
+    namespace: system
+{{- end -}}

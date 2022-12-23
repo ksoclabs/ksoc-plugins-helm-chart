@@ -1,0 +1,20 @@
+{{- if .Values.ksocSbom.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name:  ksoc-sbom
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 9443
+  selector:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+{{- end -}}
