@@ -12,10 +12,9 @@ for chart in stable/*; do
 
   printf "\nChecking %s\n" "${chart#*/}"
 
-  helm template "${chart}"  > /tmp/"${chart}".yaml
+  helm template "${chart}"  > /tmp/"${chart#*/}".yaml
 
   export KUBEVAL_SCHEMA_LOCATION=file:///usr/local/kubeval/schemas
 
-  kubeval --kubernetes-version 1.21.0 --strict --force-color --ignore-missing-schemas /tmp/"${chart}".yaml
-
+  kubeval --kubernetes-version 1.21.0 --strict --force-color --ignore-missing-schemas /tmp/"${chart#*/}".yaml
 done
