@@ -4,34 +4,18 @@ set -euo pipefail
 
 mkdir -p /tmp/charts
 
-printf "Validating incubator charts ... \n\n"
+printf "Validating stable charts ... \n\n"
 
-for chart in incubator/*; do
+for chart in stable/*; do
 
-  if [ "$chart" == 'incubator/README.md' ] ||  [ "$chart" == 'incubator/external-service' ]; then continue ; fi
+  if [ "$chart" == 'stable/README.md' ] ||  [ "$chart" == 'stable/external-service' ]; then continue ; fi
 
   printf "\nChecking %s\n" "${chart#*/}"
 
-  helm template "${chart}"  > /tmp/"${chart#*/}".yaml
+  helm template "${chart}"  > /tmp/"${chart}".yaml
 
   export KUBEVAL_SCHEMA_LOCATION=file:///usr/local/kubeval/schemas
 
-  kubeval --kubernetes-version 1.21.0 --strict --force-color --ignore-missing-schemas /tmp/"${chart#*/}".yaml
+  kubeval --kubernetes-version 1.21.0 --strict --force-color --ignore-missing-schemas /tmp/"${chart}".yaml
 
 done
-
-printf "Validating stable charts ... \n\n"
-
-#for chart in stable/*; do
-#
-#  if [ "$chart" == 'stable/README.md' ] ||  [ "$chart" == 'stable/external-service' ]; then continue ; fi
-#
-#  printf "\nChecking %s\n" "${chart#*/}"
-#
-#  helm template "${chart}"  > /tmp/"${chart}".yaml
-#
-#  export KUBEVAL_SCHEMA_LOCATION=file:///usr/local/kubeval/schemas
-#
-#  kubeval --kubernetes-version 1.21.0 --strict --force-color --ignore-missing-schemas /tmp/"${chart}".yaml
-#
-#done
