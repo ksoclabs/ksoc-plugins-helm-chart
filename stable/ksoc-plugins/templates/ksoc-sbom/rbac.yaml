@@ -1,0 +1,124 @@
+{{- if .Values.ksocSbom.enabled -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ksoc-sbom
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ksoc-sbom
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces", "pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ksoc-sbom
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ksoc-sbom
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-sbom
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-sbom-kube-root-ca-reader
+  namespace: kube-system
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-kube-root-ca-reader
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-sbom
+    namespace: {{ .Release.Namespace }}
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-sbom-bootstrapper
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-bootstrapper-secrets-mutator
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-sbom
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-sbom-leader-election
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: ksoc-sbom
+  namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ksoc-sbom-proxy
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ksoc-proxy-role
+subjects:
+- kind: ServiceAccount
+  name: ksoc-sbom
+  namespace: system
+{{- end -}}

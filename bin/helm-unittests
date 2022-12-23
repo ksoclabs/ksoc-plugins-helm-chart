@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -euo pipefail
+
+helm plugin install https://github.com/quintush/helm-unittest/ --version 0.2.2 1>/dev/null
+
+helm unittest incubator/*/ --helm3
+
+helm unittest stable/*/ --helm3

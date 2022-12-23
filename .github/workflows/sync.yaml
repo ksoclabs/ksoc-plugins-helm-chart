@@ -1,0 +1,20 @@
+name: sync
+
+on:
+  push:
+    branches:
+      - 'main'
+
+  cloudflare-registry:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.21.3
+    steps:
+      - name: clone repo
+        uses: actions/checkout@v2
+      - name: sync registry
+        run: make sync-repo-cloudflare
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}

@@ -1,0 +1,83 @@
+{{- if .Values.ksocSync.enabled -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ksoc-sync
+  labels:
+    app_name: ksoc-sync
+    app_version: {{ .Values.ksocSync.image.tag | quote }}
+    maintained_by: ksoc
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ksoc-sync
+  labels:
+    app_name: ksoc-sync
+    app_version: {{ .Values.ksocSync.image.tag | quote }}
+    maintained_by: ksoc
+rules:
+  - apiGroups: [ "ksoc.com" ]
+    resources: [ "guardpolicies" ]
+    verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ksoc-sync
+  labels:
+    app_name: ksoc-sync
+    app_version: {{ .Values.ksocSync.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ksoc-sync
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-sync
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-sync-kube-root-ca-reader
+  namespace: kube-system
+  labels:
+    app_name: ksoc-sync
+    app_version: {{ .Values.ksocSync.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-kube-root-ca-reader
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-sync
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-sync-bootstrapper
+  labels:
+    app_name: ksoc-sync
+    app_version: {{ .Values.ksocSync.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-bootstrapper-secrets-mutator
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-sync
+    namespace: {{ .Release.Namespace }}
+{{- end -}}

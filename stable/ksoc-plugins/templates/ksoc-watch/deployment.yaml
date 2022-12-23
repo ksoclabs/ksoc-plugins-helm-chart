@@ -1,0 +1,142 @@
+{{- if .Values.ksocWatch.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ksoc-watch
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-watch
+    app_version: {{ .Values.ksocWatch.image.tag | quote }}
+    maintained_by: ksoc
+spec:
+  minReadySeconds: 90
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app_name: ksoc-watch
+  template:
+    metadata:
+      labels:
+        app_name: ksoc-watch
+        app_version: {{ .Values.ksocWatch.image.tag | quote }}
+        maintained_by: ksoc
+      annotations:
+        {{- if .Values.deployments.disableServiceMesh }}
+        linkerd.io/inject: disabled
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+        {{- with .Values.ksocWatch.podAnnotations }}
+{{ toYaml . | indent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: ksoc-watch
+      {{- if .Values.deployments.imagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ .Values.deployments.imagePullSecretName }}
+      {{- end }}
+      initContainers:
+        - name: ksoc-bootstrapper
+          image: {{ .Values.ksocBootstrapper.image.repository }}:{{ .Values.ksocBootstrapper.image.tag }}
+          imagePullPolicy: Always
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          env:
+            - name: AGENT_VERSION
+              value: {{ .Values.ksocBootstrapper.image.tag | quote }}
+            - name: CHART_VERSION
+              value: {{ .Chart.Version }}
+            - name: KSOC_API_URL
+              value: {{ .Values.ksoc.apiUrl }}
+            - name: KSOC_CLUSTER_NAME
+              value: {{ .Values.ksoc.clusterName }}
+            - name: KSOC_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: KSOC_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: access-key-id
+            - name: KSOC_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: secret-key
+      containers:
+        - name: ksoc-watch
+          image: {{ .Values.ksocWatch.image.repository }}:{{ .Values.ksocWatch.image.tag }}
+          imagePullPolicy: Always
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          env:
+            - name: AGENT_VERSION
+              value: {{ .Values.ksocWatch.image.tag | quote }}
+            - name: CHART_VERSION
+              value: {{ .Chart.Version }}
+            - name: KSOC_API_URL
+              value: {{ .Values.ksoc.apiUrl }}
+            - name: KSOC_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: KSOC_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: access-key-id
+            - name: KSOC_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: secret-key
+            {{- range $key, $value := .Values.ksocWatch.env }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+            {{- end }}
+          resources:
+{{ toYaml .Values.ksocWatch.resources | indent 12 }}
+      {{- with .Values.deployments.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.deployments.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+  {{- end }}
+      volumes:
+      - name: ksoc-configuration
+        secret:
+          secretName: ksoc-plugins-configuration
+{{- end -}}

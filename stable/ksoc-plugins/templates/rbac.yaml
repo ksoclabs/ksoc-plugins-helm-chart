@@ -1,0 +1,94 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ksoc-kube-root-ca-reader
+  namespace: kube-system
+  labels:
+    maintained_by: ksoc
+rules:
+  - apiGroups: [""]
+    resources: [ "configmaps" ]
+    resourceNames: [ "kube-root-ca.crt" ]
+    verbs: ["get", "watch", "list"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ksoc-bootstrapper-secrets-mutator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    maintained_by: ksoc
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ksoc-leader-election-role
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ksoc-proxy-role
+  labels:
+    maintained_by: ksoc
+rules:
+  - apiGroups:
+      - authentication.k8s.io
+    resources:
+      - tokenreviews
+    verbs:
+      - create
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      - subjectaccessreviews
+    verbs:
+      - create
+
+---

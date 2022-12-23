@@ -1,0 +1,191 @@
+{{- if .Values.ksocGuard.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ksoc-guard
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-guard
+    app_version: {{ .Values.ksocGuard.image.tag | quote }}
+    maintained_by: ksoc
+spec:
+  minReadySeconds: 90
+  replicas: {{ .Values.ksocGuard.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app_name: ksoc-guard
+  template:
+    metadata:
+      labels:
+        app_name: ksoc-guard
+        app_version: {{ .Values.ksocGuard.image.tag | quote }}
+        maintained_by: ksoc
+      annotations:
+        {{- if .Values.deployments.disableServiceMesh }}
+        linkerd.io/inject: disabled
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+        {{- with .Values.ksocGuard.podAnnotations }}
+{{ toYaml . | indent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: ksoc-guard
+      {{- if .Values.deployments.imagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ .Values.deployments.imagePullSecretName }}
+      {{- end }}
+      initContainers:
+        - name: ksoc-bootstrapper
+          image: {{ .Values.ksocBootstrapper.image.repository }}:{{ .Values.ksocBootstrapper.image.tag }}
+          imagePullPolicy: Always
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          env:
+            - name: AGENT_VERSION
+              value: {{ .Values.ksocBootstrapper.image.tag | quote }}
+            - name: CHART_VERSION
+              value: {{ .Chart.Version }}
+            - name: KSOC_API_URL
+              value: {{ .Values.ksoc.apiUrl}}
+            - name: KSOC_CLUSTER_NAME
+              value: {{ .Values.ksoc.clusterName }}
+            - name: KSOC_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: KSOC_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: access-key-id
+            - name: KSOC_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: secret-key
+      containers:
+        - name: ksoc-guard
+          image: {{ .Values.ksocGuard.image.repository }}:{{ .Values.ksocGuard.image.tag }}
+          imagePullPolicy: Always
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          env:
+            - name: AGENT_VERSION
+              value: {{ .Values.ksocGuard.image.tag | quote }}
+            - name: CHART_VERSION
+              value: {{ .Chart.Version }}
+            - name: KSOC_API_URL
+              value: {{ .Values.ksoc.apiUrl }}
+            - name: KSOC_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: KSOC_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: access-key-id
+            - name: KSOC_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: secret-key
+            - name: INSTALL_CRDS
+              value: "true"
+            {{- range $key, $value := .Values.ksocGuard.config }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8001
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+          - mountPath: /tmp/k8s-webhook-server/serving-certs
+            name: cert
+            readOnly: true
+          resources:
+{{ toYaml .Values.ksocGuard.resources | indent 12 }}
+        - name: kube-rbac-proxy
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          image: gcr.io/kubebuilder/kube-rbac-proxy:v0.12.0
+          args:
+          - "--secure-listen-address=0.0.0.0:8443"
+          - "--upstream=http://127.0.0.1:8080/"
+          - "--logtostderr=true"
+          - "--v=0"
+          ports:
+          - containerPort: 8443
+            protocol: TCP
+            name: https
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+      {{- with .Values.deployments.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.deployments.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+  {{- end }}
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: ksoc-guard-self-signed-cert
+      - name: ksoc-configuration
+        secret:
+          secretName: ksoc-plugins-configuration
+{{- end -}}
