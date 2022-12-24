@@ -1,6 +1,6 @@
 # Helm charts
 
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/ksoc-plugins)](https://artifacthub.io/packages/search?repo=ksoc-plugins)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/ksoc)](https://artifacthub.io/packages/search?repo=ksoc)
 
 This repository contains the source for the packaged and versioned charts released in the [`stable KSOC Helm repository`](https://charts.ksoc.com/stable).
 
