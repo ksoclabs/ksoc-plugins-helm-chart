@@ -49,7 +49,7 @@ ksocGuard:
     # -- Whether to block on timeout.
     BLOCK_ON_TIMEOUT: false
     # -- Deadline for GuardResult custom resource deletion
-    GUARDRESULT_TTL_SECONDS: 300
+    GUARDRESULT_TTL_SECONDS: 60
     # -- The log level to use.
     LOG_LEVEL: info
   resources:
