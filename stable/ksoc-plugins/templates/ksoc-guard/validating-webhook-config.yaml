@@ -29,22 +29,18 @@ webhooks:
       - apiGroups: [ "apps" ]
         apiVersions: [ "v1" ]
         operations: [ "CREATE", "UPDATE" ]
-        resources: [ "daemonsets", "deployments", "replicasets", "statefulsets" ]
-        scope: "Namespaced"
+        resources: [ "daemonsets", "deployments", "statefulsets" ]
       - apiGroups: [ "batch" ]
         apiVersions: [ "v1" ]
         operations: [ "CREATE", "UPDATE" ]
         resources: [ "jobs", "cronjobs" ]
-        scope: "Namespaced"
       - apiGroups: [ "rbac.authorization.k8s.io" ]
         apiVersions: [ "v1" ]
         operations: [ "CREATE", "UPDATE" ]
         resources: [ "rolebindings", "clusterrolebindings", "roles", "clusterroles" ]
-        scope: "Namespaced"
       - apiGroups: [ "" ]
         apiVersions: [ "v1" ]
         operations: [ "CREATE", "UPDATE" ]
         resources: [ "pods", "namespaces" ]
-        scope: "Namespaced"
     sideEffects: NoneOnDryRun
 {{- end -}}
