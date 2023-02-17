@@ -185,7 +185,4 @@ spec:
         secret:
           defaultMode: 420
           secretName: ksoc-guard-self-signed-cert
-      - name: ksoc-configuration
-        secret:
-          secretName: ksoc-plugins-configuration
 {{- end -}}

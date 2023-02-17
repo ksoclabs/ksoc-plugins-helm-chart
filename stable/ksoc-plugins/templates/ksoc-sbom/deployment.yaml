@@ -156,7 +156,7 @@ spec:
             allowPrivilegeEscalation: false
             seccompProfile:
               type: RuntimeDefault
-          image: gcr.io/kubebuilder/kube-rbac-proxy:v0.12.0
+          image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
           args:
           - "--secure-listen-address=0.0.0.0:8443"
           - "--upstream=http://127.0.0.1:8080/"
@@ -188,7 +188,4 @@ spec:
         secret:
           defaultMode: 420
           secretName: ksoc-sbom-self-signed-cert
-      - name: ksoc-configuration
-        secret:
-          secretName: ksoc-plugins-configuration
 {{- end -}}

@@ -11,6 +11,23 @@ metadata:
 ---
 
 apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ksoc-sync-configmap-mutator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-sync
+    app_version: {{ .Values.ksocSync.image.tag | quote }}
+    maintained_by: ksoc
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    resourceNames: [ "ksoc-guard-dynamic-configuration", "ksoc-sbom-dynamic-configuration", "ksoc-sync-dynamic-configuration", "ksoc-watch-dynamic-configuration" ]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: ksoc-sync
@@ -37,6 +54,25 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: ksoc-sync
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-sync
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-sync-configmap-mutator
+  labels:
+    app_name: ksoc-sync
+    app_version: {{ .Values.ksocSync.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-sync-configmap-mutator
 subjects:
   - kind: ServiceAccount
     name: ksoc-sync

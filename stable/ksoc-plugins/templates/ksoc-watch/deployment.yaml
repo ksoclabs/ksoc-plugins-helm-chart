@@ -135,8 +135,4 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
   {{- end }}
-      volumes:
-      - name: ksoc-configuration
-        secret:
-          secretName: ksoc-plugins-configuration
 {{- end -}}
