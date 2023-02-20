@@ -68,7 +68,7 @@ ksocSbom:
   image:
     # -- The image to use for the ksoc-sbom deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sbom).
     repository: us.gcr.io/ksoc-public/ksoc-sbom
-    tag: v0.0.46
+    tag: v0.0.47
   env: {}
   resources:
     requests:
