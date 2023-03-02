@@ -7,6 +7,21 @@ metadata:
     app_name: ksoc-sync
     app_version: {{ .Values.ksocSync.image.tag | quote }}
     maintained_by: ksoc
+automountServiceAccountToken: false
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ksoc-sync-api-token-secret
+  labels:
+    app_name: ksoc-sync
+    app_version: {{ .Values.ksocSync.image.tag | quote }}
+    maintained_by: ksoc
+  annotations:
+    kubernetes.io/service-account.name: ksoc-sync
+type: kubernetes.io/service-account-token
 
 ---
 
