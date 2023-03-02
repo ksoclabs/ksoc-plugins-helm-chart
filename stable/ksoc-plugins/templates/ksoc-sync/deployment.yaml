@@ -39,11 +39,20 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.deployments.imagePullSecretName }}
       {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
       initContainers:
         - name: ksoc-bootstrapper
           image: {{ .Values.ksocBootstrapper.image.repository }}:{{ .Values.ksocBootstrapper.image.tag }}
           imagePullPolicy: Always
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
             capabilities:
               drop:
                 - ALL
@@ -86,6 +95,9 @@ spec:
           image: {{ .Values.ksocSync.image.repository }}:{{ .Values.ksocSync.image.tag }}
           imagePullPolicy: Always
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
             capabilities:
               drop:
                 - ALL
