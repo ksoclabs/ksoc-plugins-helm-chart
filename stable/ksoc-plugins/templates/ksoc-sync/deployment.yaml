@@ -39,11 +39,21 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.deployments.imagePullSecretName }}
       {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      automountServiceAccountToken: false
       initContainers:
         - name: ksoc-bootstrapper
           image: {{ .Values.ksocBootstrapper.image.repository }}:{{ .Values.ksocBootstrapper.image.tag }}
           imagePullPolicy: Always
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
             capabilities:
               drop:
                 - ALL
@@ -81,11 +91,18 @@ spec:
                   name: ksoc-access-key
                   {{ end -}}
                   key: secret-key
+          volumeMounts:
+          - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+            name: api-token
+            readOnly: true
       containers:
         - name: ksoc-sync
           image: {{ .Values.ksocSync.image.repository }}:{{ .Values.ksocSync.image.tag }}
           imagePullPolicy: Always
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
             capabilities:
               drop:
                 - ALL
@@ -125,6 +142,10 @@ spec:
             - name: "{{ $key }}"
               value: "{{ $value }}"
             {{- end }}
+          volumeMounts:
+          - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+            name: api-token
+            readOnly: true
           resources:
 {{ toYaml .Values.ksocSync.resources | indent 12 }}
       {{- with .Values.deployments.nodeSelector }}
@@ -135,4 +156,8 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
   {{- end }}
+      volumes:
+      - name: api-token
+        secret:
+          secretName: ksoc-sync-api-token-secret
 {{- end -}}

@@ -16,20 +16,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: ksoc-bootstrapper-secrets-mutator
-  namespace: {{ .Release.Namespace }}
-  labels:
-    maintained_by: ksoc
-rules:
-  - apiGroups: [""]
-    resources: ["secrets"]
-    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
   name: ksoc-leader-election-role
   namespace: {{ .Release.Namespace }}
   labels:

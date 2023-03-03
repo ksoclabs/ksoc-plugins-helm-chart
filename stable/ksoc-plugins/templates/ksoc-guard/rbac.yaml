@@ -7,6 +7,21 @@ metadata:
     app_name: ksoc-guard
     app_version: {{ .Values.ksocGuard.image.tag | quote }}
     maintained_by: ksoc
+automountServiceAccountToken: false
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ksoc-guard-api-token-secret
+  labels:
+    app_name: ksoc-guard
+    app_version: {{ .Values.ksocGuard.image.tag | quote }}
+    maintained_by: ksoc
+  annotations:
+    kubernetes.io/service-account.name: ksoc-guard
+type: kubernetes.io/service-account-token
 
 ---
 
@@ -102,24 +117,6 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: ksoc-kube-root-ca-reader
-subjects:
-  - kind: ServiceAccount
-    name: ksoc-guard
-    namespace: {{ .Release.Namespace }}
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: ksoc-guard-bootstrapper
-  labels:
-    app_name: ksoc-guard
-    app_version: {{ .Values.ksocGuard.image.tag | quote }}
-    maintained_by: ksoc
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: ksoc-bootstrapper-secrets-mutator
 subjects:
   - kind: ServiceAccount
     name: ksoc-guard

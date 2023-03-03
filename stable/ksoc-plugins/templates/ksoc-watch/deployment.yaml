@@ -34,6 +34,13 @@ spec:
 {{ toYaml . | indent 8 }}
         {{- end }}
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      automountServiceAccountToken: false
       serviceAccountName: ksoc-watch
       {{- if .Values.deployments.imagePullSecretName }}
       imagePullSecrets:
@@ -44,6 +51,9 @@ spec:
           image: {{ .Values.ksocBootstrapper.image.repository }}:{{ .Values.ksocBootstrapper.image.tag }}
           imagePullPolicy: Always
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
             capabilities:
               drop:
                 - ALL
@@ -81,11 +91,18 @@ spec:
                   name: ksoc-access-key
                   {{ end -}}
                   key: secret-key
+          volumeMounts:
+          - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+            name: api-token
+            readOnly: true
       containers:
         - name: ksoc-watch
           image: {{ .Values.ksocWatch.image.repository }}:{{ .Values.ksocWatch.image.tag }}
           imagePullPolicy: Always
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
             capabilities:
               drop:
                 - ALL
@@ -125,6 +142,10 @@ spec:
             - name: "{{ $key }}"
               value: "{{ $value }}"
             {{- end }}
+          volumeMounts:
+          - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+            name: api-token
+            readOnly: true
           resources:
 {{ toYaml .Values.ksocWatch.resources | indent 12 }}
       {{- with .Values.deployments.nodeSelector }}
@@ -135,4 +156,8 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
   {{- end }}
+      volumes:
+      - name: api-token
+        secret:
+          secretName: ksoc-watch-api-token-secret
 {{- end -}}

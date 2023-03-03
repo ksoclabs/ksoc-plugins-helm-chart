@@ -39,11 +39,21 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.deployments.imagePullSecretName }}
       {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      automountServiceAccountToken: false
       initContainers:
         - name: ksoc-bootstrapper
           image: {{ .Values.ksocBootstrapper.image.repository }}:{{ .Values.ksocBootstrapper.image.tag }}
           imagePullPolicy: Always
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
             capabilities:
               drop:
                 - ALL
@@ -81,11 +91,18 @@ spec:
                   name: ksoc-access-key
                   {{ end -}}
                   key: secret-key
+          volumeMounts:
+          - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+            name: api-token
+            readOnly: true
       containers:
         - name: ksoc-sbom
           image: {{ .Values.ksocSbom.image.repository }}:{{ .Values.ksocSbom.image.tag }}
           imagePullPolicy: Always
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
             capabilities:
               drop:
                 - ALL
@@ -144,35 +161,11 @@ spec:
           - mountPath: /tmp/k8s-webhook-server/serving-certs
             name: cert
             readOnly: true
+          - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+            name: api-token
+            readOnly: true
           resources:
 {{ toYaml .Values.ksocSbom.resources | indent 12 }}
-        - name: kube-rbac-proxy
-          securityContext:
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: true
-            allowPrivilegeEscalation: false
-            seccompProfile:
-              type: RuntimeDefault
-          image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
-          args:
-          - "--secure-listen-address=0.0.0.0:8443"
-          - "--upstream=http://127.0.0.1:8080/"
-          - "--logtostderr=true"
-          - "--v=0"
-          ports:
-          - containerPort: 8443
-            protocol: TCP
-            name: https
-          resources:
-            limits:
-              cpu: 200m
-              memory: 128Mi
-            requests:
-              cpu: 100m
-              memory: 64Mi
       {{- with .Values.deployments.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
@@ -188,4 +181,7 @@ spec:
         secret:
           defaultMode: 420
           secretName: ksoc-sbom-self-signed-cert
+      - name: api-token
+        secret:
+          secretName: ksoc-sbom-api-token-secret
 {{- end -}}

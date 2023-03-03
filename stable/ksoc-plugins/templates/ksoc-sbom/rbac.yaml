@@ -7,6 +7,38 @@ metadata:
     app_name: ksoc-sbom
     app_version: {{ .Values.ksocSbom.image.tag | quote }}
     maintained_by: ksoc
+automountServiceAccountToken: false
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ksoc-sbom-api-token-secret
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+  annotations:
+    kubernetes.io/service-account.name: ksoc-sbom
+type: kubernetes.io/service-account-token
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ksoc-sbom-configmap-reader
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    resourceNames: [ "ksoc-sbom-dynamic-configuration" ]
+    verbs: ["get", "list", "watch"]
 
 ---
 
@@ -50,6 +82,25 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
+  name: ksoc-sbom-configmap-reader
+  labels:
+    app_name: ksoc-sbom
+    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-sbom-configmap-reader
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-sbom
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
   name: ksoc-sbom-kube-root-ca-reader
   namespace: kube-system
   labels:
@@ -60,24 +111,6 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: ksoc-kube-root-ca-reader
-subjects:
-  - kind: ServiceAccount
-    name: ksoc-sbom
-    namespace: {{ .Release.Namespace }}
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: ksoc-sbom-bootstrapper
-  labels:
-    app_name: ksoc-sbom
-    app_version: {{ .Values.ksocSbom.image.tag | quote }}
-    maintained_by: ksoc
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: ksoc-bootstrapper-secrets-mutator
 subjects:
   - kind: ServiceAccount
     name: ksoc-sbom
