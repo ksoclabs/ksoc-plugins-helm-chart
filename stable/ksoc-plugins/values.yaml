@@ -103,7 +103,11 @@ ksocWatch:
     # -- The image to use for the kubewatcher deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/kubewatcher).
     repository: us.gcr.io/ksoc-public/ksoc-watch
     tag: v0.0.52
-  env: {}
+  env:
+    # -- Whether to trigger reconciliation at startup.
+    RECONCILIATION_AT_START: false
+    # -- How often should reconciliation be triggered.
+    RECONCILIATION_INTERVAL: 24h
   resources:
     limits:
       cpu: 250m
