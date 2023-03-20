@@ -79,6 +79,9 @@ sync_repo() {
         exit 1
     fi
 
+    # Finally sync the artifacthub-repo.yml file
+    ${AWS_S3_BASE_CMD} cp "artifacthub-repo.yml" "$bucket/artifacthub-repo.yml"
+
     ls -l "$sync_dir"
 
     return "$exit_code"
