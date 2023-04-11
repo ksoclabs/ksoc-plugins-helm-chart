@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: ksoc-guard
+  namespace: {{ .Release.Namespace }}
   labels:
     app_name: ksoc-guard
     app_version: {{ .Values.ksocGuard.image.tag | quote }}
@@ -15,6 +16,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: ksoc-guard-api-token-secret
+  namespace: {{ .Release.Namespace }}
   labels:
     app_name: ksoc-guard
     app_version: {{ .Values.ksocGuard.image.tag | quote }}
@@ -89,6 +91,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: ksoc-guard-configmap-reader
+  namespace: {{ .Release.Namespace }}
   labels:
     app_name: ksoc-guard
     app_version: {{ .Values.ksocGuard.image.tag | quote }}
