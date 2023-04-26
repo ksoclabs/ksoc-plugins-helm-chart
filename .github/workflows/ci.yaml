@@ -8,7 +8,7 @@ jobs:
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.21.3
+    container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.24.9
     steps:
       - name: clone repo
         uses: actions/checkout@v2
@@ -19,7 +19,7 @@ jobs:
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.21.3
+    container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.24.9
     steps:
       - name: clone repo
         uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.21.3
+    container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.24.9
     steps:
       - name: clone repo
         uses: actions/checkout@v2
