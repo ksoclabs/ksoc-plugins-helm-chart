@@ -13,7 +13,7 @@ jobs:
     container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.24.9
     steps:
       - name: clone repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: sync registry
         run: make sync-repo-cloudflare
         env:

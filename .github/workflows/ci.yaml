@@ -11,7 +11,7 @@ jobs:
     container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.24.9
     steps:
       - name: clone repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: pre-commit checks
         run: pre-commit-checks
 
@@ -22,7 +22,7 @@ jobs:
     container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.24.9
     steps:
       - name: clone repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: deprecation-checks
         run: make deprecation-checks
 
@@ -33,7 +33,7 @@ jobs:
     container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.24.9
     steps:
       - name: clone repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: kubeval-checks
         run: make kubeval-checks
 
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Set up Helm
