@@ -102,7 +102,7 @@ ksocWatch:
   image:
     # -- The image to use for the ksoc-watch deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-watch).
     repository: us.gcr.io/ksoc-public/ksoc-watch
-    tag: v0.0.53
+    tag: v0.0.56
   env:
     # -- Whether to trigger reconciliation at startup.
     RECONCILIATION_AT_START: false
