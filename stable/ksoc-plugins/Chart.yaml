@@ -16,7 +16,7 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: added
-      description: Ingesting services and endpointslices resources
+      description: Ingesting service and endpointslice resources
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/links: |
     - name: source
