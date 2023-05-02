@@ -11,7 +11,7 @@ keywords:
   - ksoc
 maintainers:
   - name: KSOC Engineering
-    email: engineering@ksoc.comgcasm 
+    email: engineering@ksoc.com
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
