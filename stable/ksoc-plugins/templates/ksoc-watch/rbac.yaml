@@ -53,8 +53,9 @@ metadata:
     app_version: {{ .Values.ksocWatch.image.tag | quote }}
     maintained_by: ksoc
 rules:
+rules:
   - apiGroups: [""]
-    resources: ["namespaces", "nodes", "pods", "serviceaccounts"]
+    resources: ["namespaces", "nodes", "pods", "services", "serviceaccounts"]
     verbs: ["get", "list", "watch"]
 
   - apiGroups: [ "apps" ]
@@ -63,6 +64,10 @@ rules:
 
   - apiGroups: [ "batch" ]
     resources: [ "cronjobs", "jobs"]
+    verbs: [ "get", "list", "watch" ]
+
+  - apiGroups: [ "discovery.k8s.io" ]
+    resources: [ "endpointslices" ]
     verbs: [ "get", "list", "watch" ]
 
   - apiGroups: [ "rbac.authorization.k8s.io" ]
