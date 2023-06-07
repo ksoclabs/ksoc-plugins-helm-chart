@@ -53,7 +53,6 @@ metadata:
     app_version: {{ .Values.ksocWatch.image.tag | quote }}
     maintained_by: ksoc
 rules:
-rules:
   - apiGroups: [""]
     resources: ["namespaces", "nodes", "pods", "services", "serviceaccounts"]
     verbs: ["get", "list", "watch"]

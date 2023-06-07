@@ -10,15 +10,11 @@ ksoc:
   # -- The name of the custom secret containing Access Key.
   accessKeySecretNameOverride: ""
 
-deployments:
+workloads:
   # -- Whether to disable service mesh integration.
   disableServiceMesh: true
   # -- The image pull secret name to use to pull container images.
   imagePullSecretName: ""
-  # -- The node selector to use for the plugin deployments.
-  nodeSelector: {}
-  # -- The tolerations to use for the plugin deployments.
-  tolerations: []
 
 ksocBootstrapper:
   image:
@@ -34,6 +30,8 @@ ksocBootstrapper:
       cpu: 50m
       memory: 32Mi
   podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
 
 ksocGuard:
   enabled: true
@@ -62,6 +60,43 @@ ksocGuard:
   webhook:
     objectSelector: {}
     timeoutSeconds: 10
+  nodeSelector: {}
+  tolerations: []
+
+ksocRuntime:
+  enabled: false
+  runtimeReporter:
+    image:
+      repository: us.gcr.io/ksoc-public/runtime-reporter
+      tag: v0.0.11
+    env:
+      LOG_LEVEL: info
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  tetragon:
+    operator:
+      image:
+        repository: quay.io/cilium/tetragon-operator
+        tag: v0.9.0
+    image:
+      repository: quay.io/cilium/tetragon
+      tag: v0.9.0
+    env: {}
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
 
 ksocSbom:
   enabled: true
@@ -80,6 +115,8 @@ ksocSbom:
   podAnnotations: {}
   webhook:
     timeoutSeconds: 10
+  nodeSelector: {}
+  tolerations: []
 
 ksocSync:
   enabled: true
@@ -96,6 +133,8 @@ ksocSync:
       cpu: 100m
       memory: 128Mi
   podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
 
 ksocWatch:
   enabled: true
@@ -116,3 +155,5 @@ ksocWatch:
       cpu: 100m
       memory: 128Mi
   podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []

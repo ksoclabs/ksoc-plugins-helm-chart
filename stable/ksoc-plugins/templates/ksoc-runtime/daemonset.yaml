@@ -1,0 +1,173 @@
+{{- if .Values.ksocRuntime.enabled -}}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ksoc-runtime
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-runtime
+    app_version: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+    maintained_by: ksoc
+spec:
+  selector:
+    matchLabels:
+      app_name: ksoc-runtime
+  template:
+    metadata:
+      labels:
+        app_name: ksoc-runtime
+        app_version: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+        maintained_by: ksoc
+      annotations:
+        {{- if .Values.workloads.disableServiceMesh }}
+        linkerd.io/inject: disabled
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+        {{- with .Values.ksocRuntime.podAnnotations }}
+{{ toYaml . | indent 8 }}
+        {{- end }}
+    spec:
+      automountServiceAccountToken: false
+      hostNetwork: true
+      {{- if .Values.workloads.imagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ .Values.workloads.imagePullSecretName }}
+      {{- end }}
+      serviceAccountName: ksoc-runtime
+
+      initContainers:
+{{ include "ksoc-plugins.bootstrap-initcontainer" . | indent 8 }}
+        - name: tetragon-operator
+          command:
+          - tetragon-operator
+          image: {{ .Values.ksocRuntime.tetragon.operator.image.repository }}:{{ .Values.ksocRuntime.tetragon.operator.image.tag }}
+          imagePullPolicy: Always
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+          - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+            name: api-token
+            readOnly: true
+
+      containers:
+
+        - name: runtime-reporter
+          image: {{ .Values.ksocRuntime.runtimeReporter.image.repository }}:{{ .Values.ksocRuntime.runtimeReporter.image.tag }}
+          imagePullPolicy: Always
+          env:
+            - name: AGENT_VERSION
+              value: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+            - name: CHART_VERSION
+              value: {{ .Chart.Version }}
+            - name: FILE
+              value: /var/run/cilium/tetragon/tetragon.log
+            - name: KSOC_API_URL
+              value: {{ .Values.ksoc.apiUrl }}
+            - name: KSOC_NAMESPACE
+              value: {{ .Release.Namespace }}
+{{ include "ksoc-plugins.access-key-env-secret" . | indent 12 }}
+            {{- range $key, $value := .Values.ksocRuntime.runtimeReporter.env }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+            {{- end }}
+          resources:
+{{ toYaml .Values.ksocRuntime.runtimeReporter.resources | indent 12 }}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: export-logs
+              mountPath: var/run/cilium/tetragon
+            - name: api-token
+              mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              readOnly: true
+
+        - name: tetragon
+          image: {{ .Values.ksocRuntime.tetragon.image.repository }}:{{ .Values.ksocRuntime.tetragon.image.tag }}
+          imagePullPolicy: Always
+          command:
+            - /usr/bin/tetragon
+          args:
+            - --config-dir=/etc/tetragon/tetragon.conf.d/
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /var/lib/tetragon/metadata
+              name: metadata-files
+            - mountPath: /etc/tetragon/tetragon.conf.d/
+              name: tetragon-config
+              readOnly: true
+            - mountPath: /sys/fs/bpf
+              mountPropagation: Bidirectional
+              name: bpf-maps
+            - mountPath: /var/run/cilium
+              name: cilium-run
+            - mountPath: /var/run/cilium/tetragon
+              name: export-logs
+            - mountPath: /procRoot
+              name: host-proc
+            - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              name: api-token
+              readOnly: true
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                    fieldPath: spec.nodeName
+          resources:
+{{ toYaml .Values.ksocRuntime.tetragon.resources | indent 12 }}
+      {{- with .Values.ksocRuntime.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.ksocRuntime.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+
+      volumes:
+        - name: cilium-run
+          hostPath:
+            path: /var/run/cilium
+            type: DirectoryOrCreate
+        - name: export-logs
+          hostPath:
+            path: /var/run/cilium/tetragon
+            type: DirectoryOrCreate
+        - name: tetragon-config
+          configMap:
+            name: tetragon-config
+        - name: bpf-maps
+          hostPath:
+            path: /sys/fs/bpf
+            type: DirectoryOrCreate
+        - name: host-proc
+          hostPath:
+            path: /proc
+            type: Directory
+        - emptyDir: {}
+          name: metadata-files
+        - name: api-token
+          secret:
+            defaultMode: 420
+            secretName: ksoc-runtime-api-token-secret
+{{- end -}}

@@ -1,0 +1,164 @@
+{{- if .Values.ksocRuntime.enabled -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ksoc-runtime
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-runtime
+    app_version: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+    maintained_by: ksoc
+automountServiceAccountToken: false
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ksoc-runtime-api-token-secret
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-runtime
+    app_version: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+    maintained_by: ksoc
+  annotations:
+    kubernetes.io/service-account.name: ksoc-runtime
+type: kubernetes.io/service-account-token
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ksoc-runtime-configmap-reader
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-runtime
+    app_version: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+    maintained_by: ksoc
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    resourceNames:
+      - tetragon-config
+    verbs:
+      - get
+      - list
+      - watch
+
+---
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ksoc-runtime
+  labels:
+    app_name: ksoc-runtime
+    app_version: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+    maintained_by: ksoc
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - cilium.io
+    resources:
+      - tracingpolicies
+      - tracingpoliciesnamespaced
+    verbs:
+      - get
+      - list
+      - watch
+  # We need to split out the create permission and enforce it without resourceNames since
+  # the name would not be known at resource creation time
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - create
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - create
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    resourceNames:
+      - tracingpolicies.cilium.io
+      - tracingpoliciesnamespaced.cilium.io
+    verbs:
+      - update
+      - get
+      - list
+
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ksoc-runtime
+  labels:
+    app_name: ksoc-runtime
+    app_version: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ksoc-runtime
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-runtime
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-runtime-configmap-reader
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-runtime
+    app_version: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-runtime-configmap-reader
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-runtime
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-runtime-kube-root-ca-reader
+  namespace: kube-system
+  labels:
+    app_name: ksoc-runtime
+    app_version: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-kube-root-ca-reader
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-runtime
+    namespace: {{ .Release.Namespace }}
+
+{{- end -}}

@@ -1,0 +1,34 @@
+{{- if .Values.ksocRuntime.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tetragon-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-runtime
+    app_version: {{ .Values.ksocRuntime.runtimeReporter.image.tag | quote }}
+    maintained_by: ksoc
+data:
+  enable-k8s-api: "true"
+  enable-process-cred: "true"
+  enable-process-ns: "false"
+  export-allowlist: '{"event_set":["PROCESS_EXEC", "PROCESS_EXIT", "PROCESS_KPROBE", "PROCESS_UPROBE"]}'
+  export-denylist: |-
+    {"health_check":true}
+    {"namespace":["", "cilium", "kube-system"]}
+  export-file-compress: "false"
+  export-file-max-backups: "5"
+  export-file-max-size-mb: "10"
+  export-filename: /var/run/cilium/tetragon/tetragon.log
+  export-rate-limit: "-1"
+  field-filters: |-
+    {"fields": "parent", "action": "EXCLUDE"}
+    {"fields": "process.auid", "action": "EXCLUDE"}
+    {"fields": "process.docker", "action": "EXCLUDE"}
+    {"fields": "process.flags", "action": "EXCLUDE"}
+  gops-address: localhost:8118
+  metrics-server: :2112
+  process-cache-size: "65536"
+  procfs: /procRoot
+  server-address: localhost:54321
+{{- end -}}
