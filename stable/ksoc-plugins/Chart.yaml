@@ -15,8 +15,6 @@ maintainers:
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
-    - kind: fixed
-      description: ksoc-watch rbac permissions for service and endpointslice resources
     - kind: added
       description: ksoc-runtime plugin for tracking runtime-level events via eBPF
   artifacthub.io/containsSecurityUpdates: "true"
