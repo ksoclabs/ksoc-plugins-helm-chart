@@ -2,7 +2,7 @@
 
 A Helm chart to run the KSOC plugins
 
-![Version: 0.0.79](https://img.shields.io/badge/Version-0.0.79-informational?style=flat-square)
+![Version: 1.0.21](https://img.shields.io/badge/Version-1.0.21-informational?style=flat-square)
 
 ## KSOC Plugins Architecture
 
@@ -35,6 +35,10 @@ Finally, the plugin also acts as a mutating webhook that simply takes the `Admis
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| deployments.disableServiceMesh | bool | `true` | Whether to disable service mesh integration. |
+| deployments.imagePullSecretName | string | `""` | The image pull secret name to use to pull container images. |
+| deployments.nodeSelector | object | `{}` | The node selector to use for the plugin deployments. |
+| deployments.tolerations | list | `[]` | The tolerations to use for the plugin deployments. |
 | ksoc.accessKeySecretNameOverride | string | `""` | The name of the custom secret containing Access Key. |
 | ksoc.apiUrl | string | `"https://api.ksoc.com"` | The base URL for the KSOC API. |
 | ksoc.base64AccessKeyId | string | `""` | The ID of the Access Key used in this cluster (base64). |
@@ -42,73 +46,56 @@ Finally, the plugin also acts as a mutating webhook that simply takes the `Admis
 | ksoc.clusterName | string | `""` | The name of the cluster you want displayed in KSOC. |
 | ksocBootstrapper.env | object | `{}` |  |
 | ksocBootstrapper.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-bootstrapper"` | The image to use for the ksoc-bootstrapper deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-bootstrapper). |
-| ksocBootstrapper.image.semver | string | `""` | If set will allow flux to promote images. (i.e 1.0.x) |
-| ksocBootstrapper.image.tag | string | `"v0.0.0"` |  |
-| ksocBootstrapper.nodeSelector | object | `{}` |  |
+| ksocBootstrapper.image.tag | string | `"v0.0.13"` |  |
 | ksocBootstrapper.podAnnotations | object | `{}` |  |
 | ksocBootstrapper.resources.limits.cpu | string | `"100m"` |  |
 | ksocBootstrapper.resources.limits.memory | string | `"64Mi"` |  |
 | ksocBootstrapper.resources.requests.cpu | string | `"50m"` |  |
 | ksocBootstrapper.resources.requests.memory | string | `"32Mi"` |  |
-| ksocBootstrapper.tolerations | list | `[]` |  |
 | ksocGuard.config.BLOCK_ON_ERROR | bool | `false` | Whether to block on error. |
 | ksocGuard.config.BLOCK_ON_POLICY_VIOLATION | bool | `false` | Whether to block on policy violation. |
 | ksocGuard.config.BLOCK_ON_TIMEOUT | bool | `false` | Whether to block on timeout. |
-| ksocGuard.config.GUARDRESULT_TTL_SECONDS | int | `300` | Deadline for GuardResult custom resource deletion |
 | ksocGuard.config.LOG_LEVEL | string | `"info"` | The log level to use. |
 | ksocGuard.enabled | bool | `true` |  |
 | ksocGuard.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-guard"` | The image to use for the ksoc-guard deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-guard). |
-| ksocGuard.image.semver | string | `""` | If set will allow flux to promote images. (i.e 1.0.x) |
-| ksocGuard.image.tag | string | `"v0.0.0"` |  |
-| ksocGuard.nodeSelector | object | `{}` |  |
+| ksocGuard.image.tag | string | `"v0.0.74"` |  |
 | ksocGuard.podAnnotations | object | `{}` |  |
 | ksocGuard.replicas | int | `1` |  |
 | ksocGuard.resources.limits.cpu | string | `"250m"` |  |
 | ksocGuard.resources.limits.memory | string | `"500Mi"` |  |
 | ksocGuard.resources.requests.cpu | string | `"100m"` |  |
 | ksocGuard.resources.requests.memory | string | `"100Mi"` |  |
-| ksocGuard.tolerations | list | `[]` |  |
 | ksocGuard.webhook.objectSelector | object | `{}` |  |
 | ksocGuard.webhook.timeoutSeconds | int | `10` |  |
 | ksocSbom.enabled | bool | `true` |  |
 | ksocSbom.env | object | `{}` |  |
 | ksocSbom.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-sbom"` | The image to use for the ksoc-sbom deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sbom). |
-| ksocSbom.image.semver | string | `""` | If set will allow flux to promote images. (i.e 1.0.x) |
-| ksocSbom.image.tag | string | `"v0.0.0"` |  |
-| ksocSbom.nodeSelector | object | `{}` |  |
+| ksocSbom.image.tag | string | `"v0.0.48"` |  |
 | ksocSbom.podAnnotations | object | `{}` |  |
 | ksocSbom.resources.limits.cpu | int | `1` |  |
 | ksocSbom.resources.limits.memory | string | `"2Gi"` |  |
 | ksocSbom.resources.requests.cpu | string | `"500m"` |  |
 | ksocSbom.resources.requests.memory | string | `"1Gi"` |  |
-| ksocSbom.tolerations | list | `[]` |  |
 | ksocSbom.webhook.timeoutSeconds | int | `10` |  |
 | ksocSync.enabled | bool | `true` |  |
 | ksocSync.env | object | `{}` |  |
 | ksocSync.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-sync"` | The image to use for the ksoc-sync deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sync). |
-| ksocSync.image.semver | string | `""` | If set will allow flux to promote images. (i.e 1.0.x) |
-| ksocSync.image.tag | string | `"v0.0.0"` |  |
-| ksocSync.nodeSelector | object | `{}` |  |
+| ksocSync.image.tag | string | `"v0.0.37"` |  |
 | ksocSync.podAnnotations | object | `{}` |  |
 | ksocSync.resources.limits.cpu | string | `"200m"` |  |
 | ksocSync.resources.limits.memory | string | `"256Mi"` |  |
 | ksocSync.resources.requests.cpu | string | `"100m"` |  |
 | ksocSync.resources.requests.memory | string | `"128Mi"` |  |
-| ksocSync.tolerations | list | `[]` |  |
 | ksocWatch.enabled | bool | `true` |  |
-| ksocWatch.env | object | `{}` |  |
-| ksocWatch.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-watch"` | The image to use for the kubewatcher deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/kubewatcher). |
-| ksocWatch.image.semver | string | `""` | If set will allow flux to promote images. (i.e 1.0.x) |
-| ksocWatch.image.tag | string | `"v0.0.0"` |  |
-| ksocWatch.nodeSelector | object | `{}` |  |
+| ksocWatch.env.RECONCILIATION_AT_START | bool | `false` | Whether to trigger reconciliation at startup. |
+| ksocWatch.env.RECONCILIATION_INTERVAL | string | `"24h"` | How often should reconciliation be triggered. |
+| ksocWatch.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-watch"` | The image to use for the ksoc-watch deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-watch). |
+| ksocWatch.image.tag | string | `"v0.0.56"` |  |
 | ksocWatch.podAnnotations | object | `{}` |  |
 | ksocWatch.resources.limits.cpu | string | `"250m"` |  |
 | ksocWatch.resources.limits.memory | string | `"512Mi"` |  |
 | ksocWatch.resources.requests.cpu | string | `"100m"` |  |
 | ksocWatch.resources.requests.memory | string | `"128Mi"` |  |
-| ksocWatch.tolerations | list | `[]` |  |
-| workloads.disableServiceMesh | bool | `true` | Whether to disable service mesh integration. |
-| workloads.imagePullSecretName | string | `""` | The image pull secret name to use to pull container images. |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)
