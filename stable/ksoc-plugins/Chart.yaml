@@ -1,6 +1,6 @@
 apiVersion: v1
 name: ksoc-plugins
-version: 1.0.20
+version: 1.0.21
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -15,8 +15,8 @@ maintainers:
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
-    - kind: fixed
-      description: vulnerabilities in the ksoc-sbom plugin
+    - kind: added
+      description: overview of each plugin to chart README
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/links: |
     - name: source
