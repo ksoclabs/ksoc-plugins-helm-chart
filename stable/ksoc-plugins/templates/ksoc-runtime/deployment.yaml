@@ -1,16 +1,15 @@
-{{- if .Values.ksocSbom.enabled -}}
+{{- if .Values.ksocRuntime.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ksoc-sbom
+  name: ksoc-runtime
   namespace: {{ .Release.Namespace }}
   labels:
-    app_name: ksoc-sbom
-    app_version: {{ .Values.ksocSbom.image.tag | quote }}
+    app_name: ksoc-runtime
+    app_version: {{ .Values.ksocRuntime.reporter.image.tag | quote }}
     maintained_by: ksoc
 spec:
-  minReadySeconds: 90
-  replicas: 1
+  replicas: {{ .Values.ksocRuntime.reporter.replicas }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,39 +17,33 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      app_name: ksoc-sbom
+      app_name: ksoc-runtime
   template:
     metadata:
       labels:
-        app_name: ksoc-sbom
-        app_version: {{ .Values.ksocSbom.image.tag | quote }}
+        app_name: ksoc-runtime
+        app_version: {{ .Values.ksocRuntime.reporter.image.tag | quote }}
         maintained_by: ksoc
       annotations:
         {{- if .Values.workloads.disableServiceMesh }}
         linkerd.io/inject: disabled
         sidecar.istio.io/inject: "false"
         {{- end }}
-        {{- with .Values.ksocSbom.podAnnotations }}
+        {{- with .Values.ksocRuntime.podAnnotations }}
 {{ toYaml . | indent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: ksoc-sbom
+      serviceAccountName: ksoc-runtime
       {{- if .Values.workloads.imagePullSecretName }}
       imagePullSecrets:
         - name: {{ .Values.workloads.imagePullSecretName }}
       {{- end }}
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
-        seccompProfile:
-          type: RuntimeDefault
       automountServiceAccountToken: false
       initContainers:
 {{ include "ksoc-plugins.bootstrap-initcontainer" . | indent 8 }}
       containers:
-        - name: ksoc-sbom
-          image: {{ .Values.ksocSbom.image.repository }}:{{ .Values.ksocSbom.image.tag }}
+        - name: ksoc-runtime
+          image: {{ .Values.ksocRuntime.reporter.image.repository }}:{{ .Values.ksocRuntime.reporter.image.tag }}
           imagePullPolicy: Always
           securityContext:
             runAsNonRoot: true
@@ -66,7 +59,7 @@ spec:
               type: RuntimeDefault
           env:
             - name: AGENT_VERSION
-              value: {{ .Values.ksocSbom.image.tag | quote }}
+              value: {{ .Values.ksocRuntime.reporter.image.tag | quote }}
             - name: CHART_VERSION
               value: {{ .Chart.Version }}
             - name: KSOC_API_URL
@@ -74,50 +67,29 @@ spec:
             - name: KSOC_NAMESPACE
               value: {{ .Release.Namespace }}
 {{ include "ksoc-plugins.access-key-env-secret" . | indent 12 }}
-            {{- range $key, $value := .Values.ksocSbom.env }}
+            {{- range $key, $value := .Values.ksocRuntime.reporter.env }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
             {{- end }}
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8081
-            initialDelaySeconds: 15
-            periodSeconds: 20
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 10
+          ports:
+          - containerPort: 8000
           volumeMounts:
-          - mountPath: /tmp
-            name: temp-image-dir
-            readOnly: false
-          - mountPath: /tmp/k8s-webhook-server/serving-certs
-            name: cert
-            readOnly: true
           - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
             name: api-token
             readOnly: true
           resources:
-{{ toYaml .Values.ksocSbom.resources | indent 12 }}
-      {{- with .Values.ksocSbom.nodeSelector }}
+{{ toYaml .Values.ksocRuntime.reporter.resources | indent 12 }}
+      {{- with .Values.ksocRuntime.reporter.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
       {{- end }}
-      {{- with .Values.ksocSbom.tolerations }}
+      {{- with .Values.ksocRuntime.reporter.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}
-  {{- end }}
+      {{- end }}
       volumes:
-      - name: temp-image-dir
-        emptyDir: {}
-      - name: cert
-        secret:
-          defaultMode: 420
-          secretName: ksoc-sbom-self-signed-cert
-      - name: api-token
-        secret:
-          secretName: ksoc-sbom-api-token-secret
+        - name: api-token
+          secret:
+            defaultMode: 420
+            secretName: ksoc-runtime-api-token-secret
 {{- end -}}
