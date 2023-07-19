@@ -14,6 +14,10 @@ jobs:
     steps:
       - name: clone repo
         uses: actions/checkout@v3
+      - name: repo add
+        run: helm repo add falcosecurity https://falcosecurity.github.io/charts
+      - name: repo update
+        run: helm repo update
       - name: sync registry
         run: make sync-repo-cloudflare
         env:
