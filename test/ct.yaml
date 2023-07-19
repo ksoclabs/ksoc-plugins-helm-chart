@@ -1,5 +1,7 @@
 chart-dirs:
   - stable
+chart-repos:
+  - falcosecurity=https://falcosecurity.github.io/charts
 check-version-increment: true
 helm-extra-args: --timeout 600
 target-branch: main
