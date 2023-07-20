@@ -10,15 +10,11 @@ ksoc:
   # -- The name of the custom secret containing Access Key.
   accessKeySecretNameOverride: ""
 
-deployments:
+workloads:
   # -- Whether to disable service mesh integration.
   disableServiceMesh: true
   # -- The image pull secret name to use to pull container images.
   imagePullSecretName: ""
-  # -- The node selector to use for the plugin deployments.
-  nodeSelector: {}
-  # -- The tolerations to use for the plugin deployments.
-  tolerations: []
 
 ksocBootstrapper:
   image:
@@ -34,6 +30,8 @@ ksocBootstrapper:
       cpu: 50m
       memory: 32Mi
   podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
 
 ksocGuard:
   enabled: true
@@ -62,6 +60,28 @@ ksocGuard:
   webhook:
     objectSelector: {}
     timeoutSeconds: 10
+  nodeSelector: {}
+  tolerations: []
+
+ksocRuntime:
+  enabled: false
+  reporter:
+    image:
+      repository: us.gcr.io/ksoc-public/runtime-reporter
+      tag: v0.0.15
+    env:
+      LOG_LEVEL: info
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 100m
+      limits:
+        memory: 500Mi
+        cpu: 250m
+    podAnnotations: {}
+    replicas: 3
+    nodeSelector: {}
+    tolerations: []
 
 ksocSbom:
   enabled: true
@@ -80,6 +100,8 @@ ksocSbom:
   podAnnotations: {}
   webhook:
     timeoutSeconds: 10
+  nodeSelector: {}
+  tolerations: []
 
 ksocSync:
   enabled: true
@@ -96,6 +118,8 @@ ksocSync:
       cpu: 100m
       memory: 128Mi
   podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
 
 ksocWatch:
   enabled: true
@@ -116,3 +140,23 @@ ksocWatch:
       cpu: 100m
       memory: 128Mi
   podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
+
+# Values for falco subchart (https://github.com/falcosecurity/charts/tree/falco-3.3.0/falco)
+falco:
+  driver:
+    enabled: true
+    kind: modern-bpf
+  falco:
+    http_output:
+      enabled: true
+      url: http://ksoc-runtime.ksoc.svc.cluster.local/falco-alert
+      user_agent: falcosecurity/falco
+      insecure: true
+    json_output: true
+    priority: notice
+    stdout_output:
+      enabled: false
+    syslog_output:
+      enabled: false

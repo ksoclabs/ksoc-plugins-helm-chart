@@ -27,6 +27,10 @@ In this way, we can avoid the degradation of the API server, which would occur i
 The configuration for the blocking logic can be found in the `ksocGuard` section of the helm chart values file; see [here](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=values). If admission is blocked, it can be seen in the KSOC application under the Events tab for the specific cluster.
 Finally, the plugin also acts as a mutating webhook that simply takes the `AdmissionReview.UID` and adds it as an annotation (`ksoc-guard/admission: xxx`). In the case of a blocked object, this gives KSOC an identifier to track what would otherwise be an ephemeral event.
 
+### ksoc-runtime plugin
+`ksoc-runtime` utilizes system-level probes in order to analyze what is happening at the process level on each node, enabling KSOC to detect in real-time events that may indicate a security breach is occurring.
+It is not enabled by default.
+
 ## Prerequisites
 
 The remainder of this page assumes the following:
