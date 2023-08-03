@@ -8,6 +8,7 @@ This chart deploys the following plugins required for the [KSOC](https://ksoc.co
 - ksoc-watch
 - ksoc-sbom
 - ksoc-guard
+- ksoc-runtime
 
 These plugins perform several different tasks, which will be explained below.
 
