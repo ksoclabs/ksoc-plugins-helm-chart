@@ -33,8 +33,7 @@ ksocGuard:
     BLOCK_ON_POLICY_VIOLATION: true
 ```
 
-If admission is blocked, it can be seen in the KSOC application under the Events tab for the specific cluster. Finally, the plugin also acts as a mutating webhook that simply takes the AdmissionReview.UID and adds it as an annotation (ksoc-guard/admission: xxx). In the case of a blocked object, this gives
-Finally, the plugin also acts as a mutating webhook that simply takes the `AdmissionReview.UID` and adds it as an annotation (`ksoc-guard/admission: xxx`). In the case of a blocked object, this gives KSOC an identifier to track what would otherwise be an ephemeral event.
+If admission is blocked, it can be seen in the KSOC application under the Events tab for the specific cluster. Finally, the plugin also acts as a mutating webhook that simply takes the `AdmissionReview.UID` and adds it as an annotation (`ksoc-guard/admission: xxx`). In the case of a blocked object, this gives KSOC an identifier to track what would otherwise be an ephemeral event.
 
 ### ksoc-runtime plugin
 `ksoc-runtime` utilizes system-level probes in order to analyze what is happening at the process level on each node, enabling KSOC to detect in real-time events that may indicate a security breach is occurring. It is not enabled by default. To enable this, please set the following in your values file.
