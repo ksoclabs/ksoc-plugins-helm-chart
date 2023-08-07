@@ -50,11 +50,11 @@ When `ksoc-runtime` is enabled an additional deployment can be seen. There is al
 The remainder of this page assumes the following:
 
 - An Account in KSOC already exists
-- The user has obtained the `base64AccessKey` and `base64SecretKey` values required for the installation via the UI
+- The user has obtained the `base64AccessKey` and `base64SecretKey` values required for the installation via the UI or the API
 - The user has kubectl installed
 - The user has Helm v3 installed
 - The user has kubectl admin access to the cluster
-- The KSOC pods have outbound port 443 access to https://api.ksoc.com
+- The KSOC pods have outbound port 443 access to `https://api.ksoc.com`
 
 ## Installing the Chart
 
