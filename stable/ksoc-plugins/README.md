@@ -212,17 +212,15 @@ If you have enabled the `ksoc-runtime` plugin you should also see the following 
 
 ```bash
 NAME                            READY   STATUS    RESTARTS   AGE
-ksoc-guard-86959f7544-96hbl     1/1     Running   0          1m
 ksoc-runtime-6c854b998c-7jjzg   1/1     Running   0          1m
 ksoc-runtime-6c854b998c-p45g6   1/1     Running   0          1m
 ksoc-runtime-6c854b998c-pmgtf   1/1     Running   0          1m
+
+# The number of pods below should equal the number of nodes in your cluster
 ksoc-runtime-ds-m44z5           2/2     Running   0          1m
 ksoc-runtime-ds-nb9cq           2/2     Running   0          1m
 ksoc-runtime-ds-snx8b           2/2     Running   0          1m
 ksoc-runtime-ds-wvh8n           2/2     Running   0          1m
-ksoc-sbom-664bf566dc-bxm5c      1/1     Running   0          1m
-ksoc-sync-769cd7c6fc-cxczq      1/1     Running   0          1m
-ksoc-watch-7bf4d7b6b9-kqblh     1/1     Running   0          1m
 ```
 
 If you don't see all the pods running within 2 minutes, please check the [Installation Troubleshooting](https://docs.ksoc.com/docs/installation-troubleshooting) page or contact KSOC support.
