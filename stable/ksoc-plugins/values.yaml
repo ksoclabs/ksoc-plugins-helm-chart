@@ -145,6 +145,7 @@ ksocWatch:
 
 # Values for falco subchart (https://github.com/falcosecurity/charts/tree/falco-3.3.0/falco)
 falco:
+  fullnameOverride: "ksoc-runtime-ds"
   driver:
     enabled: true
     kind: modern-bpf
