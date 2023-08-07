@@ -25,22 +25,37 @@ In this way, we can avoid the degradation of the API server, which would occur i
 
 ### ksoc-guard plugin
 `ksoc-guard` is the plugin responsible for executing `GuardPolicy` (in the form of Rego) against a specific set of Kubernetes resources during their admission to the cluster, either allowing the admission or denying it.
-The configuration for the blocking logic can be found in the `ksocGuard` section of the helm chart values file; see [here](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=values). If admission is blocked, it can be seen in the KSOC application under the Events tab for the specific cluster.
+The configuration for the blocking logic can be found in the `ksocGuard` section of the helm chart values file; see below. If admission is blocked, it can be seen in the KSOC application under the Events tab for the specific cluster.
+
+```yaml
+ksocGuard:
+  config:
+    BLOCK_ON_POLICY_VIOLATION: true
+```
+
+If admission is blocked, it can be seen in the KSOC application under the Events tab for the specific cluster. Finally, the plugin also acts as a mutating webhook that simply takes the AdmissionReview.UID and adds it as an annotation (ksoc-guard/admission: xxx). In the case of a blocked object, this gives
 Finally, the plugin also acts as a mutating webhook that simply takes the `AdmissionReview.UID` and adds it as an annotation (`ksoc-guard/admission: xxx`). In the case of a blocked object, this gives KSOC an identifier to track what would otherwise be an ephemeral event.
 
 ### ksoc-runtime plugin
-`ksoc-runtime` utilizes system-level probes in order to analyze what is happening at the process level on each node, enabling KSOC to detect in real-time events that may indicate a security breach is occurring.
-It is not enabled by default.
+`ksoc-runtime` utilizes system-level probes in order to analyze what is happening at the process level on each node, enabling KSOC to detect in real-time events that may indicate a security breach is occurring. It is not enabled by default. To enable this, please set the following in your values file.
+
+```yaml
+ksocRuntime:
+  enabled: true
+```
+
+When `ksoc-runtime` is enabled an additional deployment can be seen. There is also a `DaemonSet` that deploys an eBPF pod on each node to gather the run-time information.
 
 ## Prerequisites
 
 The remainder of this page assumes the following:
 
-- An Organization (child account) in KSOC already exists
+- An Account in KSOC already exists
 - The user has obtained the `base64AccessKey` and `base64SecretKey` values required for the installation via the UI
 - The user has kubectl installed
 - The user has Helm v3 installed
 - The user has kubectl admin access to the cluster
+- The KSOC pods have outbound port 443 access to https://api.ksoc.com
 
 ## Installing the Chart
 
@@ -50,7 +65,7 @@ The remainder of this page assumes the following:
 
 You can check if cert-manager is installed using the command below:
 
-```
+```bash
 kubectl get pods -A | grep cert-manager
 ```
 
@@ -58,7 +73,7 @@ If the command above returns no results, you must install cert-manager into your
 
 **NOTE:** It may take up to 2 minutes for the `helm install`command below to complete.
 
-```
+```bash
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
 
@@ -76,13 +91,13 @@ A full list of available Helm values is on[ cert-manager's ArtifactHub page](htt
 
 Now we have installed cert-manager, we need to validate that it is running successfully. This can be achieved using the command below:
 
-```
+```bash
 kubectl get pods -n cert-manager
 ```
 
 You should see the following pods (with slightly different generated IDs at the end) with a status of Running:
 
-```
+```bash
 NAME                                     	 READY   STATUS	RESTARTS   AGE
 cert-manager-7dc9d6599-5fj6g             	 1/1 	   Running   0      	1m
 cert-manager-cainjector-757dd96b8b-hlqgp 	 1/1 	   Running   0      	1m
@@ -93,26 +108,26 @@ cert-manager-webhook-854656c6ff-b4zqp    	 1/1 	   Running   0      	1m
 
 To install the KSOC plugins Helm chart, we need to configure access to the KSOC helm repository using the commands below:
 
-```
+```bash
 helm repo add ksoc https://charts.ksoc.com/stable
 helm repo update
 ```
 
 If you already had KSOC's Helm chart installed, it is recommended to update it.
 
-```
+```bash
 helm repo update ksoc
 ```
 
 Verify the KSOC plugins Helm chart has been installed:
 
-```
+```bash
 helm search repo ksoc
 ```
 
 Example output (chart version may differ):
 
-```
+```bash
 helm search repo ksoc
 NAME                     	CHART VERSION	APP VERSION	DESCRIPTION
 ksoc/ksoc-plugins        	1.0.20      	           	A Helm chart to run the KSOC plugins
@@ -122,7 +137,7 @@ ksoc/ksoc-plugins        	1.0.20      	           	A Helm chart to run the KSOC 
 
 Next, we need to create a values file called `values.yaml` with the following content that includes the [base64AccessKeyId and base64SecretKey](https://docs.ksoc.com/docs/installation#add-cluster):
 
-```
+```yaml
 ksoc:
   base64AccessKeyId: "YOURACCESSKEYID"
   base64SecretKey: "YOURSECRETKEY"
@@ -139,7 +154,7 @@ By default, a secret is created as part of our Helm chart, which we use to secur
 
 The structure of the secret is as follows:
 
-```
+```yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -152,7 +167,7 @@ data:
 
 The secret can now be referenced in the Helm chart using the following values.yaml configuration:
 
-```
+```yaml
 ksoc:
   clusterName: "please add a name here"
   accessKeySecretNameOverride: "ksoc-access-key"
@@ -166,7 +181,7 @@ Finally, you can install ksoc-plugins using the following command:
 
 **NOTE:** It may take up to 2 minutes for the `helm install`command below to complete.
 
-```
+```bash
 helm install \
   ksoc ksoc/ksoc-plugins \
   --namespace ksoc \
@@ -178,17 +193,36 @@ helm install \
 
 Now we have installed the KSOC plugins, we need to validate that it is running successfully. This can be achieved using the command below:
 
-```
+```bash
 kubectl get pods -n ksoc
 ```
 
-You should expect to see the following pods in a state of Running:
+You should expect to see the following pods in a state of `Running`:
+
+```bash
+NAME                            READY   STATUS    RESTARTS   AGE
+ksoc-guard-86959f7544-96hbl     1/1     Running   0          1m
+ksoc-sbom-664bf566dc-bxm5c      1/1     Running   0          1m
+ksoc-sync-769cd7c6fc-cxczq      1/1     Running   0          1m
+ksoc-watch-7bf4d7b6b9-kqblh     1/1     Running   0          1m
 
 ```
-ksoc-guard-774d79f4b7-b8fhr   1/1 	Running   0      	1m
-ksoc-sbom-6db8f6fcb-f9n6p     1/1 	Running   0      	1m
-ksoc-sync-774b47cb47-gms9d    1/1 	Running   0      	1m
-ksoc-watch-8f5688cbb-pvcws    1/1 	Running   0      	1m
+
+If you have enabled the `ksoc-runtime` plugin you should also see the following pods in a state of Running:
+
+```bash
+NAME                            READY   STATUS    RESTARTS   AGE
+ksoc-guard-86959f7544-96hbl     1/1     Running   0          1m
+ksoc-runtime-6c854b998c-7jjzg   1/1     Running   0          1m
+ksoc-runtime-6c854b998c-p45g6   1/1     Running   0          1m
+ksoc-runtime-6c854b998c-pmgtf   1/1     Running   0          1m
+ksoc-runtime-ds-m44z5           2/2     Running   0          1m
+ksoc-runtime-ds-nb9cq           2/2     Running   0          1m
+ksoc-runtime-ds-snx8b           2/2     Running   0          1m
+ksoc-runtime-ds-wvh8n           2/2     Running   0          1m
+ksoc-sbom-664bf566dc-bxm5c      1/1     Running   0          1m
+ksoc-sync-769cd7c6fc-cxczq      1/1     Running   0          1m
+ksoc-watch-7bf4d7b6b9-kqblh     1/1     Running   0          1m
 ```
 
 If you don't see all the pods running within 2 minutes, please check the [Installation Troubleshooting](https://docs.ksoc.com/docs/installation-troubleshooting) page or contact KSOC support.
