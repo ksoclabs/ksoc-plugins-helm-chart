@@ -25,7 +25,7 @@ In this way, we can avoid the degradation of the API server, which would occur i
 
 ### ksoc-guard plugin
 `ksoc-guard` is the plugin responsible for executing `GuardPolicy` (in the form of Rego) against a specific set of Kubernetes resources during their admission to the cluster, either allowing the admission or denying it.
-The configuration for the blocking logic can be found in the `ksocGuard` section of the helm chart values file; see below. If admission is blocked, it can be seen in the KSOC application under the Events tab for the specific cluster.
+The configuration for the blocking logic can be found in the `ksocGuard` section of the helm chart values file; see below.
 
 ```yaml
 ksocGuard:
