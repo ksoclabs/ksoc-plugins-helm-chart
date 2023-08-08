@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.0.26
+version: 1.0.25
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -14,8 +14,9 @@ maintainers:
     email: engineering@ksoc.com
 annotations:
   artifacthub.io/category: security
+  # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
-    - kind: updated
+    - kind: changed
       description: documentation
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/links: |
