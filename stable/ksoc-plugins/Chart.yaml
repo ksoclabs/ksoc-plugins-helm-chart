@@ -27,5 +27,5 @@ annotations:
 dependencies:
   - name: falco
     repository: https://falcosecurity.github.io/charts
-    version: 3.3.0
+    version: 3.5.0
     condition: ksocRuntime.enabled
