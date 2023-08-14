@@ -20,7 +20,7 @@ ksocBootstrapper:
   image:
     # -- The image to use for the ksoc-bootstrapper deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-bootstrapper).
     repository: us.gcr.io/ksoc-public/ksoc-bootstrapper
-    tag: v0.0.13
+    tag: v1.0.0
   env: {}
   resources:
     limits:
@@ -38,7 +38,7 @@ ksocGuard:
   image:
     # -- The image to use for the ksoc-guard deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-guard).
     repository: us.gcr.io/ksoc-public/ksoc-guard
-    tag: v0.0.74
+    tag: v1.0.0
   config:
     # -- Whether to block on error.
     BLOCK_ON_ERROR: false
@@ -68,7 +68,7 @@ ksocRuntime:
   reporter:
     image:
       repository: us.gcr.io/ksoc-public/runtime-reporter
-      tag: v0.0.15
+      tag: v1.0.0
     env:
       LOG_LEVEL: info
     resources:
@@ -88,7 +88,7 @@ ksocSbom:
   image:
     # -- The image to use for the ksoc-sbom deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sbom).
     repository: us.gcr.io/ksoc-public/ksoc-sbom
-    tag: v0.0.48
+    tag: v1.0.0
   env: {}
   resources:
     requests:
@@ -108,7 +108,7 @@ ksocSync:
   image:
     # -- The image to use for the ksoc-sync deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sync).
     repository: us.gcr.io/ksoc-public/ksoc-sync
-    tag: v0.0.37
+    tag: v1.0.0
   env: {}
   resources:
     limits:
@@ -126,7 +126,7 @@ ksocWatch:
   image:
     # -- The image to use for the ksoc-watch deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-watch).
     repository: us.gcr.io/ksoc-public/ksoc-watch
-    tag: v0.0.56
+    tag: v1.0.0
   env:
     # -- Whether to trigger reconciliation at startup.
     RECONCILIATION_AT_START: false
