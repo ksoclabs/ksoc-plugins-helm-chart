@@ -126,12 +126,10 @@ ksocWatch:
   image:
     # -- The image to use for the ksoc-watch deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-watch).
     repository: us.gcr.io/ksoc-public/ksoc-watch
-    tag: v1.0.1
+    tag: v1.0.3
   env:
     # -- Whether to trigger reconciliation at startup.
     RECONCILIATION_AT_START: false
-    # -- How often should reconciliation be triggered.
-    RECONCILIATION_INTERVAL: 24h
   resources:
     limits:
       cpu: 250m
