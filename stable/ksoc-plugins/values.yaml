@@ -149,6 +149,8 @@ falco:
   driver:
     enabled: true
     kind: modern-bpf
+    modern_bpf:
+      leastPrivileged: true
   falco:
     http_output:
       enabled: true
