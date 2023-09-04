@@ -13,7 +13,7 @@ jobs:
     container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.24.9
     steps:
       - name: clone repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: repo add
         run: helm repo add falcosecurity https://falcosecurity.github.io/charts
       - name: repo update
