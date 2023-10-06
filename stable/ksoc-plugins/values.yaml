@@ -143,6 +143,8 @@ ksocWatch:
 
 # Values for falco subchart (https://github.com/falcosecurity/charts/tree/falco-3.3.0/falco)
 falco:
+  image:
+    pullPolicy: Always
   fullnameOverride: "ksoc-runtime-ds"
   driver:
     enabled: true
