@@ -84,6 +84,71 @@ ksocRuntime:
     replicas: 3
     nodeSelector: {}
     tolerations: []
+  detectReachableVulnerabilities: false
+  runtimeProfileRules: |
+    - list: ksoc_k8s_namespaces_excluded_from_runtime_profiles
+      items:
+        - kube-system
+        - cert-manager
+        - calico-system
+        - calico-apiserver
+        - ksoc
+    - macro: ksoc_container_entrypoint
+      condition: >
+        ((not proc.pname exists or proc.pname in (runc:[0:PARENT], runc:[1:CHILD], runc, pause, crio))
+        or proc.name in (runc:[0:PARENT], runc:[1:CHILD], runc, pause, crio))
+    - macro: ksoc_is_shared_library
+      condition: >
+        (fd.name glob '*/lib/*.so*')
+    - rule: KSOC file access profile updated
+      desc: Detect when file access profile is updated, e.g. when shared libraries are loaded by executable binaries
+      source: syscall
+      condition: >
+        (open_read
+        and container
+        and not ksoc_container_entrypoint
+        and ksoc_is_shared_library
+        and not k8s.ns.name in (ksoc_k8s_namespaces_excluded_from_runtime_profiles))
+      output: |-
+        File access profile updated
+        (proc_name=%proc.name
+        container_id=%container.id
+        container_name=%container.name
+        container_image_repository=%container.image.repository
+        container_image_tag=%container.image.tag
+        container_image_digest=%container.image.digest
+        k8s_pod_name=%k8s.pod.name
+        k8s_ns_name=%k8s.ns.name
+        fd_name=%fd.name)
+      priority: NOTICE
+      tags:
+        - ksoc_file_access_profile
+        - file
+      enabled: true
+    - rule: KSOC executable profile updated
+      desc: Detect when executable profile is updated, e.g. when programs are executed in containers
+      source: syscall
+      condition: >
+        (evt.type in (execve)
+        and container
+        and not ksoc_container_entrypoint
+        and not k8s.ns.name in (ksoc_k8s_namespaces_excluded_from_runtime_profiles))
+      output: |-
+        Executable profile updated
+        (proc_name=%proc.name
+        container_id=%container.id
+        container_name=%container.name
+        container_image_repository=%container.image.repository
+        container_image_tag=%container.image.tag
+        container_image_digest=%container.image.digest
+        k8s_pod_name=%k8s.pod.name
+        k8s_ns_name=%k8s.ns.name
+        proc_exepath=%proc.exepath)
+      priority: NOTICE
+      tags:
+        - ksoc_executable_profile
+        - process
+      enabled: true
 
 ksocSbom:
   enabled: true
@@ -153,6 +218,9 @@ falco:
     kind: modern-bpf
     modern_bpf:
       leastPrivileged: true
+  extra:
+    args:
+      - "--disable-cri-async"
   falco:
     http_output:
       enabled: true
@@ -165,3 +233,12 @@ falco:
       enabled: false
     syslog_output:
       enabled: false
+  mounts:
+    volumeMounts:
+      - name: ksoc-runtime-profile-rules-config
+        mountPath: /etc/falco/rules.d/
+    volumes:
+      - name: ksoc-runtime-profile-rules-config
+        configMap:
+          name: ksoc-runtime-profile-configuration
+          optional: true
