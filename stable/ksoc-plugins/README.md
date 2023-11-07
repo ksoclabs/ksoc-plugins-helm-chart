@@ -234,7 +234,7 @@ The plugin image versions included in the Helm chart are collectively tested as 
 
 To upgrade the version of the [KSOC](https://ksoc.com) plugin's helm chart on your cluster, please follow the steps below.
 
-1. **Fetch the Latest Chart Version:** Acquire the most recent `ksoc-plugins` chart by running the following commands in your terminal
+1\. **Fetch the Latest Chart Version:** Acquire the most recent `ksoc-plugins` chart by running the following commands in your terminal
 
 ```bash
 helm repo add ksoc https://charts.ksoc.com/stable
@@ -242,7 +242,7 @@ helm repo update ksoc
 helm search repo ksoc
 ```
 
-2. **Perform the Upgrade:** Execute the upgrade by utilizing the following Helm command, making sure to retain your current configuration (values.yaml)
+2\. **Perform the Upgrade:** Execute the upgrade by utilizing the following Helm command, making sure to retain your current configuration (values.yaml)
 
 ```bash
 helm upgrade --install \
