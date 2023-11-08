@@ -224,6 +224,43 @@ ksoc-runtime-ds-wvh8n           2/2     Running   0          1m
 
 If you don't see all the pods running within 2 minutes, please check the [Installation Troubleshooting](https://docs.ksoc.com/docs/installation-troubleshooting) page or contact KSOC support.
 
+## Upgrading the Chart
+
+Typically, we advise maintaining the most current versions of plugins. However, our [KSOC](https://ksoc.com) plugins are designed to support upgrades between any two versions, with certain exceptions as outlined in our Helm chart changelog which you can access [here](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=changelog).
+
+The plugin image versions included in the Helm chart are collectively tested as a unified set. Individual plugin image versions are not tested in isolation for upgrades. It is strongly advised to upgrade the entire Helm chart as a complete package to ensure compatibility and stability.
+
+### Workflow
+
+To upgrade the version of the [KSOC](https://ksoc.com) plugin's helm chart on your cluster, please follow the steps below.
+
+1\. **Fetch the Latest Chart Version:** Acquire the most recent `ksoc-plugins` chart by running the following commands in your terminal
+
+```bash
+helm repo add ksoc https://charts.ksoc.com/stable
+helm repo update ksoc
+helm search repo ksoc
+```
+
+2\. **Perform the Upgrade:** Execute the upgrade by utilizing the following Helm command, making sure to retain your current configuration (values.yaml)
+
+```bash
+helm upgrade --install \
+ksoc ksoc/ksoc-plugins \
+--namespace ksoc \
+--reuse-values
+```
+
+3\. **Confirm the Installation:** Verify that the upgrade was successful and the correct version is now deployed
+
+```
+helm list -n ksoc
+```
+
+### Helm chart changelog and updates
+
+For full disclosure and to ensure you are kept up-to-date, we document every change, improvement, and correction in our detailed changelog for each version release. We encourage you to consult the changelog regularly to stay informed about the latest developments and understand the specifics of each update. Access the changelog for the [KSOC](https://ksoc.com) plugins Helm chart at this[  ](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=changelog)[link](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=changelog).
+
 ## Uninstalling the Chart
 
 To uninstall the `ksoc-plugins` deployment:
