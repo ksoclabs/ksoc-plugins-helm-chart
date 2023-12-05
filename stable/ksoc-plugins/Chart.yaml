@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.0.36
+version: 1.0.37
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: changed
-      description: Updated the ksoc-sbom image to v1.0.2 to fix a medium vulnerability(GHSA-jq35-85cj-fj4p). See https://github.com/moby/moby/security/advisories/GHSA-jq35-85cj-fj4p
+      description: Observe starting containers for 60 seconds to detect reachable vulnerabilities.
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/links: |
     - name: source

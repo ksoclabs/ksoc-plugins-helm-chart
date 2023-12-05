@@ -93,6 +93,8 @@ ksocRuntime:
         - calico-system
         - calico-apiserver
         - ksoc
+    - macro: ksoc_container_is_new
+      condition: (container.duration <= 60000000000)
     - macro: ksoc_container_entrypoint
       condition: >
         ((not proc.pname exists or proc.pname in (runc:[0:PARENT], runc:[1:CHILD], runc, pause, crio))
@@ -106,6 +108,7 @@ ksocRuntime:
       condition: >
         (open_read
         and container
+        and ksoc_container_is_new
         and not ksoc_container_entrypoint
         and ksoc_is_shared_library
         and not k8s.ns.name in (ksoc_k8s_namespaces_excluded_from_runtime_profiles))
@@ -129,8 +132,9 @@ ksocRuntime:
       desc: Detect when executable profile is updated, e.g. when programs are executed in containers
       source: syscall
       condition: >
-        (evt.type in (execve)
+        (spawned_process
         and container
+        and ksoc_container_is_new
         and not ksoc_container_entrypoint
         and not k8s.ns.name in (ksoc_k8s_namespaces_excluded_from_runtime_profiles))
       output: |-
