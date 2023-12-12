@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.0.37
+version: 1.0.38
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,8 +17,8 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: changed
-      description: Observe starting containers for 60 seconds to detect reachable vulnerabilities.
-  artifacthub.io/containsSecurityUpdates: "true"
+      description: ksocSbom.resources.limits.cpu should be a string
+  artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
       url: https://github.com/ksoclabs/ksoc-plugins-helm-chart
