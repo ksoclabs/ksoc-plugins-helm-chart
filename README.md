@@ -31,3 +31,7 @@ For a step-by-step guide on how to add the KSOC helm repositories locally please
 This chart repository supports the latest and previous minor versions of Kubernetes.
 
 For example, if the latest minor release of Kubernetes is 1.22 then 1.21 and 1.22 are supported.
+
+## Contributing Guidelines
+
+Contributions are welcome via GitHub pull requests. Please see [here](CONTRIBUTING.md) for more information.
