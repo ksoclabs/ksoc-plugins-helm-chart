@@ -1,0 +1,212 @@
+{{- if .Values.ksocRuntime.enabled  }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Values.falco.fullnameOverride }}
+  namespace: {{ .Release.Namespace  }}
+  labels:
+    app.kubernetes.io/instance: ksoc
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: falco
+    app.kubernetes.io/version: 0.36.2
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: ksoc
+      app.kubernetes.io/name: falco
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: ksoc
+        app.kubernetes.io/name: falco
+      name: ksoc-runtime-ds
+    spec:
+      containers:
+      - args:
+        - /usr/bin/falco
+        - --modern-bpf
+        - --cri
+        - /run/containerd/containerd.sock
+        - --cri
+        - /run/crio/crio.sock
+        - -K
+        - /var/run/secrets/kubernetes.io/serviceaccount/token
+        - -k
+        - https://$(KUBERNETES_SERVICE_HOST)
+        - --k8s-node
+        - $(FALCO_K8S_NODE_NAME)
+        - -pk
+        - --disable-cri-async
+        env:
+        - name: FALCO_K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        image: falcosecurity/falco-no-driver:0.36.2
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8765
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: falco
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8765
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 512Mi
+        securityContext:
+          capabilities:
+            add:
+            - BPF
+            - SYS_RESOURCE
+            - PERFMON
+            - SYS_PTRACE
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/falco
+          name: rulesfiles-install-dir
+        - mountPath: /root/.falco
+          name: root-falco-fs
+        - mountPath: /host/proc
+          name: proc-fs
+        - mountPath: /host/var/run/docker.sock
+          name: docker-socket
+        - mountPath: /host/run/containerd/containerd.sock
+          name: containerd-socket
+        - mountPath: /host/run/crio/crio.sock
+          name: crio-socket
+        - mountPath: /etc/falco/falco.yaml
+          name: falco-yaml
+          subPath: falco.yaml
+        - mountPath: /etc/falco/rules.d/
+          name: ksoc-runtime-profile-rules-config
+      - args:
+        - artifact
+        - follow
+        - --verbose
+        image: falcosecurity/falcoctl:0.6.2
+        imagePullPolicy: IfNotPresent
+        name: falcoctl-artifact-follow
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /plugins
+          name: plugins-install-dir
+        - mountPath: /rulesfiles
+          name: rulesfiles-install-dir
+        - mountPath: /etc/falcoctl
+          name: falcoctl-config-volume
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - args:
+        - artifact
+        - install
+        - --verbose
+        image: falcosecurity/falcoctl:0.6.2
+        imagePullPolicy: IfNotPresent
+        name: falcoctl-artifact-install
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /plugins
+          name: plugins-install-dir
+        - mountPath: /rulesfiles
+          name: rulesfiles-install-dir
+        - mountPath: /etc/falcoctl
+          name: falcoctl-config-volume
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: {{ .Values.falco.fullnameOverride }}
+      serviceAccountName: {{ .Values.falco.fullnameOverride }}
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+      volumes:
+      - emptyDir: {}
+        name: plugins-install-dir
+      - emptyDir: {}
+        name: rulesfiles-install-dir
+      - emptyDir: {}
+        name: root-falco-fs
+      - hostPath:
+          path: /boot
+          type: ""
+        name: boot-fs
+      - hostPath:
+          path: /lib/modules
+          type: ""
+        name: lib-modules
+      - hostPath:
+          path: /usr
+          type: ""
+        name: usr-fs
+      - hostPath:
+          path: /etc
+          type: ""
+        name: etc-fs
+      - hostPath:
+          path: /var/run/docker.sock
+          type: ""
+        name: docker-socket
+      - hostPath:
+          path: /run/containerd/containerd.sock
+          type: ""
+        name: containerd-socket
+      - hostPath:
+          path: /run/crio/crio.sock
+          type: ""
+        name: crio-socket
+      - hostPath:
+          path: /proc
+          type: ""
+        name: proc-fs
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: falcoctl.yaml
+            path: falcoctl.yaml
+          name: ksoc-runtime-ds-falcoctl
+        name: falcoctl-config-volume
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: falco.yaml
+            path: falco.yaml
+          name: ksoc-runtime-ds
+        name: falco-yaml
+      - configMap:
+          defaultMode: 420
+          name: ksoc-runtime-profile-configuration
+          optional: true
+        name: ksoc-runtime-profile-rules-config
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+{{- end }}
