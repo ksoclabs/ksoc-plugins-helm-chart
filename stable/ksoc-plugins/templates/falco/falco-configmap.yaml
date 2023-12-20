@@ -6,10 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace  }}
   labels:
     app.kubernetes.io/instance: ksoc
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: falco
-    app.kubernetes.io/version: 0.36.2
-    helm.sh/chart: falco-3.8.4
 data:
   falco.yaml: |-
     base_syscalls:
