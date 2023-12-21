@@ -1,0 +1,28 @@
+{{- if .Values.ksocRuntime.enabled  }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.falco.fullnameOverride }}-falcoctl
+  namespace: {{ .Release.Namespace  }}
+data:
+  falcoctl.yaml: |-
+    artifact:
+      allowedTypes:
+      - rulesfile
+      follow:
+        every: 6h
+        falcoversions: http://localhost:8765/versions
+        pluginsDir: /plugins
+        refs:
+        - falco-rules:2
+        rulesfilesDir: /rulesfiles
+      install:
+        pluginsDir: /plugins
+        refs:
+        - falco-rules:2
+        resolveDeps: false
+        rulesfilesDir: /rulesfiles
+    indexes:
+    - name: falcosecurity
+      url: https://falcosecurity.github.io/falcoctl/index.yaml
+{{- end }}

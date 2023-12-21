@@ -212,37 +212,5 @@ ksocWatch:
   nodeSelector: {}
   tolerations: []
 
-# Values for falco subchart (https://github.com/falcosecurity/charts/tree/falco-3.3.0/falco)
 falco:
-  image:
-    pullPolicy: Always
-  fullnameOverride: "ksoc-runtime-ds"
-  driver:
-    enabled: true
-    kind: modern-bpf
-    modern_bpf:
-      leastPrivileged: true
-  extra:
-    args:
-      - "--disable-cri-async"
-  falco:
-    http_output:
-      enabled: true
-      url: http://ksoc-runtime.ksoc.svc.cluster.local/falco-alert
-      user_agent: falcosecurity/falco
-      insecure: true
-    json_output: true
-    priority: notice
-    stdout_output:
-      enabled: false
-    syslog_output:
-      enabled: false
-  mounts:
-    volumeMounts:
-      - name: ksoc-runtime-profile-rules-config
-        mountPath: /etc/falco/rules.d/
-    volumes:
-      - name: ksoc-runtime-profile-rules-config
-        configMap:
-          name: ksoc-runtime-profile-configuration
-          optional: true
+  fullnameOverride: ksoc-runtime-ds

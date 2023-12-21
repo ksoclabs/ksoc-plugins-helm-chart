@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.0.38
+version: 1.0.39
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -24,8 +24,3 @@ annotations:
       url: https://github.com/ksoclabs/ksoc-plugins-helm-chart
     - name: support
       url: https://github.com/ksoclabs/ksoc-plugins-helm-chart/issues
-dependencies:
-  - name: falco
-    repository: https://falcosecurity.github.io/charts
-    version: 3.8.4
-    condition: ksocRuntime.enabled
