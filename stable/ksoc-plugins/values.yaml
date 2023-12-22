@@ -179,7 +179,7 @@ ksocSync:
   image:
     # -- The image to use for the ksoc-sync deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sync).
     repository: us.gcr.io/ksoc-public/ksoc-sync
-    tag: v1.0.1
+    tag: v1.1.1
   env: {}
   resources:
     limits:
