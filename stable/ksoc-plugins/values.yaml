@@ -70,7 +70,7 @@ ksocRuntime:
   reporter:
     image:
       repository: us.gcr.io/ksoc-public/runtime-reporter
-      tag: v1.0.0
+      tag: v1.1.1
     env:
       LOG_LEVEL: info
     resources:
