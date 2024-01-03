@@ -20,7 +20,7 @@ ksocBootstrapper:
   image:
     # -- The image to use for the ksoc-bootstrapper deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-bootstrapper).
     repository: us.gcr.io/ksoc-public/ksoc-bootstrapper
-    tag: v1.1.1
+    tag: v1.1.2
   env: {}
   resources:
     limits:
