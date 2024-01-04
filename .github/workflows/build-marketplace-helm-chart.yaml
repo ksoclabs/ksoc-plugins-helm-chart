@@ -43,4 +43,4 @@ jobs:
       env:
         REGISTRY: ${{ vars.AWS_MARKETPLACE_REGISTRY }}
         HELM_EXPERIMENTAL_OCI: 1
-      run: helm push ksoc-plugins-$(git describe --tags --always).tgz oci://$REGISTRY/
+      run: helm push $(ls | grep '.tgz') oci://$REGISTRY/
