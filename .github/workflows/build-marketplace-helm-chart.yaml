@@ -1,0 +1,46 @@
+name: build-marketplace-helm-chart
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  build-marketplace-helm-chart:
+    name: Build AWS Marketplace Helm Chart
+    runs-on: ubuntu-latest
+    if: startsWith(github.head_ref, 'renovate') == false
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Replace GCR Images with ECR Images
+      run: ./scripts/replace_repositories.sh
+
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: 'v3.13.2'
+
+    - name: Assume Marketplace Integration Role
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ vars.AWS_MARKETPLACE_ROLE }}
+        role-session-name: github-action-build-images
+        aws-access-key-id: ${{ secrets.AWS_GITHUB_RUNNER_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_GITHUB_RUNNER_SECRET_KEY }}
+        aws-region: ${{ vars.AWS_MARKETPLACE_REGION }}
+
+    - name: Login to ECR with Helm
+      env:
+        REGISTRY: ${{ vars.AWS_MARKETPLACE_REGISTRY }}
+      run: aws ecr get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin $REGISTRY
+
+    - name: Package Helm Chart
+      run: helm package stable/ksoc-plugins
+
+    - name: Push helm chart to Amazon ECR
+      env:
+        REGISTRY: ${{ vars.AWS_MARKETPLACE_REGISTRY }}
+        HELM_EXPERIMENTAL_OCI: 1
+      run: helm push ksoc-plugins-$(git describe --tags --always).tgz oci://$REGISTRY/
