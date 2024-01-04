@@ -38,7 +38,7 @@ ksocGuard:
   image:
     # -- The image to use for the ksoc-guard deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-guard).
     repository: us.gcr.io/ksoc-public/ksoc-guard
-    tag: v1.1.2
+    tag: v1.1.3
   config:
     # -- Whether to block on error.
     BLOCK_ON_ERROR: false
