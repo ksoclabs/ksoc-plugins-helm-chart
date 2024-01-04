@@ -1,7 +1,7 @@
 #!/bin/bash
 
-FILE="../stable/ksoc-plugins/values.yaml"
-FALCO_DS_FILE="../stable/ksoc-plugins/templates/falco/falco-ds.yaml"
+FILE="./stable/ksoc-plugins/values.yaml"
+FALCO_DS_FILE="./stable/ksoc-plugins/templates/falco/falco-ds.yaml"
 
 GCR_REGISTRY_NAME="us.gcr.io/ksoc-public"
 FALCO_SEARCH="falcosecurity"
