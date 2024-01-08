@@ -44,3 +44,6 @@ jobs:
         REGISTRY: ${{ vars.AWS_MARKETPLACE_REGISTRY }}
         HELM_EXPERIMENTAL_OCI: 1
       run: helm push $(ls | grep '.tgz') oci://$REGISTRY/
+
+    - name: Create AWS Marketplace change-set
+      run: ./scripts/create_changeset.sh
