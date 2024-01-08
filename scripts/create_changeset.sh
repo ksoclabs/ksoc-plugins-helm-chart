@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 VALUES_FILE_PATH="./stable/ksoc-plugins/values.yaml"
 CHART_FILE_PATH="./stable/ksoc-plugins/Chart.yaml"
@@ -29,7 +30,7 @@ for image in $detected_images; do
     fi
 done
 
-# Appendthe images found in values.yaml with our Falco images
+# Append the images found in values.yaml with our Falco images
 CONTAINER_IMAGES+="$images"
 
 echo "Creating Change Set"
