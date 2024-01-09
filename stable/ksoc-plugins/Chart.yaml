@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.1.4
+version: 1.1.5
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: added
-      description: Pushes chart to ArtifactHub and AWS Marketplace ECR
+      description: Adds functionality to apply a change-set to update our AWS Marketplace Offering when changes are made to our helm chart
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
