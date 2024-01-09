@@ -11,9 +11,10 @@ RELEASE_NOTES_URL="https://github.com/ksoclabs/ksoc-plugins-helm-chart"
 
 AWS_MARKETPLACE_PRODUCT_ID="prod-m7tlrvfq6yjzu"
 
+KSOC_RUNTIME_IMAGE=$(yq e ".ksocRuntime.reporter.image.repository" $VALUES_FILE_PATH):$(yq e ".ksocRuntime.reporter.image.tag" $VALUES_FILE_PATH)
 
-CONTAINER_IMAGES="709825985650.dkr.ecr.us-east-1.amazonaws.com/ksoc-labs/falco-no-driver:0.36.2
-709825985650.dkr.ecr.us-east-1.amazonaws.com/ksoc-labs/falcoctl:0.6.2\n"
+CONTAINER_IMAGES="709825985650.dkr.ecr.us-east-1.amazonaws.com/ksoc-labs/falco-no-driver:0.36.2 709825985650.dkr.ecr.us-east-1.amazonaws.com/ksoc-labs/falcoctl:0.6.2 $KSOC_RUNTIME_IMAGE "
+
 
 PRODUCT_TITLE=$(aws marketplace-catalog describe-entity --entity-id "${AWS_MARKETPLACE_PRODUCT_ID}" --catalog AWSMarketplace --region us-east-1 | jq -r '.Details | fromjson | .Description.ProductTitle')
 
@@ -26,11 +27,11 @@ for image in $detected_images; do
 
     # Check if both repository and tag are not null or empty
     if [ -n "$repo" ] && [ "$repo" != "null" ] && [ -n "$tag" ] && [ "$tag" != "null" ]; then
-        images+="${repo}:${tag}\n"
+        images+="${repo}:${tag} "
     fi
 done
 
-# Append the images found in values.yaml with our Falco images
+# Append the images found in values.yaml with our Falco images and runtime-reporter image
 CONTAINER_IMAGES+="$images"
 
 echo "Creating Change Set"
@@ -55,7 +56,7 @@ jq --null-input \
                "CompatibleServices": [
                  "EKS"
                ],
-               "ContainerImages": ($CONTAINER_IMAGES | split( "\n" ) | map(select(. != "" ))),
+               "ContainerImages": ($CONTAINER_IMAGES | split( " " ) | map(select(. != "" ))),
                "Description": "The KSOC plugins are deployed in your EKS cluster with our Helm chart. The chart is open source and can be viewed here",
                "HelmChartUri": "709825985650.dkr.ecr.us-east-1.amazonaws.com/\($HELM_CHART_REPO):\($HELM_CHART_VERSION)",
                "QuickLaunchEnabled": false,
