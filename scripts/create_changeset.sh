@@ -60,7 +60,7 @@ jq --null-input \
                "Description": "The KSOC plugins are deployed in your EKS cluster with our Helm chart. The chart is open source and can be viewed here",
                "HelmChartUri": "709825985650.dkr.ecr.us-east-1.amazonaws.com/\($HELM_CHART_REPO):\($HELM_CHART_VERSION)",
                "QuickLaunchEnabled": false,
-               "UsageInstructions": "To install KSOC to your Kubernetes cluster, install cert-manager first. Once cert-manager is installed, go to the KSOC Platform and grab your api credentials. These will be used in the base64AccessKeyId and base64SecretKey variables. The variable clusterName will determine the name of the Kubernetes cluster within the KSOC Platform.",
+               "UsageInstructions": "To install KSOC through the AWS Marketplace, refer to our documentation on [Installing KSOC In The AWS Marketplace](https://docs.ksoc.com/docs/installing-ksoc-in-the-aws-marketplace)",
                "ReleaseName": "ksoc-plugins",
                "Namespace": "ksoc",
                "OverrideParameters": [
