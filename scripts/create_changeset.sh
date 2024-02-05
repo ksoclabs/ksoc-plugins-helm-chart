@@ -73,19 +73,11 @@ jq --null-input \
                     }
                   },
                   {
-                    "Key": "ksoc.base64AccessKeyId",
+                    "Key": "ksoc.apiKey",
                     "Metadata": {
                       "Obfuscate": true,
-                      "Label": "Base64 Access Key",
-                      "Description": "The base64 encoded acess key given through the UI or the API of KSOC"
-                    }
-                  },
-                  {
-                    "Key": "ksoc.base64SecretKey",
-                    "Metadata": {
-                      "Obfuscate": true,
-                      "Description": "The base64 encoded secrt key given through the UI or the API of KSOC",
-                      "Label": "Base64 Secret Key"
+                      "Label": "KSOC API Key",
+                      "Description": "The combined api keys given through the UI or the API of KSOC"
                     }
                   }
                 ],
