@@ -1,4 +1,6 @@
 ksoc:
+  # -- The combined API key to authenticate with KSOC
+  apiKey: ""
   # -- The base URL for the KSOC API.
   apiUrl: https://api.ksoc.com
   # -- The ID of the Access Key used in this cluster (base64).
