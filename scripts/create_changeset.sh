@@ -77,7 +77,7 @@ jq --null-input \
                     "Metadata": {
                       "Obfuscate": true,
                       "Label": "KSOC API Key",
-                      "Description": "The combined api keys given through the UI or the API of KSOC"
+                      "Description": "The combined API key given through the UI or the API of KSOC"
                     }
                   }
                 ],
