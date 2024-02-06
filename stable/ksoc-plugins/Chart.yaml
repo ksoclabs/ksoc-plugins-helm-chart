@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: added
-      description: Added a combined api key to install the Helm Chart
+      description: Added a combined API key to install the Helm Chart
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
