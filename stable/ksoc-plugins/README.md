@@ -134,11 +134,12 @@ ksoc/ksoc-plugins        	1.1.8        	           	A Helm chart to run the KSOC
 
 ### 4. Create cluster-specific values file
 
-Next, we need to create a values file called `values.yaml` with the following content that includes the [apiKey](https://docs.ksoc.com/docs/installation#add-cluster):
+Next, we need to create a values file called `values.yaml` with the following content that includes the [base64AccessKeyId and base64SecretKey](https://docs.ksoc.com/docs/installation#add-cluster):
 
 ```yaml
 ksoc:
-  apiKey: "YOURSECRETKEY"
+  base64AccessKeyId: "YOURACCESSKEYID"
+  base64SecretKey: "YOURSECRETKEY"
   clusterName: "please add a name here"
 ```
 
