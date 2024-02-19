@@ -74,6 +74,12 @@ spec:
             - name: KSOC_NAMESPACE
               value: {{ .Release.Namespace }}
 {{ include "ksoc-plugins.access-key-env-secret" . | indent 12 }}
+            {{- if .Values.ksocWatch.ingestCustomResources }}
+            - name: INGEST_CUSTOM_RESOURCES
+              value: "true"
+            - name: CUSTOM_RESOURCE_RULES_PATH
+              value: /var/run/custom-resource-rules/rules.yaml
+            {{- end }}
             {{- range $key, $value := .Values.ksocWatch.env }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
@@ -82,6 +88,11 @@ spec:
           - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
             name: api-token
             readOnly: true
+          {{- if .Values.ksocWatch.ingestCustomResources }}
+          - mountPath: /var/run/custom-resource-rules
+            name: custom-resource-rules
+            readOnly: true
+          {{- end }}
           resources:
 {{ toYaml .Values.ksocWatch.resources | indent 12 }}
       {{- with .Values.ksocWatch.nodeSelector }}
@@ -96,4 +107,9 @@ spec:
       - name: api-token
         secret:
           secretName: ksoc-watch-api-token-secret
+      {{- if .Values.ksocWatch.ingestCustomResources }}
+      - name: custom-resource-rules
+        configMap:
+          name: ksoc-watch-custom-resource-rules
+      {{- end }}
 {{- end -}}

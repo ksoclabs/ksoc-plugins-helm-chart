@@ -20,6 +20,7 @@ These plugins perform several different tasks, which will be explained below.
 The first action of the service is to upload the entire inventory of the cluster. Once this inventory is up-to-date, the plugin tracks events only generated when we detect a change in the object (or resource) state.
 In this way, we can avoid the degradation of the API server, which would occur if we were to poll for resources. Automatic reconciliation is run every 24h by default in case any delete events are lost and prevent KSOC from keeping track of stale objects.
 
+
 ### ksoc-sbom plugin
 `ksoc-sbom` is the plugin responsible for calculating [SBOMs](https://en.wikipedia.org/wiki/Software_supply_chain) directly on the customer cluster. The plugin is run as an admission/mutating webhook, adding an image digest next to its tag if it's missing. This mutation is performed so [TOCTOU](https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use) does not impact the user. The image deployed is the image that KSOC scanned. It sees all new workloads and calculates SBOMs for them. It continuously checks the KSOC API to save time and resources to see if the SBOM is already known for any particular image digest. If not, it is being calculated and uploaded to KSOC for further processing.
 
@@ -223,6 +224,54 @@ ksoc-runtime-ds-wvh8n           2/2     Running   0          1m
 ```
 
 If you don't see all the pods running within 2 minutes, please check the [Installation Troubleshooting](https://docs.ksoc.com/docs/installation-troubleshooting) page or contact KSOC support.
+
+## Custom Resources support
+`ksoc-watch` plugin optionally supports ingestion of _Custom Resources_ to the KSOC platform. To use it
+set `ksocWatch.ingestCustomResources` to `true` and configure `customResourceRules` in `values.yaml`.
+
+For example, in order to ingest `your.com/ResourceA`, `your.com/ResourceB` and `your.com/ResourceC` `values.yaml` should include:
+```yaml
+ksocWatch:
+  ingestCustomResources: true
+  customResourceRules:
+    allowlist:
+    - apiGroups:
+      - "your.com"
+      resources:
+      - "ResourceA"
+      - "ResourceB"
+      - "ResourceC"
+```
+
+Alternatively, you can ingest all _Custom Resources_ matching `your.com apiGroup` with a wildcard `*`:
+```yaml
+ksocWatch:
+  ingestCustomResources: true
+  customResourceRules:
+    allowlist:
+    - apiGroups:
+      - "your.com"
+      resources:
+      - "*"
+```
+
+If you want to ingest `ResourceA` and `ResourceB` but exclude `ResourceC`, you should use `denylist`:
+```yaml
+ksocWatch:
+  ingestCustomResources: true
+  customResourceRules:
+    allowlist:
+    - apiGroups:
+      - "your.com"
+      resources:
+      - "*"
+
+    denylist:
+    - apiGroups:
+      - "your.com"
+      resources:
+      - "ResourceC"
+```
 
 ## Upgrading the Chart
 

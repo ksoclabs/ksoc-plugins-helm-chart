@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.1.10
+version: 1.2.0
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -16,8 +16,8 @@ annotations:
   artifacthub.io/category: security
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
-    - kind: Removed
-      description: Removed comments in values yaml file to reduce confusion when pushing to the AWS Marketplace
+    - kind: Added
+      description: Added optional support for Custom Resource ingestion in `ksoc-watch`.
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source

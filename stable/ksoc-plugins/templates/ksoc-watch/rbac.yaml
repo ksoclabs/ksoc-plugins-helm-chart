@@ -81,6 +81,13 @@ rules:
     resources: [ "ingresses", "networkpolicies" ]
     verbs: [ "get", "list", "watch" ]
 
+  {{- if .Values.ksocWatch.ingestCustomResources }}
+  {{ range .Values.ksocWatch.customResourceRules.allowlist }}
+  - apiGroups: {{ .apiGroups | toJson }}
+    resources: {{ .resources | toJson }}
+    verbs: [ "get", "list", "watch" ]
+  {{ end }}
+  {{- end }}
 ---
 
 apiVersion: rbac.authorization.k8s.io/v1
