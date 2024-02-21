@@ -199,7 +199,7 @@ ksocWatch:
   image:
     # -- The image to use for the ksoc-watch deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-watch).
     repository: us.gcr.io/ksoc-public/ksoc-watch
-    tag: v1.1.3
+    tag: v1.1.12
   env:
     # -- Whether to trigger reconciliation at startup.
     RECONCILIATION_AT_START: false
@@ -213,6 +213,19 @@ ksocWatch:
   podAnnotations: {}
   nodeSelector: {}
   tolerations: []
+
+  # -- If set will allow ingesting Custom Resources specified in `customResourceRules`
+  ingestCustomResources: false
+  # -- Rules for Custom Resource ingestion containing allow- and denylists of rules specifying `apiGroups` and `resources`.
+  # E.g. `allowlist: apiGroups: ["custom.com"], resources: ["someResource", "otherResoure"]`
+  # Wildcards (`*`) can be used to match all.
+  # `customResourceRules.denylist` sets resources that should not be ingested. It has a priority over `customResourceRules.allowlist` to
+  #  deny resources allowed using a wildcard (`*`) match.
+  #  E.g. you can use `allowlist: apiGroups: ["custom.com"], resources: ["*"], denylist: apiGroups: ["custom.com"], resources: "excluded"`
+  # to ingest all resources within `custom.com` group but `excluded`.
+  customResourceRules:
+    allowlist: []
+    denylist: []
 
 falco:
   fullnameOverride: ksoc-runtime-ds

@@ -1,0 +1,14 @@
+{{- if and .Values.ksocWatch.enabled .Values.ksocWatch.ingestCustomResources -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ksoc-watch-custom-resource-rules
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-watch
+    app_version: {{ .Values.ksocWatch.image.tag | quote }}
+    maintained_by: ksoc
+data:
+  rules.yaml: |
+  {{- .Values.ksocWatch.customResourceRules | toYaml | nindent 4 }}
+{{- end -}}

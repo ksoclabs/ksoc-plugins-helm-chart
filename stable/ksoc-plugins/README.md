@@ -224,6 +224,54 @@ ksoc-runtime-ds-wvh8n           2/2     Running   0          1m
 
 If you don't see all the pods running within 2 minutes, please check the [Installation Troubleshooting](https://docs.ksoc.com/docs/installation-troubleshooting) page or contact KSOC support.
 
+## Custom Resources support
+`ksoc-watch` plugin optionally supports ingestion of _Custom Resources_ to the KSOC platform. To use it
+set `ksocWatch.ingestCustomResources` to `true` and configure `customResourceRules` in `values.yaml`.
+
+For example, in order to ingest `your.com/ResourceA`, `your.com/ResourceB` and `your.com/ResourceC` `values.yaml` should include:
+```yaml
+ksocWatch:
+  ingestCustomResources: true
+  customResourceRules:
+    allowlist:
+    - apiGroups:
+      - "your.com"
+      resources:
+      - "ResourceA"
+      - "ResourceB"
+      - "ResourceC"
+```
+
+Alternatively, you can ingest all _Custom Resources_ matching `your.com apiGroup` with a wildcard `*`:
+```yaml
+ksocWatch:
+  ingestCustomResources: true
+  customResourceRules:
+    allowlist:
+    - apiGroups:
+      - "your.com"
+      resources:
+      - "*"
+```
+
+If you want to ingest `ResourceA` and `ResourceB` but exclude `ResourceC`, you should use `denylist`:
+```yaml
+ksocWatch:
+  ingestCustomResources: true
+  customResourceRules:
+    allowlist:
+    - apiGroups:
+      - "your.com"
+      resources:
+      - "*"
+
+    denylist:
+    - apiGroups:
+      - "your.com"
+      resources:
+      - "ResourceC"
+```
+
 ## Upgrading the Chart
 
 Typically, we advise maintaining the most current versions of plugins. However, our [KSOC](https://ksoc.com) plugins are designed to support upgrades between any two versions, with certain exceptions as outlined in our Helm chart changelog which you can access [here](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=changelog).
