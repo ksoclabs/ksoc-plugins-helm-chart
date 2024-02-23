@@ -129,7 +129,7 @@ Example output (chart version may differ):
 ```bash
 helm search repo ksoc
 NAME                     	CHART VERSION	APP VERSION	DESCRIPTION
-ksoc/ksoc-plugins        	1.1.8        	           	A Helm chart to run the KSOC plugins
+ksoc/ksoc-plugins        	1.2.3        	           	A Helm chart to run the KSOC plugins
 ```
 
 ### 4. Create cluster-specific values file
