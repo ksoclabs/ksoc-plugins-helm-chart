@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.2.1
+version: 1.2.2
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -18,9 +18,12 @@ annotations:
   artifacthub.io/changes: |
     - kind: security
       description: Updates dependecies to fix security vulerablities
-  artifacthub.io/containsSecurityUpdates: "false"
+    - kind: changed
+      description: Improves Custom Resource support - new resources are automatically refreshed
+  artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/links: |
     - name: source
       url: https://github.com/ksoclabs/ksoc-plugins-helm-chart
     - name: support
       url: https://github.com/ksoclabs/ksoc-plugins-helm-chart/issues
+  artifacthub.io/prerelease: "true"
