@@ -26,4 +26,3 @@ annotations:
       url: https://github.com/ksoclabs/ksoc-plugins-helm-chart
     - name: support
       url: https://github.com/ksoclabs/ksoc-plugins-helm-chart/issues
-  artifacthub.io/prerelease: "true"
