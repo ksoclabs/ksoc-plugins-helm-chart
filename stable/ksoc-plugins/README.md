@@ -43,7 +43,7 @@ ksocRuntime:
   enabled: true
 ```
 
-When `ksoc-runtime` is enabled an additional deployment can be seen. There is also a `DaemonSet` that deploys an eBPF pod on each node to gather the run-time information.
+When `ksoc-runtime` is enabled an additional deployment can be seen. There is also a `DaemonSet` that deploys an eBPF pod on each node to gather the run-time information.  For more information on the `ksoc-runtime` plugin, please see the [KSOC Runtime documentation](https://docs.ksoc.com/docs/ksoc-runtime-1).
 
 ## Prerequisites
 
@@ -129,7 +129,7 @@ Example output (chart version may differ):
 ```bash
 helm search repo ksoc
 NAME                     	CHART VERSION	APP VERSION	DESCRIPTION
-ksoc/ksoc-plugins        	1.2.3        	           	A Helm chart to run the KSOC plugins
+ksoc/ksoc-plugins        	1.2.4        	           	A Helm chart to run the KSOC plugins
 ```
 
 ### 4. Create cluster-specific values file

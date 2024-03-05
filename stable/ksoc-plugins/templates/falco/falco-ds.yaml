@@ -27,12 +27,6 @@ spec:
         - /run/containerd/containerd.sock
         - --cri
         - /run/crio/crio.sock
-        - -K
-        - /var/run/secrets/kubernetes.io/serviceaccount/token
-        - -k
-        - https://$(KUBERNETES_SERVICE_HOST)
-        - --k8s-node
-        - $(FALCO_K8S_NODE_NAME)
         - -pk
         - --disable-cri-async
         env:
@@ -41,7 +35,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: spec.nodeName
-        image: falcosecurity/falco-no-driver:0.36.2
+        image: falcosecurity/falco-no-driver:0.37.1
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 3
@@ -102,7 +96,7 @@ spec:
         - artifact
         - follow
         - --verbose
-        image: falcosecurity/falcoctl:0.6.2
+        image: falcosecurity/falcoctl:0.7.1
         imagePullPolicy: IfNotPresent
         name: falcoctl-artifact-follow
         resources: {}
@@ -121,7 +115,7 @@ spec:
         - artifact
         - install
         - --verbose
-        image: falcosecurity/falcoctl:0.6.2
+        image: falcosecurity/falcoctl:0.7.1
         imagePullPolicy: IfNotPresent
         name: falcoctl-artifact-install
         resources: {}
