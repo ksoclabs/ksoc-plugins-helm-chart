@@ -2,7 +2,7 @@
 
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/ksoc)](https://artifacthub.io/packages/search?repo=ksoc)
 
-This repository contains the source for the packaged and versioned charts released in the [`stable KSOC Helm repository`](https://charts.ksoc.com/stable).
+This repository contains the source for the packaged and versioned charts released on Artifacthub for the [`KSOC Plugins Helm repository`](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins).
 
 The charts in the `stable` directory in the `main` branch match the latest packaged charts in the chart repository.
 
