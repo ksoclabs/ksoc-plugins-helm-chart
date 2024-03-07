@@ -41,7 +41,8 @@ data:
     libs_logger:
       enabled: false
       severity: debug
-    load_plugins: []
+    load_plugins:
+      - k8smeta
     log_level: info
     log_stderr: true
     log_syslog: true
@@ -58,8 +59,10 @@ data:
       libbpf_stats_enabled: true
       output_rule: true
       resource_utilization_enabled: true
-    modern_bpf:
-      cpus_for_each_syscall_buffer: 2
+    engine:
+      kind: modern_ebpf
+      modern_ebpf:
+        cpus_for_each_buffer: 2
     output_timeout: 2000
     outputs:
       max_burst: 1000
@@ -67,6 +70,12 @@ data:
     outputs_queue:
       capacity: 0
     plugins:
+    - init_config:
+        collectorHostname: k8s-metacollector.{{ .Release.Namespace  }}.svc
+        collectorPort: 45000
+        nodeName: ${FALCO_K8S_NODE_NAME}
+      library_path: libk8smeta.so
+      name: k8smeta
     - init_config: null
       library_path: libk8saudit.so
       name: k8saudit

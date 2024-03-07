@@ -1,0 +1,66 @@
+{{- if .Values.ksocRuntime.enabled  }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-metacollector
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: ksoc-k8s-metacollector
+    app.kubernetes.io/instance: k8s-metacollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ksoc-k8s-metacollector
+      app.kubernetes.io/instance: k8s-metacollector
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ksoc-k8s-metacollector
+        app.kubernetes.io/instance: k8s-metacollector
+    spec:
+      serviceAccountName: ksoc-k8s-metacollector
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: k8s-metacollector
+          securityContext:
+            capabilities:
+              drop:
+              - ALL
+          image: "docker.io/falcosecurity/k8s-metacollector:0.1.0"
+          imagePullPolicy: IfNotPresent
+          command:
+            - /meta-collector
+          args:
+            - run
+          ports:
+            - name: "broker-grpc"
+              containerPort: 45000
+              protocol: TCP
+            - name: "health-probe"
+              containerPort: 8081
+              protocol: TCP
+            - name: "metrics"
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 45
+            periodSeconds: 15
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 5
+          resources:
+            {}
+{{- end }}
