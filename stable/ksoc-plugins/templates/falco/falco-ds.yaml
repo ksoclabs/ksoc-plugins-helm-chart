@@ -22,7 +22,6 @@ spec:
       containers:
       - args:
         - /usr/bin/falco
-        - --modern-bpf
         - --cri
         - /run/containerd/containerd.sock
         - --cri
@@ -92,6 +91,8 @@ spec:
           subPath: falco.yaml
         - mountPath: /etc/falco/rules.d/
           name: ksoc-runtime-profile-rules-config
+        - mountPath: /usr/share/falco/plugins
+          name: plugins-install-dir
       - args:
         - artifact
         - follow

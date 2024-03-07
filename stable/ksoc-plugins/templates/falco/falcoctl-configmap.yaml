@@ -9,6 +9,7 @@ data:
     artifact:
       allowedTypes:
       - rulesfile
+      - plugin
       follow:
         every: 6h
         falcoversions: http://localhost:8765/versions
@@ -20,6 +21,7 @@ data:
         pluginsDir: /plugins
         refs:
         - falco-rules:2
+        - ghcr.io/falcosecurity/plugins/plugin/k8smeta:0.1.0
         resolveDeps: false
         rulesfilesDir: /rulesfiles
     indexes:

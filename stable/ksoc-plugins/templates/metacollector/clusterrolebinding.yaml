@@ -1,0 +1,17 @@
+{{- if .Values.ksocRuntime.enabled  }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8s-metacollector
+  labels:
+    app.kubernetes.io/name: ksoc-k8s-metacollector
+    app.kubernetes.io/instance: k8s-metacollector
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ksoc-k8s-metacollector
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-k8s-metacollector
+    namespace: {{ .Release.Namespace }}
+{{- end }}
