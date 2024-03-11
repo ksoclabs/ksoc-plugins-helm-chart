@@ -58,12 +58,7 @@ spec:
           successThreshold: 1
           timeoutSeconds: 5
         resources:
-          limits:
-            cpu: "1"
-            memory: 1Gi
-          requests:
-            cpu: 100m
-            memory: 512Mi
+{{ toYaml .Values.falco.resources | indent 10 }}
         securityContext:
           capabilities:
             add:
@@ -135,11 +130,10 @@ spec:
       serviceAccount: {{ .Values.falco.fullnameOverride }}
       serviceAccountName: {{ .Values.falco.fullnameOverride }}
       terminationGracePeriodSeconds: 30
+      {{- with .Values.falco.tolerations }}
       tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/control-plane
+{{ toYaml . | indent 6 }}
+  {{- end }}
       volumes:
       - emptyDir: {}
         name: plugins-install-dir

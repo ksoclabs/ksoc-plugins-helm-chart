@@ -13,7 +13,7 @@ AWS_MARKETPLACE_PRODUCT_ID="prod-m7tlrvfq6yjzu"
 
 KSOC_RUNTIME_IMAGE=$(yq e ".ksocRuntime.reporter.image.repository" $VALUES_FILE_PATH):$(yq e ".ksocRuntime.reporter.image.tag" $VALUES_FILE_PATH)
 
-CONTAINER_IMAGES="709825985650.dkr.ecr.us-east-1.amazonaws.com/ksoc-labs/falco-no-driver:0.36.2 709825985650.dkr.ecr.us-east-1.amazonaws.com/ksoc-labs/falcoctl:0.6.2 $KSOC_RUNTIME_IMAGE "
+CONTAINER_IMAGES="709825985650.dkr.ecr.us-east-1.amazonaws.com/ksoc-labs/falco-no-driver:0.37.1 709825985650.dkr.ecr.us-east-1.amazonaws.com/ksoc-labs/falcoctl:0.7.1 $KSOC_RUNTIME_IMAGE "
 
 
 PRODUCT_TITLE=$(aws marketplace-catalog describe-entity --entity-id "${AWS_MARKETPLACE_PRODUCT_ID}" --catalog AWSMarketplace --region us-east-1 | jq -r '.Details | fromjson | .Description.ProductTitle')

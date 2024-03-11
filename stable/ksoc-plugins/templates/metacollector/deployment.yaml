@@ -62,5 +62,13 @@ spec:
             periodSeconds: 15
             timeoutSeconds: 5
           resources:
-            {}
+{{ toYaml .Values.metacollector.resources | indent 12 }}
+          {{- with .Values.metacollector.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.metacollector.tolerations }}
+      tolerations:
+{{ toYaml . | indent 6 }}
+      {{- end }}
 {{- end }}
