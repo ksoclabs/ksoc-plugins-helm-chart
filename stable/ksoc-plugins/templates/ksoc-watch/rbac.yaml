@@ -54,7 +54,7 @@ metadata:
     maintained_by: ksoc
 rules:
   - apiGroups: [""]
-    resources: ["namespaces", "nodes", "pods", "services", "serviceaccounts"]
+    resources: ["configmaps", "namespaces", "nodes", "pods", "services", "serviceaccounts"]
     verbs: ["get", "list", "watch"]
 
   - apiGroups: [ "apps" ]
