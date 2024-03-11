@@ -235,10 +235,10 @@ ksocWatch:
     denylist: []
 
 # -- Falco Daemonset configuration. The tolerations and resources are what are provided by default.
-# -- You can change them if need be. 
+# -- You can change them if need be.
 falco:
   fullnameOverride: ksoc-runtime-ds
-  tolerations: 
+  tolerations:
   - effect: NoSchedule
     key: node-role.kubernetes.io/master
   - effect: NoSchedule
@@ -251,8 +251,8 @@ falco:
       cpu: 100m
       memory: 512Mi
 
-# -- The Falco k8s-metacollector is disabled by default. It will only be created if 
-# -- ksoc.ksoc-runtime is enabled. These values are blank by default in the metacollector. 
+# -- The Falco k8s-metacollector is disabled by default. It will only be created if
+# -- ksoc.ksoc-runtime is enabled. These values are blank by default in the metacollector.
 # -- You can extend them if needed.
 metacollector:
   resources: {}
