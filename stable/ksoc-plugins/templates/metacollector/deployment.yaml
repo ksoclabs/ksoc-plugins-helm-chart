@@ -31,7 +31,7 @@ spec:
             capabilities:
               drop:
               - ALL
-          image: "docker.io/falcosecurity/k8s-metacollector:0.1.0"
+          image: {{ .Values.metacollector.image.repository }}:{{ .Values.metacollector.image.tag }}
           imagePullPolicy: IfNotPresent
           command:
             - /meta-collector

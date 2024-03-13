@@ -237,6 +237,13 @@ ksocWatch:
 # -- Falco Daemonset configuration. The tolerations and resources are what are provided by default.
 # -- You can change them if need be.
 falco:
+  image:
+    falcoctl:
+      repository: falcosecurity/falcoctl
+      tag: "0.7.1"
+    falco:
+      repository: falcosecurity/falco-no-driver
+      tag: "0.37.1"
   fullnameOverride: ksoc-runtime-ds
   tolerations:
   - effect: NoSchedule
@@ -255,6 +262,9 @@ falco:
 # -- ksoc.ksoc-runtime is enabled. These values are blank by default in the metacollector.
 # -- You can extend them if needed.
 metacollector:
+  image:
+    repository: docker.io/falcosecurity/k8s-metacollector
+    tag: v0.1.0
   resources: {}
   tolerations: []
   nodeSelector: {}
