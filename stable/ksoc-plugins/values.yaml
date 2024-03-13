@@ -239,10 +239,10 @@ ksocWatch:
 falco:
   image:
     falcoctl:
-      repository: falcosecurity/falcoctl
+      repository: docker.io/falcosecurity/falcoctl
       tag: "0.7.1"
     falco:
-      repository: falcosecurity/falco-no-driver
+      repository: docker.io/falcosecurity/falco-no-driver
       tag: "0.37.1"
   fullnameOverride: ksoc-runtime-ds
   tolerations:
