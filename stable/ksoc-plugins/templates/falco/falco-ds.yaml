@@ -34,7 +34,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: spec.nodeName
-        image: falcosecurity/falco-no-driver:0.37.1
+        image: {{ .Values.falco.image.falco.repository }}:{{ .Values.falco.image.falco.tag }}
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 3
@@ -92,7 +92,7 @@ spec:
         - artifact
         - follow
         - --verbose
-        image: falcosecurity/falcoctl:0.7.1
+        image: {{ .Values.falco.image.falcoctl.repository }}:{{ .Values.falco.image.falcoctl.tag }}
         imagePullPolicy: IfNotPresent
         name: falcoctl-artifact-follow
         resources: {}
@@ -111,7 +111,7 @@ spec:
         - artifact
         - install
         - --verbose
-        image: falcosecurity/falcoctl:0.7.1
+        image: {{ .Values.falco.image.falcoctl.repository }}:{{ .Values.falco.image.falcoctl.tag }}
         imagePullPolicy: IfNotPresent
         name: falcoctl-artifact-install
         resources: {}
