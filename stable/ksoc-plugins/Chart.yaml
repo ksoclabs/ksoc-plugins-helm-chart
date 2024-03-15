@@ -16,8 +16,8 @@ annotations:
   artifacthub.io/category: security
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Corrects typo in metacollector tag name
+    - kind: changed
+      description: Makes metacollector optional and fixes typo in metacollector tag name
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source

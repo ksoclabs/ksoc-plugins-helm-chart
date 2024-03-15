@@ -259,9 +259,9 @@ falco:
       memory: 512Mi
 
 # -- The Falco k8s-metacollector is disabled by default. It will only be created if
-# -- ksoc.ksoc-runtime is enabled. These values are blank by default in the metacollector.
-# -- You can extend them if needed.
+# -- ksoc-runtime is enabled and metacollector is set to be enabled.
 metacollector:
+  enabled: false
   image:
     repository: docker.io/falcosecurity/k8s-metacollector
     tag: 0.1.0

@@ -41,8 +41,10 @@ data:
     libs_logger:
       enabled: false
       severity: debug
+    {{- if .Values.metacollector.enabled }}
     load_plugins:
       - k8smeta
+    {{- end }}
     log_level: info
     log_stderr: true
     log_syslog: true
@@ -70,12 +72,14 @@ data:
     outputs_queue:
       capacity: 0
     plugins:
+    {{- if .Values.metacollector.enabled }}
     - init_config:
         collectorHostname: k8s-metacollector.{{ .Release.Namespace  }}.svc
         collectorPort: 45000
         nodeName: ${FALCO_K8S_NODE_NAME}
       library_path: libk8smeta.so
       name: k8smeta
+    {{- end }}
     - init_config: null
       library_path: libk8saudit.so
       name: k8saudit
