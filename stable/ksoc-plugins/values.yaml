@@ -264,7 +264,7 @@ falco:
 metacollector:
   image:
     repository: docker.io/falcosecurity/k8s-metacollector
-    tag: v0.1.0
+    tag: 0.1.0
   resources: {}
   tolerations: []
   nodeSelector: {}
