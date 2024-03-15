@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.2.9
+version: 1.2.10
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -16,8 +16,8 @@ annotations:
   artifacthub.io/category: security
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Specifies the docker.io image repo name for Falco images
+    - kind: changed
+      description: Makes metacollector optional and fixes typo in metacollector tag name
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source

@@ -1,4 +1,4 @@
-{{- if .Values.ksocRuntime.enabled  }}
+{{- if and .Values.ksocRuntime.enabled .Values.metacollector.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
