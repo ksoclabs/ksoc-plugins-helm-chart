@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.2.10
+version: 1.2.11
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: changed
-      description: Makes metacollector optional and fixes typo in metacollector tag name
+      description: Makes the creation of the ksoc api secret optional when no secret keys are passed.
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
