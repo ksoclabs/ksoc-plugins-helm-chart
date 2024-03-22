@@ -71,8 +71,8 @@ data:
       rate: 0
     outputs_queue:
       capacity: 0
-    plugins:
     {{- if .Values.metacollector.enabled }}
+    plugins:
     - init_config:
         collectorHostname: k8s-metacollector.{{ .Release.Namespace  }}.svc
         collectorPort: 45000
@@ -80,15 +80,6 @@ data:
       library_path: libk8smeta.so
       name: k8smeta
     {{- end }}
-    - init_config: null
-      library_path: libk8saudit.so
-      name: k8saudit
-      open_params: http://:9765/k8s-audit
-    - library_path: libcloudtrail.so
-      name: cloudtrail
-    - init_config: ""
-      library_path: libjson.so
-      name: json
     priority: notice
     program_output:
       enabled: false
