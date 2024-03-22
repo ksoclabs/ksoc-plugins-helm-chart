@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.2.11
+version: 1.2.12
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -16,8 +16,8 @@ annotations:
   artifacthub.io/category: security
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
-    - kind: changed
-      description: Makes the creation of the ksoc api secret optional when no secret keys are passed.
+    - kind: fixed
+      description: Removes unused Falco plugins.
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
