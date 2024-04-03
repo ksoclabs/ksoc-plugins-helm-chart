@@ -170,6 +170,8 @@ ksocSbom:
     # -- Whether to mutate the annotations in pod spec by adding images digests. Annotations can be used to track image
     # digests in addition to, or instead of the image tag mutation.
     MUTATE_ANNOTATIONS: false
+    # -- The format of the generated SBOM. Currently we support: syft-json,cyclonedx-json,spdx-json
+    SBOM_FORMAT: cyclonedx-json
   resources:
     requests:
       cpu: 500m
