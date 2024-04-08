@@ -14,8 +14,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Replace Images and Remove Comments In values.yaml
-      run: ./scripts/replace_repositories.sh
+    - name: Modify Helm Chart For AWS Marketplace
+      run: ./scripts/modify_chart_for_aws_marketplace.sh
 
     - name: Install Helm
       uses: azure/setup-helm@v3

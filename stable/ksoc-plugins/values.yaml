@@ -270,3 +270,12 @@ metacollector:
   resources: {}
   tolerations: []
   nodeSelector: {}
+
+# -- Configuration for the EKS Addon dummy deployment. This is needed to track the status of addon.
+# -- This is a known issue and this is the  workaround for now. If you are not installing through the
+# -- EKS Addon Marketplace, you do not need to enable the addon.
+eksAddon:
+  enabled: false
+  image:
+    repository: public.ecr.aws/eks-distro/kubernetes/pause
+    tag: v1.29.1-eks-1-29-latest
