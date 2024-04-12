@@ -15,3 +15,9 @@ repos:
   rev: v0.1.10
   hooks:
     - id: shellcheck
+- repo: https://github.com/norwoodj/helm-docs
+  rev: v1.13.1
+  hooks:
+    - id: helm-docs
+      args:
+        - --chart-search-root=stable

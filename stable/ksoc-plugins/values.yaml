@@ -28,9 +28,11 @@ ksocBootstrapper:
     limits:
       cpu: 100m
       memory: 64Mi
+      ephemeral-storage: 100Mi
     requests:
       cpu: 50m
       memory: 32Mi
+      ephemeral-storage: 100Mi
   podAnnotations: {}
   nodeSelector: {}
   tolerations: []
@@ -56,9 +58,11 @@ ksocGuard:
     requests:
       memory: 100Mi
       cpu: 100m
+      ephemeral-storage: 100Mi
     limits:
       memory: 500Mi
       cpu: 250m
+      ephemeral-storage: 1Gi
   podAnnotations: {}
   replicas: 1
   webhook:
@@ -79,9 +83,11 @@ ksocRuntime:
       requests:
         memory: 100Mi
         cpu: 100m
+        ephemeral-storage: 100Mi
       limits:
         memory: 500Mi
         cpu: 250m
+        ephemeral-storage: 1Gi
     podAnnotations: {}
     replicas: 3
     nodeSelector: {}
@@ -176,9 +182,12 @@ ksocSbom:
     requests:
       cpu: 500m
       memory: 1Gi
+      ephemeral-storage: 1Gi
     limits:
       cpu: 1000m
       memory: 2Gi
+      # -- The ephemeral storage limit is set to 25Gi to cache and reuse image layers for the sbom generation.
+      ephemeral-storage: 25Gi
   podAnnotations: {}
   webhook:
     timeoutSeconds: 10
@@ -196,9 +205,11 @@ ksocSync:
     limits:
       cpu: 200m
       memory: 256Mi
+      ephemeral-storage: 1Gi
     requests:
       cpu: 100m
       memory: 128Mi
+      ephemeral-storage: 100Mi
   podAnnotations: {}
   nodeSelector: {}
   tolerations: []
@@ -216,9 +227,11 @@ ksocWatch:
     limits:
       cpu: 250m
       memory: 512Mi
+      ephemeral-storage: 1Gi
     requests:
       cpu: 100m
       memory: 128Mi
+      ephemeral-storage: 100Mi
   podAnnotations: {}
   nodeSelector: {}
   tolerations: []
@@ -256,9 +269,11 @@ falco:
     limits:
       cpu: "1"
       memory: 1Gi
+      ephemeral-storage: 1Gi
     requests:
       cpu: 100m
       memory: 512Mi
+      ephemeral-storage: 100Mi
 
 # -- The Falco k8s-metacollector is disabled by default. It will only be created if
 # -- ksoc-runtime is enabled and metacollector is set to be enabled.
@@ -271,6 +286,7 @@ metacollector:
   tolerations: []
   nodeSelector: {}
 
+# @ignored
 # -- Configuration for the EKS Addon dummy deployment. This is needed to track the status of addon.
 # -- This is a known issue and this is the  workaround for now. If you are not installing through the
 # -- EKS Addon Marketplace, you do not need to enable the addon.

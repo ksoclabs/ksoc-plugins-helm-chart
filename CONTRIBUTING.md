@@ -40,7 +40,7 @@ See `git help commit`:
 * Must follow [Charts best practices](https://helm.sh/docs/topics/chart_best_practices/)
 * Must pass all pre-commit hooks. To install pre-commit hooks, run `make initialise` in the root of the repository
 * Any change to a chart requires a version bump following [semver](https://semver.org/) principles. See [Immutability](#immutability) and [Versioning](#versioning) below
-* Please remember to update the [README.md](./stable/ksoc-plugins/README.md)
+* Please remember to update the [README.md.gotmpl](./stable/ksoc-plugins/README.md.gotmpl)
 * Please remember to update the [Chart.yaml](./stable/ksoc-plugins/Chart.yaml) with the new version number and update `artifacthub.io/changes` section with the changes made in the chart
 
 Once changes have been merged, the release job will automatically run to package and release changed charts.
