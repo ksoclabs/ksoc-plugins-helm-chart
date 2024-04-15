@@ -3,6 +3,7 @@ CURRENT_WORKING_DIR=$(shell pwd)
 initialise:
 	pre-commit --version || brew install pre-commit
 	shellcheck --version || brew install shellcheck
+	helm-docs --version || brew install norwoodj/tap/helm-docs
 	pre-commit install
 	pre-commit run --all-files
 

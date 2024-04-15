@@ -56,6 +56,25 @@ ksocRuntime:
 
 When `ksoc-runtime` is enabled an additional deployment can be seen. There is also a `DaemonSet` that deploys an eBPF pod on each node to gather the run-time information.  For more information on the `ksoc-runtime` plugin, please see the [KSOC Runtime documentation](https://docs.ksoc.com/docs/ksoc-runtime-1).
 
+### k9 plugin
+`k9` is a plugin that responds in-cluster to commands from the Rad Security platform. The plugin will poll the Rad Security backend, and does not require any ingress to the cluster.  The plugin is not enabled by default. Individual capabilities must be opted-into by the user, and the plugin will only respond to commands that are explicitly enabled.  To enable a capability, please enable the plugin with `enabled: true` and set the capabilities you wish to enable to `true` in your values file.
+
+```yaml
+k9:
+  enabled: true
+  capabilities:
+    enableTerminatePod: true
+    enableTerminateNamespace: true
+    enableQuarantine: true
+    enableGetLogs: true
+    enableLabelPod: true
+```
+Terminate Pod: Allows the plugin to terminate a pod in the cluster.
+Terminate Namespace: Allows the plugin to terminate a namespace in the cluster.
+Quarantine: Allows the plugin to quarantine a pod in the cluster via a NetworkPolicy to prevent it from communicating over the network.
+Get Logs: Allows the plugin to retrieve logs from a pod in the cluster.
+Label Pod: Allows the plugin to label a pod in the cluster.
+
 ## Prerequisites
 
 The remainder of this page assumes the following:
@@ -338,7 +357,41 @@ The command removes all the Kubernetes components associated with the chart and 
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| falco | object | `{"fullnameOverride":"ksoc-runtime-ds","image":{"falco":{"repository":"docker.io/falcosecurity/falco-no-driver","tag":"0.37.1"},"falcoctl":{"repository":"docker.io/falcosecurity/falcoctl","tag":"0.7.1"}},"resources":{"limits":{"cpu":"1","ephemeral-storage":"1Gi","memory":"1Gi"},"requests":{"cpu":"100m","ephemeral-storage":"100Mi","memory":"512Mi"}},"tolerations":[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master"},{"effect":"NoSchedule","key":"node-role.kubernetes.io/control-plane"}]}` | You can change them if need be. |
+| falco.fullnameOverride | string | `"ksoc-runtime-ds"` |  |
+| falco.image.falco.repository | string | `"docker.io/falcosecurity/falco-no-driver"` |  |
+| falco.image.falco.tag | string | `"0.37.1"` |  |
+| falco.image.falcoctl.repository | string | `"docker.io/falcosecurity/falcoctl"` |  |
+| falco.image.falcoctl.tag | string | `"0.7.1"` |  |
+| falco.resources.limits.cpu | string | `"1"` |  |
+| falco.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
+| falco.resources.limits.memory | string | `"1Gi"` |  |
+| falco.resources.requests.cpu | string | `"100m"` |  |
+| falco.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
+| falco.resources.requests.memory | string | `"512Mi"` |  |
+| falco.tolerations[0].effect | string | `"NoSchedule"` |  |
+| falco.tolerations[0].key | string | `"node-role.kubernetes.io/master"` |  |
+| falco.tolerations[1].effect | string | `"NoSchedule"` |  |
+| falco.tolerations[1].key | string | `"node-role.kubernetes.io/control-plane"` |  |
+| k9.backend.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-backend-agent"` |  |
+| k9.backend.image.tag | string | `"v0.0.23"` |  |
+| k9.capabilities.enableGetLogs | bool | `false` |  |
+| k9.capabilities.enableLabelPod | bool | `false` |  |
+| k9.capabilities.enableQuarantine | bool | `false` |  |
+| k9.capabilities.enableTerminateNamespace | bool | `false` |  |
+| k9.capabilities.enableTerminatePod | bool | `false` |  |
+| k9.enabled | bool | `false` |  |
+| k9.frontend.agentActionPollInterval | string | `"5s"` | The interval in which the agent polls the backend for new actions. |
+| k9.frontend.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-frontend-agent"` |  |
+| k9.frontend.image.tag | string | `"v0.0.23"` |  |
+| k9.nodeSelector | object | `{}` |  |
+| k9.replicas | int | `1` |  |
+| k9.resources.limits.cpu | string | `"250m"` |  |
+| k9.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
+| k9.resources.limits.memory | string | `"512Mi"` |  |
+| k9.resources.requests.cpu | string | `"100m"` |  |
+| k9.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
+| k9.resources.requests.memory | string | `"128Mi"` |  |
+| k9.tolerations | list | `[]` |  |
 | ksoc.accessKeySecretNameOverride | string | `""` | The name of the custom secret containing Access Key. |
 | ksoc.apiKey | string | `""` | The combined API key to authenticate with KSOC |
 | ksoc.apiUrl | string | `"https://api.ksoc.com"` | The base URL for the KSOC API. |
@@ -437,6 +490,11 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocWatch.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocWatch.resources.requests.memory | string | `"128Mi"` |  |
 | ksocWatch.tolerations | list | `[]` |  |
-| metacollector | object | `{"enabled":false,"image":{"repository":"docker.io/falcosecurity/k8s-metacollector","tag":"0.1.0"},"nodeSelector":{},"resources":{},"tolerations":[]}` | ksoc-runtime is enabled and metacollector is set to be enabled. |
+| metacollector.enabled | bool | `false` |  |
+| metacollector.image.repository | string | `"docker.io/falcosecurity/k8s-metacollector"` |  |
+| metacollector.image.tag | string | `"0.1.0"` |  |
+| metacollector.nodeSelector | object | `{}` |  |
+| metacollector.resources | object | `{}` |  |
+| metacollector.tolerations | list | `[]` |  |
 | workloads.disableServiceMesh | bool | `true` | Whether to disable service mesh integration. |
 | workloads.imagePullSecretName | string | `""` | The image pull secret name to use to pull container images. |
