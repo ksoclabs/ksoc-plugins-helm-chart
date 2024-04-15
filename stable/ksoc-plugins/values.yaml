@@ -249,8 +249,8 @@ ksocWatch:
     allowlist: []
     denylist: []
 
-# -- Falco Daemonset configuration. The tolerations and resources are what are provided by default.
-# -- You can change them if need be.
+  # -- Falco Daemonset configuration. The tolerations and resources are what are provided by default.
+  # -- You can change them if need be.
 falco:
   image:
     falcoctl:
@@ -261,10 +261,10 @@ falco:
       tag: "0.37.1"
   fullnameOverride: ksoc-runtime-ds
   tolerations:
-  - effect: NoSchedule
-    key: node-role.kubernetes.io/master
-  - effect: NoSchedule
-    key: node-role.kubernetes.io/control-plane
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
   resources:
     limits:
       cpu: "1"
@@ -275,14 +275,48 @@ falco:
       memory: 512Mi
       ephemeral-storage: 100Mi
 
-# -- The Falco k8s-metacollector is disabled by default. It will only be created if
-# -- ksoc-runtime is enabled and metacollector is set to be enabled.
+  # -- The Falco k8s-metacollector is disabled by default. It will only be created if
+  # -- ksoc-runtime is enabled and metacollector is set to be enabled.
 metacollector:
   enabled: false
   image:
     repository: docker.io/falcosecurity/k8s-metacollector
     tag: 0.1.0
   resources: {}
+  tolerations: []
+  nodeSelector: {}
+
+  # -- K9 is an in-cluster response plugin.  It will request any queued commands from
+  # -- the Rad Security backend, and execute them in the cluster.  Each capability must
+  # -- be opted into individually.
+k9:
+  enabled: false
+  replicas: 1
+  frontend:
+    image:
+      repository: us.gcr.io/ksoc-public/ksoc-frontend-agent
+      tag: v0.0.23
+    # -- The interval in which the agent polls the backend for new actions.
+    agentActionPollInterval: "5s"
+  backend:
+    image:
+      repository: us.gcr.io/ksoc-public/ksoc-backend-agent
+      tag: v0.0.23
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+      ephemeral-storage: 1Gi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+      ephemeral-storage: 100Mi
+  capabilities:
+    enableTerminatePod: false
+    enableTerminateNamespace: false
+    enableQuarantine: false
+    enableGetLogs: false
+    enableLabelPod: false
   tolerations: []
   nodeSelector: {}
 

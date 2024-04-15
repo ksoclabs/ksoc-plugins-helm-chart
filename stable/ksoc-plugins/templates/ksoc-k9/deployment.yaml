@@ -1,0 +1,158 @@
+{{- if .Values.k9.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ksoc-k9
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-k9
+    maintained_by: ksoc
+spec:
+  minReadySeconds: 90
+  replicas: {{ .Values.k9.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: ksoc-k9
+  template:
+    metadata:
+      labels:
+        app: ksoc-k9
+        maintained_by: ksoc
+      annotations:
+        {{- if .Values.workloads.disableServiceMesh }}
+        linkerd.io/inject: disabled
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+    spec:
+      serviceAccountName: agent-ksoc-k9
+      {{- if .Values.workloads.imagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ .Values.workloads.imagePullSecretName }}
+      {{- end }}
+      initContainers:
+{{ include "ksoc-plugins.bootstrap-initcontainer" . | indent 8 }}
+      containers:
+      - name: agent-be
+        image: "{{.Values.k9.backend.image.repository}}:{{.Values.k9.backend.image.tag}}"
+        imagePullPolicy: IfNotPresent
+        resources:
+{{ toYaml .Values.k9.resources | indent 10 }}
+        env:
+          - name: AGENT_DEPLOYMENT_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: AGENT_DEPLOYMENT_NAMESPACE
+            value: {{ .Release.Namespace }}
+          {{- if .Values.k9.capabilities.enableTerminatePod }}
+          - name: ENABLE_TERMINATE_POD
+            value: "true"
+          {{- end }}
+          {{- if .Values.k9.capabilities.enableTerminateNamespace }}
+          - name: ENABLE_TERMINATE_NAMESPACE
+            value: "true"
+          {{- end }}
+          {{- if .Values.k9.capabilities.enableQuarantine }}
+          - name: ENABLE_QUARANTINE
+            value: "true"
+          {{- end }}
+          {{- if .Values.k9.capabilities.enableGetLogs }}
+          - name: ENABLE_GET_LOGS
+            value: "true"
+          {{- end }}
+          {{- if .Values.k9.capabilities.enableLabelPod }}
+          - name: ENABLE_LABEL_POD
+            value: "true"
+          {{- end }}
+        volumeMounts:
+          - name: shared
+            mountPath: /shared
+          - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+            name: api-token
+            readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      - name: agent-fe
+        image: "{{.Values.k9.frontend.image.repository}}:{{.Values.k9.frontend.image.tag}}"
+        imagePullPolicy: IfNotPresent
+        resources:
+{{ toYaml .Values.k9.resources | indent 10 }}
+        env:
+          - name: KSOC_API_URL
+            value: {{ .Values.ksoc.apiUrl }}
+          - name: KSOC_NAMESPACE
+            value: {{ .Release.Namespace }}
+{{ include "ksoc-plugins.access-key-env-secret" . | indent 10 }}
+          - name: AGENT_ACTION_POLL_INTERVAL
+            value: {{ .Values.k9.frontend.agentActionPollInterval }}
+          - name: AGENT_DEPLOYMENT_NAMESPACE
+            value: {{ .Release.Namespace }}
+          {{- if .Values.k9.capabilities.enableTerminatePod }}
+          - name: ENABLE_TERMINATE_POD
+            value: "true"
+          {{- end }}
+          {{- if .Values.k9.capabilities.enableTerminateNamespace }}
+          - name: ENABLE_TERMINATE_NAMESPACE
+            value: "true"
+          {{- end }}
+          {{- if .Values.k9.capabilities.enableQuarantine }}
+          - name: ENABLE_QUARANTINE
+            value: "true"
+          {{- end }}
+          {{- if .Values.k9.capabilities.enableGetLogs }}
+          - name: ENABLE_GET_LOGS
+            value: "true"
+          {{- end }}
+          {{- if .Values.k9.capabilities.enableLabelPod }}
+          - name: ENABLE_LABEL_POD
+            value: "true"
+          {{- end }}
+        volumeMounts:
+          - name: shared
+            mountPath: /shared
+          - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+            name: api-token
+            readOnly: true
+        livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8082
+            initialDelaySeconds: 15
+            periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8082
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: shared
+        emptyDir:
+          sizeLimit: 10Mi
+      - name: api-token
+        secret:
+          secretName: ksoc-k9-api-token-secret
+      {{- with .Values.k9.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.k9.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+{{- end -}}
