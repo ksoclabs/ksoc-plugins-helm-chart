@@ -357,9 +357,6 @@ The command removes all the Kubernetes components associated with the chart and 
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| eksAddon.enabled | bool | `false` |  |
-| eksAddon.image.repository | string | `"public.ecr.aws/eks-distro/kubernetes/pause"` |  |
-| eksAddon.image.tag | string | `"v1.29.1-eks-1-29-latest"` |  |
 | falco.fullnameOverride | string | `"ksoc-runtime-ds"` |  |
 | falco.image.falco.repository | string | `"docker.io/falcosecurity/falco-no-driver"` |  |
 | falco.image.falco.tag | string | `"0.37.1"` |  |

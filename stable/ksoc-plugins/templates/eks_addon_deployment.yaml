@@ -1,4 +1,4 @@
-{{- if .Values.eksAddon.enabled  }}
+{{- if and .Values.eksAddon .Values.eksAddon.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
