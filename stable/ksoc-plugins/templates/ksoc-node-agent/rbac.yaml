@@ -1,4 +1,4 @@
-{{- if .Values.ksocNodeAgent.enabled -}}
+{{- if and .Values.ksocNodeAgent .Values.ksocNodeAgent.enabled -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
