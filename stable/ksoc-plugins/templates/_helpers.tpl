@@ -90,4 +90,6 @@ ksoc-bootstrap initContainer
   - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
     name: api-token
     readOnly: true
+  resources:
+{{ toYaml .Values.ksocBootstrapper.resources | indent 4 }}
 {{- end -}}
