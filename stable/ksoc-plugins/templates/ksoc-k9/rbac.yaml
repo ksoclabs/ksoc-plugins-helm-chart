@@ -1,4 +1,4 @@
-{{- if .Values.k9.enabled -}}
+{{- if and .Values.k9 .Values.k9.enabled -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:

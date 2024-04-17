@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.4.2
+version: 1.4.3
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: changed
-      description: Improved conditional logic checking is node-agent is enabled
+      description: Improved conditional logic checking for k9 and eksAddon enabled values
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
