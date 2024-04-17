@@ -249,6 +249,36 @@ ksocWatch:
     allowlist: []
     denylist: []
 
+ksocNodeAgent:
+  enabled: false
+  image:
+    repository: us.gcr.io/ksoc-public/ksoc-node-agent
+    tag: v0.0.7
+  agent:
+    env: {}
+    resources:
+      limits:
+        cpu: 200m
+        memory: 1Gi
+        ephemeral-storage: 1Gi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+        ephemeral-storage: 100Mi
+  exporter:
+    env: {}
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+        ephemeral-storage: 1Gi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+        ephemeral-storage: 100Mi
+  nodeSelector: {}
+  tolerations: []
+
   # -- Falco Daemonset configuration. The tolerations and resources are what are provided by default.
   # -- You can change them if need be.
 falco:
