@@ -1,4 +1,4 @@
-{{- if .Values.ksocNodeAgent.enabled -}}
+{{- if and .Values.ksocNodeAgent .Values.ksocNodeAgent.enabled -}}
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
