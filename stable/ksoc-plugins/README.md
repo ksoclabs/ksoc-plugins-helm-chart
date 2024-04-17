@@ -357,6 +357,9 @@ The command removes all the Kubernetes components associated with the chart and 
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| eksAddon.enabled | bool | `false` |  |
+| eksAddon.image.repository | string | `"public.ecr.aws/eks-distro/kubernetes/pause"` |  |
+| eksAddon.image.tag | string | `"v1.29.1-eks-1-29-latest"` |  |
 | falco.fullnameOverride | string | `"ksoc-runtime-ds"` |  |
 | falco.image.falco.repository | string | `"docker.io/falcosecurity/falco-no-driver"` |  |
 | falco.image.falco.tag | string | `"0.37.1"` |  |
@@ -430,6 +433,25 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.tolerations | list | `[]` |  |
 | ksocGuard.webhook.objectSelector | object | `{}` |  |
 | ksocGuard.webhook.timeoutSeconds | int | `10` |  |
+| ksocNodeAgent.agent.env | object | `{}` |  |
+| ksocNodeAgent.agent.resources.limits.cpu | string | `"200m"` |  |
+| ksocNodeAgent.agent.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
+| ksocNodeAgent.agent.resources.limits.memory | string | `"1Gi"` |  |
+| ksocNodeAgent.agent.resources.requests.cpu | string | `"100m"` |  |
+| ksocNodeAgent.agent.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
+| ksocNodeAgent.agent.resources.requests.memory | string | `"128Mi"` |  |
+| ksocNodeAgent.enabled | bool | `false` |  |
+| ksocNodeAgent.exporter.env | object | `{}` |  |
+| ksocNodeAgent.exporter.resources.limits.cpu | string | `"500m"` |  |
+| ksocNodeAgent.exporter.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
+| ksocNodeAgent.exporter.resources.limits.memory | string | `"1Gi"` |  |
+| ksocNodeAgent.exporter.resources.requests.cpu | string | `"100m"` |  |
+| ksocNodeAgent.exporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
+| ksocNodeAgent.exporter.resources.requests.memory | string | `"128Mi"` |  |
+| ksocNodeAgent.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-node-agent"` |  |
+| ksocNodeAgent.image.tag | string | `"v0.0.7"` |  |
+| ksocNodeAgent.nodeSelector | object | `{}` |  |
+| ksocNodeAgent.tolerations | list | `[]` |  |
 | ksocRuntime.detectReachableVulnerabilities | bool | `false` |  |
 | ksocRuntime.enabled | bool | `false` |  |
 | ksocRuntime.reporter.env.LOG_LEVEL | string | `"info"` |  |

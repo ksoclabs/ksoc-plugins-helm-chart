@@ -1,0 +1,225 @@
+{{- if .Values.ksocNodeAgent.enabled -}}
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: ksoc-high-priority
+value: 1000000
+globalDefault: false
+description: "This priority class should be used for node agent only."
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ksoc-node-agent
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-node-agent
+    app_version: {{ .Values.ksocNodeAgent.image.tag | quote }}
+    maintained_by: ksoc
+spec:
+  selector:
+    matchLabels:
+      app_name: ksoc-node-agent
+  template:
+    metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/agent: unconfined
+        prometheus.io/path: "/"
+        prometheus.io/scrape: "true"
+      labels:
+        app_name: ksoc-node-agent
+        app_version: {{ .Values.ksocNodeAgent.image.tag | quote }}
+        maintained_by: ksoc
+    spec:
+      {{- if .Values.workloads.imagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ .Values.workloads.imagePullSecretName }}
+      {{- end }}
+      initContainers:
+{{ include "ksoc-plugins.bootstrap-initcontainer" . | indent 8 }}
+      containers:
+        - command:
+            - micro-agent
+          env:
+            - name: HOST_ROOT
+              value: /host
+            - name: AGENT_LOG_LEVEL
+              value: INFO
+            - name: AGENT_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: AGENT_TRACER_IGNORE_NAMESPACES
+              value: |
+                cert-manager,
+                ksoc,
+                kube-node-lease,
+                kube-public,
+                kube-system
+            - name: AGENT_TRACER_NET_IGNORE_HOST_NETWORK_NS
+              value: "1"
+            {{- range $key, $value := .Values.ksocNodeAgent.agent.env }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+            {{- end }}
+          image: {{ .Values.ksocNodeAgent.image.repository }}:{{ .Values.ksocNodeAgent.image.tag }}
+          imagePullPolicy: Always
+          name: agent
+          ports:
+            - containerPort: 8000
+          resources:
+{{ toYaml .Values.ksocNodeAgent.agent.resources | indent 12 }}
+          securityContext:
+            capabilities:
+              add:
+                - SYS_ADMIN
+                - SYSLOG
+                - SYS_PTRACE
+                - SYS_RESOURCE
+                - IPC_LOCK
+                - NET_ADMIN
+                - NET_RAW
+              drop:
+                - ALL
+            privileged: false
+            runAsUser: 0
+            seLinuxOptions:
+              type: super_t
+          volumeMounts:
+            - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              name: api-token
+              readOnly: true
+            - mountPath: /tmp
+              name: unix-socket
+            - mountPath: /host/bin
+              name: bin
+              readOnly: true
+            - mountPath: /host/etc
+              name: etc
+            - mountPath: /host/opt
+              name: opt
+            - mountPath: /host/usr
+              name: usr
+              readOnly: true
+            - mountPath: /host/run
+              name: run
+              readOnly: true
+            - mountPath: /host/proc
+              name: proc
+              readOnly: true
+            - mountPath: /run
+              name: run
+            - mountPath: /sys/kernel/debug
+              name: debugfs
+            - mountPath: /sys/kernel/tracing
+              name: tracefs
+            - mountPath: /sys/fs/cgroup
+              name: cgroup
+            - mountPath: /sys/fs/bpf
+              name: bpffs
+
+        - command:
+            - micro-exporter
+          env:
+            - name: EXPORTER_LOG_LEVEL
+              value: INFO
+            - name: EXPORTER_PROVIDER_STDOUT_ENABLED
+              value: "false"
+            - name: EXPORTER_PROVIDER_KSOC_API_ENABLED
+              value: "true"
+            - name: EXPORTER_PROVIDER_KSOC_API_URL
+              value: {{ .Values.ksoc.apiUrl }}
+            - name: EXPORTER_PROVIDER_KSOC_API_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: access-key-id
+                  name: ksoc-access-key
+            - name: EXPORTER_PROVIDER_KSOC_API_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: secret-key
+                  name: ksoc-access-key
+            {{- range $key, $value := .Values.ksocNodeAgent.exporter.env }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+            {{- end }}
+          image: {{ .Values.ksocNodeAgent.image.repository }}:{{ .Values.ksocNodeAgent.image.tag }}
+          imagePullPolicy: Always
+          name: exporter
+          ports:
+            - containerPort: 8001
+          resources:
+{{ toYaml .Values.ksocNodeAgent.exporter.resources | indent 12 }}
+          volumeMounts:
+            - mountPath: /tmp
+              name: unix-socket
+
+      dnsPolicy: ClusterFirst
+      {{- with .Values.ksocNodeAgent.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+        {{- end }}
+      restartPolicy: Always
+      automountServiceAccountToken: false
+      serviceAccount: ksoc-node-agent
+      serviceAccountName: ksoc-node-agent
+      terminationGracePeriodSeconds: 30
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      {{- with .Values.ksocNodeAgent.tolerations }}
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      volumes:
+        - name: api-token
+          secret:
+            secretName: ksoc-node-agent-api-token-secret
+        - name: unix-socket
+        - hostPath:
+            path: /bin
+            type: ""
+          name: bin
+        - hostPath:
+            path: /etc
+            type: ""
+          name: etc
+        - hostPath:
+            path: /opt
+            type: ""
+          name: opt
+        - hostPath:
+            path: /usr
+            type: ""
+          name: usr
+        - hostPath:
+            path: /proc
+            type: ""
+          name: proc
+        - hostPath:
+            path: /run
+            type: ""
+          name: run
+        - hostPath:
+            path: /sys/fs/cgroup
+            type: ""
+          name: cgroup
+        - hostPath:
+            path: /sys/fs/bpf
+            type: ""
+          name: bpffs
+        - hostPath:
+            path: /sys/kernel/debug
+            type: ""
+          name: debugfs
+        - hostPath:
+            path: /sys/kernel/tracing
+            type: ""
+          name: tracefs
+{{- end -}}

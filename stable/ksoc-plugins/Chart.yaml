@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.3.0
+version: 1.4.0
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: added
-      description: Add k9 in-cluster response plugin
+      description: Add experimental ksoc-node-agent plugin
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source

@@ -1,0 +1,89 @@
+{{- if .Values.ksocNodeAgent.enabled -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ksoc-node-agent
+  namespace: ksoc
+  labels:
+    app_name: ksoc-node-agent
+    app_version: {{ .Values.ksocNodeAgent.image.tag | quote }}
+    maintained_by: ksoc
+automountServiceAccountToken: false
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ksoc-node-agent-api-token-secret
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app_name: ksoc-node-agent
+    app_version: {{ .Values.ksocNodeAgent.image.tag | quote }}
+    maintained_by: ksoc
+  annotations:
+    kubernetes.io/service-account.name: ksoc-node-agent
+type: kubernetes.io/service-account-token
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ksoc-node-agent
+  labels:
+    app_name: ksoc-node-agent
+    app_version: {{ .Values.ksocNodeAgent.image.tag | quote }}
+    maintained_by: ksoc
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "watch", "list"]
+
+  - apiGroups: [ "" ]
+    resources: [ "nodes" ]
+    verbs: [ "get", "watch", "list" ]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ksoc-node-agent
+  labels:
+    app_name: ksoc-node-agent
+    app_version: {{ .Values.ksocNodeAgent.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  kind: ClusterRole
+  name: ksoc-node-agent
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-node-agent
+    namespace: ksoc
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-now-agent-kube-root-ca-reader
+  namespace: kube-system
+  labels:
+    app_name: ksoc-node-agent
+    app_version: {{ .Values.ksocNodeAgent.image.tag | quote }}
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-kube-root-ca-reader
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-node-agent
+    namespace: {{ .Release.Namespace }}
+{{- end -}}
