@@ -398,6 +398,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksoc.base64AccessKeyId | string | `""` | The ID of the Access Key used in this cluster (base64). |
 | ksoc.base64SecretKey | string | `""` | The secret key part of the Access Key used in this cluster (base64). |
 | ksoc.clusterName | string | `""` | The name of the cluster you want displayed in KSOC. |
+| ksoc.seccompProfile | object | `{"enabled":true}` | Enable seccompProfile for all KSOC pods |
 | ksocBootstrapper.env | object | `{}` |  |
 | ksocBootstrapper.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-bootstrapper"` | The image to use for the ksoc-bootstrapper deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-bootstrapper). |
 | ksocBootstrapper.image.tag | string | `"v1.1.4"` |  |

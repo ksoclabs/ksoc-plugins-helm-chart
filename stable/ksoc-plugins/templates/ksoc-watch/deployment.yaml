@@ -38,8 +38,10 @@ spec:
         runAsNonRoot: true
         runAsUser: 65534
         runAsGroup: 65534
+      {{- if .Values.ksoc.seccompProfile.enabled }}
         seccompProfile:
           type: RuntimeDefault
+      {{- end }}
       automountServiceAccountToken: false
       serviceAccountName: ksoc-watch
       {{- if .Values.workloads.imagePullSecretName }}
@@ -62,8 +64,10 @@ spec:
             privileged: false
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
+          {{- if .Values.ksoc.seccompProfile.enabled }}
             seccompProfile:
               type: RuntimeDefault
+          {{- end }}
           env:
             - name: AGENT_VERSION
               value: {{ .Values.ksocWatch.image.tag | quote }}

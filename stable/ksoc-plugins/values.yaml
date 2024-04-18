@@ -11,6 +11,9 @@ ksoc:
   clusterName: ""
   # -- The name of the custom secret containing Access Key.
   accessKeySecretNameOverride: ""
+  # -- Enable seccompProfile for all KSOC pods
+  seccompProfile:
+    enabled: true
 
 workloads:
   # -- Whether to disable service mesh integration.
