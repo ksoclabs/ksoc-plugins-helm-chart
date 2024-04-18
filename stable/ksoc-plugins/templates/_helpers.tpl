@@ -72,8 +72,10 @@ ksoc-bootstrap initContainer
     privileged: false
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
+  {{- if .Values.ksoc.seccompProfile.enabled }}
     seccompProfile:
       type: RuntimeDefault
+  {{- end }}
   env:
     - name: AGENT_VERSION
       value: {{ .Values.ksocBootstrapper.image.tag | quote }}
