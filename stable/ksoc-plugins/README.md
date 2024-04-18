@@ -449,6 +449,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-node-agent"` |  |
 | ksocNodeAgent.image.tag | string | `"v0.0.7"` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
+| ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `false` |  |
 | ksocNodeAgent.tolerations | list | `[]` |  |
 | ksocRuntime.detectReachableVulnerabilities | bool | `false` |  |
 | ksocRuntime.enabled | bool | `false` |  |
