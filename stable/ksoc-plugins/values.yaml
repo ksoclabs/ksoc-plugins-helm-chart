@@ -254,6 +254,7 @@ ksocWatch:
 
 ksocNodeAgent:
   enabled: false
+  reachableVulnerabilitiesEnabled: false
   image:
     repository: us.gcr.io/ksoc-public/ksoc-node-agent
     tag: v0.0.7

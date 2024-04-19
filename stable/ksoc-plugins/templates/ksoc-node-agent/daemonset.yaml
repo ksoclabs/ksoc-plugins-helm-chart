@@ -60,7 +60,13 @@ spec:
                 kube-public,
                 kube-system
             - name: AGENT_TRACER_NET_IGNORE_HOST_NETWORK_NS
-              value: "1"
+              value: "true"
+            {{- if .Values.ksocNodeAgent.reachableVulnerabilitiesEnabled }}
+            - name: AGENT_TRACER_OPEN_ENABLED
+              value: "true"
+            - name: AGENT_TRACER_OPEN_PREFIXES
+              value: "/lib,/lib64,/usr,/bin,/sbin"
+            {{- end }}
             {{- range $key, $value := .Values.ksocNodeAgent.agent.env }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
