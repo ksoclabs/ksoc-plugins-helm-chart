@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.4.5
+version: 1.4.6
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: Added
-      description: Add config option to enable reachable vulnerabilities using experimental ksoc-node-agent plugin
+      description: Node agent - configure containerd socket path
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source

@@ -37,6 +37,7 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.workloads.imagePullSecretName }}
       {{- end }}
+      hostPID: {{ .Values.ksocNodeAgent.agent.hostPID }}
       initContainers:
 {{ include "ksoc-plugins.bootstrap-initcontainer" . | indent 8 }}
       containers:
@@ -45,6 +46,8 @@ spec:
           env:
             - name: HOST_ROOT
               value: /host
+            - name: INSPEKTOR_GADGET_CONTAINERD_SOCKETPATH
+              value: {{ .Values.ksocNodeAgent.agent.collectors.containerd.socket | quote }}
             - name: AGENT_LOG_LEVEL
               value: INFO
             - name: AGENT_NODE_NAME
@@ -52,6 +55,8 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: spec.nodeName
+            - name: AGENT_TRACER_AUTO_MOUNT_FILESYSTEMS
+              value: "1"
             - name: AGENT_TRACER_IGNORE_NAMESPACES
               value: |
                 cert-manager,

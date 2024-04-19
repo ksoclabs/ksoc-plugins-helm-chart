@@ -269,6 +269,11 @@ ksocNodeAgent:
         cpu: 100m
         memory: 128Mi
         ephemeral-storage: 100Mi
+    hostPID: false
+    collectors:
+      containerd:
+        enabled: true
+        socket: /run/containerd/containerd.sock
   exporter:
     env: {}
     resources:
