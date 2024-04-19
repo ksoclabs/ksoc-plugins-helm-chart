@@ -431,7 +431,10 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.tolerations | list | `[]` |  |
 | ksocGuard.webhook.objectSelector | object | `{}` |  |
 | ksocGuard.webhook.timeoutSeconds | int | `10` |  |
+| ksocNodeAgent.agent.collectors.containerd.enabled | bool | `true` |  |
+| ksocNodeAgent.agent.collectors.containerd.socket | string | `"/run/containerd/containerd.sock"` |  |
 | ksocNodeAgent.agent.env | object | `{}` |  |
+| ksocNodeAgent.agent.hostPID | bool | `false` |  |
 | ksocNodeAgent.agent.resources.limits.cpu | string | `"200m"` |  |
 | ksocNodeAgent.agent.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | ksocNodeAgent.agent.resources.limits.memory | string | `"1Gi"` |  |
