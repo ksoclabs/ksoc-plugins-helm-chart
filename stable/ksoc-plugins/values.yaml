@@ -257,7 +257,7 @@ ksocNodeAgent:
   reachableVulnerabilitiesEnabled: false
   image:
     repository: us.gcr.io/ksoc-public/ksoc-node-agent
-    tag: v0.0.7
+    tag: v0.0.8
   agent:
     env: {}
     resources:
@@ -271,9 +271,20 @@ ksocNodeAgent:
         ephemeral-storage: 100Mi
     hostPID: false
     collectors:
+      # An absolute path to the runc binary executable.
+      runtimePath: ""
+      docker:
+        enabled: false
+        socket: run/docker.sock
       containerd:
         enabled: true
         socket: /run/containerd/containerd.sock
+    mounts:
+      # A list of volumes you want to add to the agent pods.
+      volumes: []
+      # A list of volume mounts you want to add to the agent pods.
+      volumeMounts: []
+
   exporter:
     env: {}
     resources:

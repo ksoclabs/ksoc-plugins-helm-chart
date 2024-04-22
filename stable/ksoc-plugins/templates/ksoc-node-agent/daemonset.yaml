@@ -46,8 +46,24 @@ spec:
           env:
             - name: HOST_ROOT
               value: /host
-            - name: INSPEKTOR_GADGET_CONTAINERD_SOCKETPATH
-              value: {{ .Values.ksocNodeAgent.agent.collectors.containerd.socket | quote }}
+            {{- with .Values.ksocNodeAgent.agent.collectors }}
+            - name: AGENT_TRACER_COLLECTOR_DOCKER_ENABLED
+              value: {{ .docker.enabled | quote }}
+            {{- if .docker.enabled }}
+            - name: AGENT_TRACER_COLLECTOR_DOCKER_SOCKET
+              value: {{ .docker.socket | quote }}
+            {{- end }}
+            - name: AGENT_TRACER_COLLECTOR_CONTAINERD_ENABLED
+              value: {{ .containerd.enabled | quote }}
+            {{- if .containerd.enabled }}
+            - name: AGENT_TRACER_COLLECTOR_CONTAINERD_SOCKET
+              value: {{ .containerd.socket | quote }}
+            {{- end }}
+            {{- if .runtimePath }}
+            - name: RUNTIME_PATH
+              value: {{ .runtimePath | quote }}
+            {{- end }}
+            {{- end }}
             - name: AGENT_LOG_LEVEL
               value: INFO
             - name: AGENT_NODE_NAME
@@ -131,7 +147,9 @@ spec:
               name: cgroup
             - mountPath: /sys/fs/bpf
               name: bpffs
-
+            {{- with .Values.ksocNodeAgent.agent.mounts.volumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
         - command:
             - micro-exporter
           env:
@@ -233,4 +251,7 @@ spec:
             path: /sys/kernel/tracing
             type: ""
           name: tracefs
+        {{- with .Values.ksocNodeAgent.agent.mounts.volumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
 {{- end -}}

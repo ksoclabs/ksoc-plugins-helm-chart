@@ -433,8 +433,13 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.webhook.timeoutSeconds | int | `10` |  |
 | ksocNodeAgent.agent.collectors.containerd.enabled | bool | `true` |  |
 | ksocNodeAgent.agent.collectors.containerd.socket | string | `"/run/containerd/containerd.sock"` |  |
+| ksocNodeAgent.agent.collectors.docker.enabled | bool | `false` |  |
+| ksocNodeAgent.agent.collectors.docker.socket | string | `"run/docker.sock"` |  |
+| ksocNodeAgent.agent.collectors.runtimePath | string | `""` |  |
 | ksocNodeAgent.agent.env | object | `{}` |  |
 | ksocNodeAgent.agent.hostPID | bool | `false` |  |
+| ksocNodeAgent.agent.mounts.volumeMounts | list | `[]` |  |
+| ksocNodeAgent.agent.mounts.volumes | list | `[]` |  |
 | ksocNodeAgent.agent.resources.limits.cpu | string | `"200m"` |  |
 | ksocNodeAgent.agent.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | ksocNodeAgent.agent.resources.limits.memory | string | `"1Gi"` |  |
@@ -450,7 +455,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.exporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocNodeAgent.exporter.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-node-agent"` |  |
-| ksocNodeAgent.image.tag | string | `"v0.0.7"` |  |
+| ksocNodeAgent.image.tag | string | `"v0.0.8"` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
 | ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `false` |  |
 | ksocNodeAgent.tolerations | list | `[]` |  |
