@@ -164,13 +164,21 @@ spec:
             - name: EXPORTER_PROVIDER_KSOC_API_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  key: access-key-id
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
                   name: ksoc-access-key
+                  {{ end -}}
+                  key: access-key-id
             - name: EXPORTER_PROVIDER_KSOC_API_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  key: secret-key
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
                   name: ksoc-access-key
+                  {{ end -}}
+                  key: secret-key
             {{- range $key, $value := .Values.ksocNodeAgent.exporter.env }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
