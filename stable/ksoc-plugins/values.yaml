@@ -259,7 +259,8 @@ ksocNodeAgent:
     repository: us.gcr.io/ksoc-public/ksoc-node-agent
     tag: v0.0.8
   agent:
-    env: {}
+    env:
+      AGENT_LOG_LEVEL: INFO
     resources:
       limits:
         cpu: 200m
@@ -286,7 +287,8 @@ ksocNodeAgent:
       volumeMounts: []
 
   exporter:
-    env: {}
+    env:
+      EXPORTER_LOG_LEVEL: INFO
     resources:
       limits:
         cpu: 500m

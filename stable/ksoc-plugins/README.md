@@ -436,7 +436,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.agent.collectors.docker.enabled | bool | `false` |  |
 | ksocNodeAgent.agent.collectors.docker.socket | string | `"run/docker.sock"` |  |
 | ksocNodeAgent.agent.collectors.runtimePath | string | `""` |  |
-| ksocNodeAgent.agent.env | object | `{}` |  |
+| ksocNodeAgent.agent.env.AGENT_LOG_LEVEL | string | `"INFO"` |  |
 | ksocNodeAgent.agent.hostPID | bool | `false` |  |
 | ksocNodeAgent.agent.mounts.volumeMounts | list | `[]` |  |
 | ksocNodeAgent.agent.mounts.volumes | list | `[]` |  |
@@ -447,7 +447,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.agent.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocNodeAgent.agent.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.enabled | bool | `false` |  |
-| ksocNodeAgent.exporter.env | object | `{}` |  |
+| ksocNodeAgent.exporter.env.EXPORTER_LOG_LEVEL | string | `"INFO"` |  |
 | ksocNodeAgent.exporter.resources.limits.cpu | string | `"500m"` |  |
 | ksocNodeAgent.exporter.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | ksocNodeAgent.exporter.resources.limits.memory | string | `"1Gi"` |  |
