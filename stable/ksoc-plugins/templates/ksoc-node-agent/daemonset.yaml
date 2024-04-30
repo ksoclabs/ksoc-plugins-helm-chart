@@ -64,8 +64,6 @@ spec:
               value: {{ .runtimePath | quote }}
             {{- end }}
             {{- end }}
-            - name: AGENT_LOG_LEVEL
-              value: INFO
             - name: AGENT_NODE_NAME
               valueFrom:
                 fieldRef:
@@ -153,8 +151,6 @@ spec:
         - command:
             - micro-exporter
           env:
-            - name: EXPORTER_LOG_LEVEL
-              value: INFO
             - name: EXPORTER_PROVIDER_STDOUT_ENABLED
               value: "false"
             - name: EXPORTER_PROVIDER_KSOC_API_ENABLED
