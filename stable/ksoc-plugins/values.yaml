@@ -261,6 +261,12 @@ ksocNodeAgent:
   agent:
     env:
       AGENT_LOG_LEVEL: INFO
+      AGENT_TRACER_IGNORE_NAMESPACES: |
+        cert-manager,
+        ksoc,
+        kube-node-lease,
+        kube-public,
+        kube-system
     resources:
       limits:
         cpu: 200m

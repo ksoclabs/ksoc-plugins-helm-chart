@@ -71,13 +71,6 @@ spec:
                   fieldPath: spec.nodeName
             - name: AGENT_TRACER_AUTO_MOUNT_FILESYSTEMS
               value: "1"
-            - name: AGENT_TRACER_IGNORE_NAMESPACES
-              value: |
-                cert-manager,
-                ksoc,
-                kube-node-lease,
-                kube-public,
-                kube-system
             - name: AGENT_TRACER_NET_IGNORE_HOST_NETWORK_NS
               value: "true"
             {{- if .Values.ksocNodeAgent.reachableVulnerabilitiesEnabled }}
