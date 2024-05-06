@@ -434,10 +434,12 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.agent.collectors.containerd.enabled | bool | `true` |  |
 | ksocNodeAgent.agent.collectors.containerd.socket | string | `"/run/containerd/containerd.sock"` |  |
 | ksocNodeAgent.agent.collectors.docker.enabled | bool | `false` |  |
-| ksocNodeAgent.agent.collectors.docker.socket | string | `"run/docker.sock"` |  |
+| ksocNodeAgent.agent.collectors.docker.socket | string | `"/run/docker.sock"` |  |
 | ksocNodeAgent.agent.collectors.runtimePath | string | `""` |  |
 | ksocNodeAgent.agent.env.AGENT_LOG_LEVEL | string | `"INFO"` |  |
 | ksocNodeAgent.agent.env.AGENT_TRACER_IGNORE_NAMESPACES | string | `"cert-manager,\nksoc,\nkube-node-lease,\nkube-public,\nkube-system\n"` |  |
+| ksocNodeAgent.agent.eventQueueSize | int | `4096` |  |
+| ksocNodeAgent.agent.grpcServerBatchSize | int | `50` |  |
 | ksocNodeAgent.agent.hostPID | bool | `false` |  |
 | ksocNodeAgent.agent.mounts.volumeMounts | list | `[]` |  |
 | ksocNodeAgent.agent.mounts.volumes | list | `[]` |  |
