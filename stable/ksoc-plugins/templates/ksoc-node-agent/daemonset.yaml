@@ -79,6 +79,14 @@ spec:
             - name: AGENT_TRACER_OPEN_PREFIXES
               value: "/lib,/lib64,/usr,/bin,/sbin"
             {{- end }}
+            {{- if .Values.ksocNodeAgent.agent.eventQueueSize }}
+            - name: AGENT_EVENT_QUEUE_SIZE
+              value: {{ .Values.ksocNodeAgent.agent.eventQueueSize | quote }}
+            {{- end }}
+            {{- if .Values.ksocNodeAgent.agent.grpcServerBatchSize }}
+            - name: AGENT_GRPC_SERVER_BATCH_SIZE
+              value: {{ .Values.ksocNodeAgent.agent.grpcServerBatchSize | quote }}
+            {{- end }}
             {{- range $key, $value := .Values.ksocNodeAgent.agent.env }}
             - name: "{{ $key }}"
               value: "{{ $value }}"

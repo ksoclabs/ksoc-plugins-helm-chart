@@ -282,7 +282,7 @@ ksocNodeAgent:
       runtimePath: ""
       docker:
         enabled: false
-        socket: run/docker.sock
+        socket: /run/docker.sock
       containerd:
         enabled: true
         socket: /run/containerd/containerd.sock
@@ -291,7 +291,8 @@ ksocNodeAgent:
       volumes: []
       # A list of volume mounts you want to add to the agent pods.
       volumeMounts: []
-
+    eventQueueSize: 4096
+    grpcServerBatchSize: 50
   exporter:
     env:
       EXPORTER_LOG_LEVEL: INFO
