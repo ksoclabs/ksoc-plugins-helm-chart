@@ -319,6 +319,8 @@ falco:
       repository: docker.io/falcosecurity/falco-no-driver
       tag: "0.37.1"
   fullnameOverride: ksoc-runtime-ds
+  priorityClass:
+    value: 1000000
   tolerations:
     - effect: NoSchedule
       key: node-role.kubernetes.io/master
