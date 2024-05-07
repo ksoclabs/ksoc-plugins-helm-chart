@@ -362,7 +362,6 @@ The command removes all the Kubernetes components associated with the chart and 
 | falco.image.falco.tag | string | `"0.37.1"` |  |
 | falco.image.falcoctl.repository | string | `"docker.io/falcosecurity/falcoctl"` |  |
 | falco.image.falcoctl.tag | string | `"0.7.1"` |  |
-| falco.priorityClass.value | int | `1000000` |  |
 | falco.resources.limits.cpu | string | `"1"` |  |
 | falco.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | falco.resources.limits.memory | string | `"1Gi"` |  |
@@ -529,5 +528,11 @@ The command removes all the Kubernetes components associated with the chart and 
 | metacollector.nodeSelector | object | `{}` |  |
 | metacollector.resources | object | `{}` |  |
 | metacollector.tolerations | list | `[]` |  |
+| priorityClass.description | string | `"The priority class for KSOC components"` |  |
+| priorityClass.enabled | bool | `false` |  |
+| priorityClass.globalDefault | bool | `false` |  |
+| priorityClass.name | string | `"ksoc-priority"` |  |
+| priorityClass.preemptionPolicy | string | `"PreemptLowerPriority"` |  |
+| priorityClass.value | int | `1000000000` |  |
 | workloads.disableServiceMesh | bool | `true` | Whether to disable service mesh integration. |
 | workloads.imagePullSecretName | string | `""` | The image pull secret name to use to pull container images. |

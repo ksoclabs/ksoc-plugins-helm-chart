@@ -1,14 +1,4 @@
 {{- if .Values.ksocRuntime.enabled  }}
-apiVersion: scheduling.k8s.io/v1
-kind: PriorityClass
-metadata:
-  name: ksoc-runtime-high-priority
-value: {{ .Values.falco.priorityClass.value | int }}
-globalDefault: false
-description: "Priority class for KSOC runtime."
-
----
-
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -29,7 +19,9 @@ spec:
         app.kubernetes.io/name: falco
       name: ksoc-runtime-ds
     spec:
-      priorityClassName: ksoc-runtime-high-priority
+      {{- if and .Values.priorityClass.enabled .Values.priorityClass.name }}
+      priorityClassName: {{ .Values.priorityClass.name }}
+      {{- end }}
       containers:
       - args:
         - /usr/bin/falco

@@ -41,7 +41,9 @@ spec:
       automountServiceAccountToken: false
       initContainers:
 {{ include "ksoc-plugins.bootstrap-initcontainer" . | indent 8 }}
-      priorityClassName: ksoc-runtime-high-priority
+      {{- if and .Values.priorityClass.enabled .Values.priorityClass.name }}
+      priorityClassName: {{ .Values.priorityClass.name }}
+      {{- end }}
       containers:
         - name: ksoc-runtime
           image: {{ .Values.ksocRuntime.reporter.image.repository }}:{{ .Values.ksocRuntime.reporter.image.tag }}

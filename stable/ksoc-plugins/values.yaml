@@ -21,6 +21,14 @@ workloads:
   # -- The image pull secret name to use to pull container images.
   imagePullSecretName: ""
 
+priorityClass:
+  enabled: false
+  name: ksoc-priority
+  value: 1000000000
+  globalDefault: false
+  description: "The priority class for KSOC components"
+  preemptionPolicy: PreemptLowerPriority
+
 ksocBootstrapper:
   image:
     # -- The image to use for the ksoc-bootstrapper deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-bootstrapper).
@@ -319,8 +327,6 @@ falco:
       repository: docker.io/falcosecurity/falco-no-driver
       tag: "0.37.1"
   fullnameOverride: ksoc-runtime-ds
-  priorityClass:
-    value: 1000000
   tolerations:
     - effect: NoSchedule
       key: node-role.kubernetes.io/master
