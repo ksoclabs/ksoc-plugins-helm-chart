@@ -362,6 +362,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | falco.image.falco.tag | string | `"0.37.1"` |  |
 | falco.image.falcoctl.repository | string | `"docker.io/falcosecurity/falcoctl"` |  |
 | falco.image.falcoctl.tag | string | `"0.7.1"` |  |
+| falco.priorityClass.value | int | `1000000` |  |
 | falco.resources.limits.cpu | string | `"1"` |  |
 | falco.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | falco.resources.limits.memory | string | `"1Gi"` |  |
