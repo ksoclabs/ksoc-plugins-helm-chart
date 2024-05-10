@@ -314,6 +314,7 @@ ksocNodeAgent:
         memory: 128Mi
         ephemeral-storage: 100Mi
   nodeSelector: {}
+  nodeName: ""
   tolerations: []
 
   # -- Falco Daemonset configuration. The tolerations and resources are what are provided by default.

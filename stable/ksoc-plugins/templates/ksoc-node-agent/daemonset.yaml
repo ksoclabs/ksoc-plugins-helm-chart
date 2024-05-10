@@ -192,6 +192,9 @@ spec:
               name: unix-socket
 
       dnsPolicy: ClusterFirst
+      {{ if .Values.ksocNodeAgent.nodeName -}}
+      nodeName: {{ .Values.ksocNodeAgent.nodeName }}
+      {{ end -}}
       {{- with .Values.ksocNodeAgent.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
