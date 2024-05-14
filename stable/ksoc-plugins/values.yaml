@@ -178,7 +178,7 @@ ksocSbom:
   image:
     # -- The image to use for the ksoc-sbom deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sbom).
     repository: us.gcr.io/ksoc-public/ksoc-sbom
-    tag: v1.1.11
+    tag: v1.1.12
   env:
     # -- Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure
     # that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment
