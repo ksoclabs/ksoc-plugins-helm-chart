@@ -438,8 +438,8 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.agent.collectors.runtimePath | string | `""` |  |
 | ksocNodeAgent.agent.env.AGENT_LOG_LEVEL | string | `"INFO"` |  |
 | ksocNodeAgent.agent.env.AGENT_TRACER_IGNORE_NAMESPACES | string | `"cert-manager,\nksoc,\nkube-node-lease,\nkube-public,\nkube-system\n"` |  |
-| ksocNodeAgent.agent.eventQueueSize | int | `4096` |  |
-| ksocNodeAgent.agent.grpcServerBatchSize | int | `50` |  |
+| ksocNodeAgent.agent.eventQueueSize | int | `20000` |  |
+| ksocNodeAgent.agent.grpcServerBatchSize | int | `2000` |  |
 | ksocNodeAgent.agent.hostPID | bool | `false` |  |
 | ksocNodeAgent.agent.mounts.volumeMounts | list | `[]` |  |
 | ksocNodeAgent.agent.mounts.volumes | list | `[]` |  |
@@ -458,7 +458,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.exporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocNodeAgent.exporter.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-node-agent"` |  |
-| ksocNodeAgent.image.tag | string | `"v0.0.8"` |  |
+| ksocNodeAgent.image.tag | string | `"v0.0.10"` |  |
 | ksocNodeAgent.nodeName | string | `""` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
 | ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `false` |  |
