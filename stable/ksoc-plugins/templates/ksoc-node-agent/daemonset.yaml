@@ -22,6 +22,8 @@ spec:
   selector:
     matchLabels:
       app_name: ksoc-node-agent
+  updateStrategy:
+{{ toYaml .Values.ksocNodeAgent.updateStrategy | indent 4 }}
   template:
     metadata:
       annotations:
