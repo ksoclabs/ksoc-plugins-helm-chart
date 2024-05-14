@@ -267,7 +267,7 @@ ksocNodeAgent:
   reachableVulnerabilitiesEnabled: false
   image:
     repository: us.gcr.io/ksoc-public/ksoc-node-agent
-    tag: v0.0.8
+    tag: v0.0.10
   agent:
     env:
       AGENT_LOG_LEVEL: INFO
@@ -301,8 +301,8 @@ ksocNodeAgent:
       volumes: []
       # A list of volume mounts you want to add to the agent pods.
       volumeMounts: []
-    eventQueueSize: 4096
-    grpcServerBatchSize: 50
+    eventQueueSize: 20000
+    grpcServerBatchSize: 2000
   exporter:
     env:
       EXPORTER_LOG_LEVEL: INFO
