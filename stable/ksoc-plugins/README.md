@@ -463,6 +463,9 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
 | ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `false` |  |
 | ksocNodeAgent.tolerations | list | `[]` |  |
+| ksocNodeAgent.updateStrategy.rollingUpdate.maxSurge | string | `"0"` | The maximum number of pods that can be scheduled above the desired number of pods. Can be an absolute number ("5") or percent, e.g. "10%" |
+| ksocNodeAgent.updateStrategy.rollingUpdate.maxUnavailable | string | `"1"` | The maximum number of pods that can be unavailable during the update. Can be an absolute number ("5") or percent, e.g. "10%" |
+| ksocNodeAgent.updateStrategy.type | string | `"RollingUpdate"` |  |
 | ksocRuntime.detectReachableVulnerabilities | bool | `false` |  |
 | ksocRuntime.enabled | bool | `false` |  |
 | ksocRuntime.reporter.env.LOG_LEVEL | string | `"info"` |  |

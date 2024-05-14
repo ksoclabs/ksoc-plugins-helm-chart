@@ -318,6 +318,13 @@ ksocNodeAgent:
   nodeSelector: {}
   nodeName: ""
   tolerations: []
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # -- The maximum number of pods that can be unavailable during the update. Can be an absolute number ("5") or percent, e.g. "10%"
+      maxUnavailable: "1"
+      # -- The maximum number of pods that can be scheduled above the desired number of pods. Can be an absolute number ("5") or percent, e.g. "10%"
+      maxSurge: "0"
 
   # -- Falco Daemonset configuration. The tolerations and resources are what are provided by default.
   # -- You can change them if need be.
