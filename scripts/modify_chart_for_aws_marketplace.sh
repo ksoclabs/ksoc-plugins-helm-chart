@@ -14,3 +14,6 @@ sed -i "s|$FALCO_REGISTRY|$ECR_REGISTRY_NAME|g" "$FILE"
 sed -i '/# --/d' "$FILE"
 
 yq e -i '.eksAddon.enabled = true' $FILE
+
+rm ./stable/ksoc-plugins/templates/access-key-secret.yaml
+rm ./stable/ksoc-plugins/templates/rbac-kube-system.yaml

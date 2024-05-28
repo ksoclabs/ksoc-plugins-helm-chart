@@ -131,23 +131,4 @@ subjects:
     name: ksoc-watch
     namespace: {{ .Release.Namespace }}
 
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: ksoc-watch-kube-root-ca-reader
-  namespace: kube-system
-  labels:
-    app_name: ksoc-watch
-    app_version: {{ .Values.ksocWatch.image.tag | quote }}
-    maintained_by: ksoc
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: ksoc-kube-root-ca-reader
-subjects:
-  - kind: ServiceAccount
-    name: ksoc-watch
-    namespace: {{ .Release.Namespace }}
 {{- end -}}
