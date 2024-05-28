@@ -405,4 +405,4 @@ eksAddon:
   enabled: false
   image:
     repository: public.ecr.aws/eks-distro/kubernetes/pause
-    tag: v1.29.1-eks-1-29-latest
+    tag: v1.29.5-eks-1-29-latest
