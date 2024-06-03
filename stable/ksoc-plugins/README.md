@@ -159,7 +159,7 @@ Example output (chart version may differ):
 ```bash
 helm search repo ksoc
 NAME                     	CHART VERSION	APP VERSION	DESCRIPTION
-ksoc/ksoc-plugins        	1.2.16        	           	A Helm chart to run the KSOC plugins
+ksoc/ksoc-plugins        	1.4.24        	           	A Helm chart to run the KSOC plugins
 ```
 
 ### 4. Create cluster-specific values file
@@ -418,11 +418,11 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.config.LOG_LEVEL | string | `"info"` | The log level to use. |
 | ksocGuard.enabled | bool | `true` |  |
 | ksocGuard.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-guard"` | The image to use for the ksoc-guard deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-guard). |
-| ksocGuard.image.tag | string | `"v1.1.5"` |  |
+| ksocGuard.image.tag | string | `"v1.1.8"` |  |
 | ksocGuard.nodeSelector | object | `{}` |  |
 | ksocGuard.podAnnotations | object | `{}` |  |
 | ksocGuard.replicas | int | `1` |  |
-| ksocGuard.resources.limits.cpu | string | `"250m"` |  |
+| ksocGuard.resources.limits.cpu | string | `"500m"` |  |
 | ksocGuard.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | ksocGuard.resources.limits.memory | string | `"500Mi"` |  |
 | ksocGuard.resources.requests.cpu | string | `"100m"` |  |
