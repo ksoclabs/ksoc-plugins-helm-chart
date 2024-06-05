@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.4.25
+version: 1.4.26
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: changed
-      description: KSOC Node Agent - reduce logs for network events
+      description: KSOC Node Agent - added http proxy support
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source

@@ -458,7 +458,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.exporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocNodeAgent.exporter.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-node-agent"` |  |
-| ksocNodeAgent.image.tag | string | `"v0.0.14"` |  |
+| ksocNodeAgent.image.tag | string | `"v0.0.15"` |  |
 | ksocNodeAgent.nodeName | string | `""` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
 | ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `false` |  |
