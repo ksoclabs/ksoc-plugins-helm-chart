@@ -33,4 +33,24 @@ roleRef:
 
 ---
 
+{{- if ( eq .Values.eksAddon.enabled false ) -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-k9-kube-root-ca-reader
+  namespace: kube-system
+  labels:
+    app_name: ksoc-sbom
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-kube-root-ca-reader
+subjects:
+  - kind: ServiceAccount
+    name: agent-ksoc-k9
+    namespace: ksoc
+
+---
+{{- end -}}
 {{- end -}}

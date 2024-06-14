@@ -143,4 +143,27 @@ subjects:
   - kind: ServiceAccount
     name: ksoc-guard
     namespace: system
-{{- end -}}
+
+---
+
+{{- if ( eq .Values.eksAddon.enabled false ) }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-guard-kube-root-ca-reader
+  namespace: kube-system
+  labels:
+    app_name: ksoc-guard
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-kube-root-ca-reader
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-guard
+    namespace: ksoc
+
+---
+{{- end }}
+{{- end }}

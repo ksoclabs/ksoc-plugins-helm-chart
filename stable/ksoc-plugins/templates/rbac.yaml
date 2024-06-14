@@ -63,3 +63,20 @@ rules:
       - create
 
 ---
+
+{{ if ( eq .Values.eksAddon.enabled false ) -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ksoc-kube-root-ca-reader
+  namespace: kube-system
+  labels:
+    maintained_by: ksoc
+rules:
+  - apiGroups: [""]
+    resources: [ "configmaps" ]
+    resourceNames: [ "kube-root-ca.crt" ]
+    verbs: ["get", "watch", "list"]
+
+---
+{{ end -}}

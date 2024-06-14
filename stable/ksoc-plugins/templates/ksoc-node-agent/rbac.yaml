@@ -67,4 +67,28 @@ subjects:
     name: ksoc-node-agent
     namespace: ksoc
 
+---
+
+{{- if ( eq .Values.eksAddon.enabled false ) -}}
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ksoc-now-agent-kube-root-ca-reader
+  namespace: kube-system
+  labels:
+    app_name: ksoc-node-agent
+    maintained_by: ksoc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ksoc-kube-root-ca-reader
+subjects:
+  - kind: ServiceAccount
+    name: ksoc-node-agent
+    namespace: ksoc
+
+---
+{{- end -}}
+
 {{- end -}}
