@@ -27,7 +27,7 @@ type: kubernetes.io/service-account-token
 
 ---
 
-{{ if ( eq .Values.eksAddon.enabled false ) -}}
+{{ if ( eq .Values.eksAddon.enabled false ) }}
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
