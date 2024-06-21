@@ -62,3 +62,5 @@ jobs:
         uses: helm/chart-testing-action@v2.6.1
       - name: Run chart-testing (lint)
         run: ct lint --config test/ct.yaml
+      - name: Run helm lint
+        run: helm lint stable/ksoc-plugins
