@@ -27,6 +27,8 @@ type: kubernetes.io/service-account-token
 
 ---
 
+{{ if ( eq .Values.eksAddon.enabled false ) -}}
+
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -45,4 +47,7 @@ subjects:
     name: ksoc-runtime
     namespace: {{ .Release.Namespace }}
 
-{{- end -}}
+---
+
+{{- end }}
+{{- end }}

@@ -52,5 +52,6 @@ subjects:
     namespace: ksoc
 
 ---
-{{- end -}}
-{{- end -}}
+
+{{- end }}
+{{- end }}
