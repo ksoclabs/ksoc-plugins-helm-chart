@@ -152,5 +152,6 @@ subjects:
     namespace: {{ .Release.Namespace }}
 
 ---
-{{ end -}}
-{{ end -}}
+
+{{- end }}
+{{- end }}
