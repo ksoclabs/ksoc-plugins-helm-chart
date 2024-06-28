@@ -159,7 +159,7 @@ Example output (chart version may differ):
 ```bash
 helm search repo ksoc
 NAME                     	CHART VERSION	APP VERSION	DESCRIPTION
-ksoc/ksoc-plugins        	1.4.30        	           	A Helm chart to run the KSOC plugins
+ksoc/ksoc-plugins        	1.4.31        	           	A Helm chart to run the KSOC plugins
 ```
 
 ### 4. Create cluster-specific values file
@@ -516,7 +516,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocWatch.enabled | bool | `true` |  |
 | ksocWatch.env.RECONCILIATION_AT_START | bool | `false` | Whether to trigger reconciliation at startup. |
 | ksocWatch.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-watch"` | The image to use for the ksoc-watch deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-watch). |
-| ksocWatch.image.tag | string | `"v1.1.16"` |  |
+| ksocWatch.image.tag | string | `"v1.1.17"` |  |
 | ksocWatch.ingestCustomResources | bool | `false` | If set will allow ingesting Custom Resources specified in `customResourceRules` |
 | ksocWatch.nodeSelector | object | `{}` |  |
 | ksocWatch.podAnnotations | object | `{}` |  |
