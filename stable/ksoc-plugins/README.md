@@ -357,21 +357,6 @@ The command removes all the Kubernetes components associated with the chart and 
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| falco.fullnameOverride | string | `"ksoc-runtime-ds"` |  |
-| falco.image.falco.repository | string | `"docker.io/falcosecurity/falco-no-driver"` |  |
-| falco.image.falco.tag | string | `"0.37.1"` |  |
-| falco.image.falcoctl.repository | string | `"docker.io/falcosecurity/falcoctl"` |  |
-| falco.image.falcoctl.tag | string | `"0.7.1"` |  |
-| falco.resources.limits.cpu | string | `"1"` |  |
-| falco.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
-| falco.resources.limits.memory | string | `"1Gi"` |  |
-| falco.resources.requests.cpu | string | `"100m"` |  |
-| falco.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
-| falco.resources.requests.memory | string | `"512Mi"` |  |
-| falco.tolerations[0].effect | string | `"NoSchedule"` |  |
-| falco.tolerations[0].key | string | `"node-role.kubernetes.io/master"` |  |
-| falco.tolerations[1].effect | string | `"NoSchedule"` |  |
-| falco.tolerations[1].key | string | `"node-role.kubernetes.io/control-plane"` |  |
 | k9.backend.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-backend-agent"` |  |
 | k9.backend.image.tag | string | `"v0.0.23"` |  |
 | k9.capabilities.enableGetLogs | bool | `false` |  |
@@ -466,22 +451,6 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.updateStrategy.rollingUpdate.maxSurge | int | `0` | The maximum number of pods that can be scheduled above the desired number of pods. Can be an absolute number or percent, e.g. `5` or `"10%"` |
 | ksocNodeAgent.updateStrategy.rollingUpdate.maxUnavailable | int | `1` | The maximum number of pods that can be unavailable during the update. Can be an absolute number or percent, e.g.  `5` or `"10%"` |
 | ksocNodeAgent.updateStrategy.type | string | `"RollingUpdate"` |  |
-| ksocRuntime.detectReachableVulnerabilities | bool | `false` |  |
-| ksocRuntime.enabled | bool | `false` |  |
-| ksocRuntime.reporter.env.LOG_LEVEL | string | `"info"` |  |
-| ksocRuntime.reporter.image.repository | string | `"us.gcr.io/ksoc-public/runtime-reporter"` |  |
-| ksocRuntime.reporter.image.tag | string | `"v1.1.5"` |  |
-| ksocRuntime.reporter.nodeSelector | object | `{}` |  |
-| ksocRuntime.reporter.podAnnotations | object | `{}` |  |
-| ksocRuntime.reporter.replicas | int | `3` |  |
-| ksocRuntime.reporter.resources.limits.cpu | string | `"250m"` |  |
-| ksocRuntime.reporter.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
-| ksocRuntime.reporter.resources.limits.memory | string | `"500Mi"` |  |
-| ksocRuntime.reporter.resources.requests.cpu | string | `"100m"` |  |
-| ksocRuntime.reporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
-| ksocRuntime.reporter.resources.requests.memory | string | `"100Mi"` |  |
-| ksocRuntime.reporter.tolerations | list | `[]` |  |
-| ksocRuntime.runtimeProfileRules | string | `"- list: ksoc_k8s_namespaces_excluded_from_runtime_profiles\n  items:\n    - kube-system\n    - cert-manager\n    - calico-system\n    - calico-apiserver\n    - ksoc\n- macro: ksoc_container_is_new\n  condition: (container.duration <= 60000000000)\n- macro: ksoc_container_entrypoint\n  condition: >\n    ((not proc.pname exists or proc.pname in (runc:[0:PARENT], runc:[1:CHILD], runc, pause, crio))\n    or proc.name in (runc:[0:PARENT], runc:[1:CHILD], runc, pause, crio))\n- macro: ksoc_is_shared_library\n  condition: >\n    (fd.name glob '*/lib/*.so*')\n- rule: KSOC file access profile updated\n  desc: Detect when file access profile is updated, e.g. when shared libraries are loaded by executable binaries\n  source: syscall\n  condition: >\n    (open_read\n    and container\n    and ksoc_container_is_new\n    and not ksoc_container_entrypoint\n    and ksoc_is_shared_library\n    and not k8s.ns.name in (ksoc_k8s_namespaces_excluded_from_runtime_profiles))\n  output: |-\n    File access profile updated\n    (proc_name=%proc.name\n    container_id=%container.id\n    container_name=%container.name\n    container_image_repository=%container.image.repository\n    container_image_tag=%container.image.tag\n    container_image_digest=%container.image.digest\n    k8s_pod_name=%k8s.pod.name\n    k8s_ns_name=%k8s.ns.name\n    fd_name=%fd.name)\n  priority: NOTICE\n  tags:\n    - ksoc_file_access_profile\n    - file\n  enabled: true\n- rule: KSOC executable profile updated\n  desc: Detect when executable profile is updated, e.g. when programs are executed in containers\n  source: syscall\n  condition: >\n    (spawned_process\n    and container\n    and ksoc_container_is_new\n    and not ksoc_container_entrypoint\n    and not k8s.ns.name in (ksoc_k8s_namespaces_excluded_from_runtime_profiles))\n  output: |-\n    Executable profile updated\n    (proc_name=%proc.name\n    container_id=%container.id\n    container_name=%container.name\n    container_image_repository=%container.image.repository\n    container_image_tag=%container.image.tag\n    container_image_digest=%container.image.digest\n    k8s_pod_name=%k8s.pod.name\n    k8s_ns_name=%k8s.ns.name\n    proc_exepath=%proc.exepath)\n  priority: NOTICE\n  tags:\n    - ksoc_executable_profile\n    - process\n  enabled: true\n"` |  |
 | ksocSbom.enabled | bool | `true` |  |
 | ksocSbom.env.LOG_LEVEL | string | `"info"` | The log level to use.  Options are trace, debug, info, warn, error |
 | ksocSbom.env.MUTATE_ANNOTATIONS | bool | `false` | Whether to mutate the annotations in pod spec by adding images digests. Annotations can be used to track image digests in addition to, or instead of the image tag mutation. |
@@ -527,12 +496,6 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocWatch.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocWatch.resources.requests.memory | string | `"128Mi"` |  |
 | ksocWatch.tolerations | list | `[]` |  |
-| metacollector.enabled | bool | `false` |  |
-| metacollector.image.repository | string | `"docker.io/falcosecurity/k8s-metacollector"` |  |
-| metacollector.image.tag | string | `"0.1.0"` |  |
-| metacollector.nodeSelector | object | `{}` |  |
-| metacollector.resources | object | `{}` |  |
-| metacollector.tolerations | list | `[]` |  |
 | priorityClass.description | string | `"The priority class for KSOC components"` |  |
 | priorityClass.enabled | bool | `false` |  |
 | priorityClass.globalDefault | bool | `false` |  |
