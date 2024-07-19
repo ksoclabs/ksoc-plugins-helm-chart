@@ -18,6 +18,8 @@ annotations:
   artifacthub.io/changes: |
     - kind: added
       description: new version of ksoc-watch with fallback to default list of resources
+    - kind: removed
+      description: removed old metacollector files
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
