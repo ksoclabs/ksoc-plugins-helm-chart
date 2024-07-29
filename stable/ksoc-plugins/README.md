@@ -159,7 +159,7 @@ Example output (chart version may differ):
 ```bash
 helm search repo ksoc
 NAME                     	CHART VERSION	APP VERSION	DESCRIPTION
-ksoc/ksoc-plugins        	1.5.2        	           	A Helm chart to run the KSOC plugins
+ksoc/ksoc-plugins        	1.5.3        	           	A Helm chart to run the KSOC plugins
 ```
 
 ### 4. Create cluster-specific values file
@@ -457,7 +457,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSbom.env.MUTATE_IMAGE | bool | `true` | Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment reconciler requires a strict image tag match. |
 | ksocSbom.env.SBOM_FORMAT | string | `"cyclonedx-json"` | The format of the generated SBOM. Currently we support: syft-json,cyclonedx-json,spdx-json |
 | ksocSbom.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-sbom"` | The image to use for the ksoc-sbom deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sbom). |
-| ksocSbom.image.tag | string | `"v1.1.16"` |  |
+| ksocSbom.image.tag | string | `"v1.1.18"` |  |
 | ksocSbom.nodeSelector | object | `{}` |  |
 | ksocSbom.podAnnotations | object | `{}` |  |
 | ksocSbom.resources.limits.cpu | string | `"1000m"` |  |
