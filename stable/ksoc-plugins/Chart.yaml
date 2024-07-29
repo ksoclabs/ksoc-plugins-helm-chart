@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.5.2
+version: 1.5.3
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -13,11 +13,11 @@ maintainers:
   - name: KSOC Engineering
     email: engineering@ksoc.com
 annotations:
-  artifacthub.io/category: security
+  artifacthub.io/category: fixed
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
-    - kind: security
-      description: Bump all plugins to latest version to address security vulnerabilities
+    - kind: fixed
+      description: Fix the issue with the ksoc-sbom admission handler
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
