@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: ksoc-node-agent
-  namespace: ksoc
+  namespace: {{ .Release.Namespace }}
   labels:
     app_name: ksoc-node-agent
     app_version: {{ .Values.ksocNodeAgent.image.tag | quote }}
@@ -65,7 +65,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: ksoc-node-agent
-    namespace: ksoc
+    namespace: {{ .Release.Namespace }}
 
 ---
 
@@ -86,7 +86,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: ksoc-node-agent
-    namespace: ksoc
+    namespace: {{ .Release.Namespace }}
 
 ---
 
