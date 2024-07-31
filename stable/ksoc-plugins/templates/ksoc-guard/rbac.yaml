@@ -162,7 +162,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: ksoc-guard
-    namespace: ksoc
+    namespace: {{ .Release.Namespace }}
 
 ---
 {{- end }}

@@ -49,7 +49,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: agent-ksoc-k9
-    namespace: ksoc
+    namespace: {{ .Release.Namespace }}
 
 ---
 
