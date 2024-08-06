@@ -358,7 +358,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | k9.backend.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-backend-agent"` |  |
-| k9.backend.image.tag | string | `"v0.0.23"` |  |
+| k9.backend.image.tag | string | `"v0.0.31"` |  |
 | k9.capabilities.enableGetLogs | bool | `false` |  |
 | k9.capabilities.enableLabelPod | bool | `false` |  |
 | k9.capabilities.enableQuarantine | bool | `false` |  |
@@ -367,7 +367,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | k9.enabled | bool | `false` |  |
 | k9.frontend.agentActionPollInterval | string | `"5s"` | The interval in which the agent polls the backend for new actions. |
 | k9.frontend.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-frontend-agent"` |  |
-| k9.frontend.image.tag | string | `"v0.0.23"` |  |
+| k9.frontend.image.tag | string | `"v0.0.31"` |  |
 | k9.nodeSelector | object | `{}` |  |
 | k9.replicas | int | `1` |  |
 | k9.resources.limits.cpu | string | `"250m"` |  |
