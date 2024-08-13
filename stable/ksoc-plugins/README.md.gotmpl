@@ -306,6 +306,46 @@ ksocWatch:
       - "ResourceC"
 ```
 
+## Node Agent Exec Filters
+
+
+Node Agent allows to use wildcard rules to filtering command line arguments
+
+To redact a secret used in `command secret=value`, you can use
+the following Node Agent configuration:
+
+```yaml
+ksocNodeAgent:
+  exporter:
+    execFilters:
+    - wildcard: "command secret=(*)"`.
+```
+
+All _wildcard groups_, i.e., `*` enclosed in parentheses will be redacted.
+
+Wildcards not enclosed in parentheses can be used to match arguments that should not be redacted.
+
+For example, the wildcard rule:
+```yaml
+ksocNodeAgent:
+  exporter:
+    execFilters:
+    - wildcard: "command * secret=(*)"
+```
+
+result in the following redacted commands:
+
+- `command -p secret=value` - `command -p secret=*****`
+- `command --some-param secret=value` - `command --some-param secret=*****`
+
+Simple patterns matching all commands can be also used. To redact `secret=value` in all commands, the following filter can be used:
+```yaml
+ksocNodeAgent:
+  exporter:
+    execFilters:
+    - wildcard: "secret=(*)"
+```
+
 ## Upgrading the Chart
 
 Typically, we advise maintaining the most current versions of plugins. However, our [KSOC](https://ksoc.com) plugins are designed to support upgrades between any two versions, with certain exceptions as outlined in our Helm chart changelog which you can access [here](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=changelog).

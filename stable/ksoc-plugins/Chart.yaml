@@ -16,8 +16,8 @@ annotations:
   artifacthub.io/category: security
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
-    - kind: security
-      description: address security vulnerabilities
+    - kind: added
+      description: Added Node Agent Exec Filters to redact command line arguments
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/links: |
     - name: source

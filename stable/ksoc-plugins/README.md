@@ -306,6 +306,45 @@ ksocWatch:
       - "ResourceC"
 ```
 
+## Node Agent Exec Filters
+
+Node Agent allows to use wildcard rules to filtering command line arguments
+
+To redact a secret used in `command secret=value`, you can use
+the following Node Agent configuration:
+
+```yaml
+ksocNodeAgent:
+  exporter:
+    execFilters:
+    - wildcard: "command secret=(*)"`.
+```
+
+All _wildcard groups_, i.e., `*` enclosed in parentheses will be redacted.
+
+Wildcards not enclosed in parentheses can be used to match arguments that should not be redacted.
+
+For example, the wildcard rule:
+```yaml
+ksocNodeAgent:
+  exporter:
+    execFilters:
+    - wildcard: "command * secret=(*)"
+```
+
+result in the following redacted commands:
+
+- `command -p secret=value` - `command -p secret=*****`
+- `command --some-param secret=value` - `command --some-param secret=*****`
+
+Simple patterns matching all commands can be also used. To redact `secret=value` in all commands, the following filter can be used:
+```yaml
+ksocNodeAgent:
+  exporter:
+    execFilters:
+    - wildcard: "secret=(*)"
+```
+
 ## Upgrading the Chart
 
 Typically, we advise maintaining the most current versions of plugins. However, our [KSOC](https://ksoc.com) plugins are designed to support upgrades between any two versions, with certain exceptions as outlined in our Helm chart changelog which you can access [here](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=changelog).
@@ -436,6 +475,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.agent.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.enabled | bool | `false` |  |
 | ksocNodeAgent.exporter.env.EXPORTER_LOG_LEVEL | string | `"INFO"` |  |
+| ksocNodeAgent.exporter.execFilters | list | `[]` | Allows to specify wildcard rules for filtering command arguments. |
 | ksocNodeAgent.exporter.resources.limits.cpu | string | `"500m"` |  |
 | ksocNodeAgent.exporter.resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | ksocNodeAgent.exporter.resources.limits.memory | string | `"1Gi"` |  |
@@ -443,7 +483,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.exporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocNodeAgent.exporter.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-node-agent"` |  |
-| ksocNodeAgent.image.tag | string | `"v0.0.17"` |  |
+| ksocNodeAgent.image.tag | string | `"v0.0.18"` |  |
 | ksocNodeAgent.nodeName | string | `""` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
 | ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `false` |  |
