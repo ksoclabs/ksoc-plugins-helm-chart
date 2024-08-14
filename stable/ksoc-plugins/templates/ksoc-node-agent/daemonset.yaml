@@ -178,6 +178,11 @@ spec:
                   name: ksoc-access-key
                   {{ end -}}
                   key: secret-key
+            {{ if .Values.ksocNodeAgent.exporter.execFilters -}}
+            {{- $filters := printf "execFilters: %s" (.Values.ksocNodeAgent.exporter.execFilters | toJson ) -}}
+            - name: EXPORTER_EXEC_FILTERS
+              value: {{  $filters | fromYaml | toJson | squote }}
+            {{- end }}
             {{- range $key, $value := .Values.ksocNodeAgent.exporter.env }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
