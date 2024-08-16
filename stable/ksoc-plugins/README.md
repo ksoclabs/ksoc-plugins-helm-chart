@@ -536,6 +536,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocWatch.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocWatch.resources.requests.memory | string | `"128Mi"` |  |
 | ksocWatch.tolerations | list | `[]` |  |
+| openshift.enabled | bool | `false` |  |
 | priorityClass.description | string | `"The priority class for KSOC components"` |  |
 | priorityClass.enabled | bool | `false` |  |
 | priorityClass.globalDefault | bool | `false` |  |

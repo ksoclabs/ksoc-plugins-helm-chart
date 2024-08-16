@@ -273,6 +273,10 @@ k9:
   tolerations: []
   nodeSelector: {}
 
+# Toggles support for Openshift. Please note that functionality is limited at the moment.
+openshift:
+  enabled: false
+
 # @ignored
 # -- Configuration for the EKS Addon dummy deployment. This is needed to track the status of addon.
 # -- This is a known issue and this is the  workaround for now. If you are not installing through the
