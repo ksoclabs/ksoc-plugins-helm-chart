@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.6.0
+version: 1.6.1
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: added
-      description: Added Node Agent Exec Filters to redact command line arguments
+      description: Adds support for Openshift by adding SecurityContextConstraints
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/links: |
     - name: source

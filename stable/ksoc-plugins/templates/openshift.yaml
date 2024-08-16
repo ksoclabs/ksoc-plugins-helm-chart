@@ -1,0 +1,45 @@
+{{- if and .Values.openshift .Values.openshift.enabled -}}
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: rad-scc
+allowHostDirVolumePlugin: true
+allowPrivilegedContainer: true
+allowHostIPC: true
+allowHostNetwork: true
+allowHostPID: true
+allowHostPorts: true
+allowedCapabilities:
+  - SYS_ADMIN
+  - SYSLOG
+  - SYS_PTRACE
+  - SYS_RESOURCE
+  - IPC_LOCK
+  - NET_ADMIN
+  - NET_RAW
+requiredDropCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
+priority: 0
+readOnlyRootFilesystem: true
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+supplementalGroups:
+  type: RunAsAny
+seccompProfiles:
+  - "*"
+users:
+  - system:serviceaccount:{{ .Release.Namespace }}:ksoc-node-agent
+  - system:serviceaccount:{{ .Release.Namespace }}:ksoc-guard
+  - system:serviceaccount:{{ .Release.Namespace }}:ksoc-sbom
+  - system:serviceaccount:{{ .Release.Namespace }}:ksoc-sync
+  - system:serviceaccount:{{ .Release.Namespace }}:ksoc-watch
+volumes:
+  - downwardAPI
+  - emptyDir
+  - hostPath
+  - secret
+{{- end -}}
