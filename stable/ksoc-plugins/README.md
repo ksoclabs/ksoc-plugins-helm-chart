@@ -506,6 +506,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSbom.resources.requests.cpu | string | `"500m"` |  |
 | ksocSbom.resources.requests.ephemeral-storage | string | `"1Gi"` |  |
 | ksocSbom.resources.requests.memory | string | `"1Gi"` |  |
+| ksocSbom.serviceAccountAnnotations | object | `{}` |  |
 | ksocSbom.tolerations | list | `[]` |  |
 | ksocSbom.webhook.timeoutSeconds | int | `10` |  |
 | ksocSync.enabled | bool | `true` |  |
