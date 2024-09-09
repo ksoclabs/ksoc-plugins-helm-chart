@@ -159,7 +159,7 @@ Example output (chart version may differ):
 ```bash
 helm search repo ksoc
 NAME                     	CHART VERSION	APP VERSION	DESCRIPTION
-ksoc/ksoc-plugins        	1.5.6        	           	A Helm chart to run the KSOC plugins
+ksoc/ksoc-plugins        	1.6.3        	           	A Helm chart to run the KSOC plugins
 ```
 
 ### 4. Create cluster-specific values file
@@ -397,7 +397,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | k9.backend.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-backend-agent"` |  |
-| k9.backend.image.tag | string | `"v0.0.31"` |  |
+| k9.backend.image.tag | string | `"v0.0.32"` |  |
 | k9.capabilities.enableGetLogs | bool | `false` |  |
 | k9.capabilities.enableLabelPod | bool | `false` |  |
 | k9.capabilities.enableQuarantine | bool | `false` |  |
@@ -406,7 +406,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | k9.enabled | bool | `false` |  |
 | k9.frontend.agentActionPollInterval | string | `"5s"` | The interval in which the agent polls the backend for new actions. |
 | k9.frontend.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-frontend-agent"` |  |
-| k9.frontend.image.tag | string | `"v0.0.31"` |  |
+| k9.frontend.image.tag | string | `"v0.0.32"` |  |
 | k9.nodeSelector | object | `{}` |  |
 | k9.replicas | int | `1` |  |
 | k9.resources.limits.cpu | string | `"250m"` |  |
@@ -425,7 +425,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksoc.seccompProfile | object | `{"enabled":true}` | Enable seccompProfile for all KSOC pods |
 | ksocBootstrapper.env | object | `{}` |  |
 | ksocBootstrapper.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-bootstrapper"` | The image to use for the ksoc-bootstrapper deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-bootstrapper). |
-| ksocBootstrapper.image.tag | string | `"v1.1.6"` |  |
+| ksocBootstrapper.image.tag | string | `"v1.1.7"` |  |
 | ksocBootstrapper.nodeSelector | object | `{}` |  |
 | ksocBootstrapper.podAnnotations | object | `{}` |  |
 | ksocBootstrapper.resources.limits.cpu | string | `"100m"` |  |
@@ -442,7 +442,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.config.LOG_LEVEL | string | `"info"` | The log level to use. |
 | ksocGuard.enabled | bool | `true` |  |
 | ksocGuard.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-guard"` | The image to use for the ksoc-guard deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-guard). |
-| ksocGuard.image.tag | string | `"v1.1.10"` |  |
+| ksocGuard.image.tag | string | `"v1.1.11"` |  |
 | ksocGuard.nodeSelector | object | `{}` |  |
 | ksocGuard.podAnnotations | object | `{}` |  |
 | ksocGuard.replicas | int | `1` |  |
@@ -483,7 +483,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.exporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocNodeAgent.exporter.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-node-agent"` |  |
-| ksocNodeAgent.image.tag | string | `"v0.0.18"` |  |
+| ksocNodeAgent.image.tag | string | `"v0.0.19"` |  |
 | ksocNodeAgent.nodeName | string | `""` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
 | ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `false` |  |
@@ -497,7 +497,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSbom.env.MUTATE_IMAGE | bool | `true` | Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment reconciler requires a strict image tag match. |
 | ksocSbom.env.SBOM_FORMAT | string | `"cyclonedx-json"` | The format of the generated SBOM. Currently we support: syft-json,cyclonedx-json,spdx-json |
 | ksocSbom.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-sbom"` | The image to use for the ksoc-sbom deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sbom). |
-| ksocSbom.image.tag | string | `"v1.1.20"` |  |
+| ksocSbom.image.tag | string | `"v1.1.23"` |  |
 | ksocSbom.nodeSelector | object | `{}` |  |
 | ksocSbom.podAnnotations | object | `{}` |  |
 | ksocSbom.resources.limits.cpu | string | `"1000m"` |  |
@@ -512,7 +512,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSync.enabled | bool | `true` |  |
 | ksocSync.env | object | `{}` |  |
 | ksocSync.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-sync"` | The image to use for the ksoc-sync deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sync). |
-| ksocSync.image.tag | string | `"v1.1.7"` |  |
+| ksocSync.image.tag | string | `"v1.1.9"` |  |
 | ksocSync.nodeSelector | object | `{}` |  |
 | ksocSync.podAnnotations | object | `{}` |  |
 | ksocSync.resources.limits.cpu | string | `"200m"` |  |
@@ -526,7 +526,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocWatch.enabled | bool | `true` |  |
 | ksocWatch.env.RECONCILIATION_AT_START | bool | `false` | Whether to trigger reconciliation at startup. |
 | ksocWatch.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-watch"` | The image to use for the ksoc-watch deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-watch). |
-| ksocWatch.image.tag | string | `"v1.1.20"` |  |
+| ksocWatch.image.tag | string | `"v1.1.21"` |  |
 | ksocWatch.ingestCustomResources | bool | `false` | If set will allow ingesting Custom Resources specified in `customResourceRules` |
 | ksocWatch.nodeSelector | object | `{}` |  |
 | ksocWatch.podAnnotations | object | `{}` |  |
