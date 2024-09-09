@@ -255,7 +255,7 @@ k9:
   backend:
     image:
       repository: us.gcr.io/ksoc-public/ksoc-backend-agent
-      tag: v0.0.31
+      tag: v0.0.32
   resources:
     limits:
       cpu: 250m
