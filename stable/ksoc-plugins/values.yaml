@@ -33,7 +33,7 @@ ksocBootstrapper:
   image:
     # -- The image to use for the ksoc-bootstrapper deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-bootstrapper).
     repository: us.gcr.io/ksoc-public/ksoc-bootstrapper
-    tag: v1.1.6
+    tag: v1.1.7
   env: {}
   resources:
     limits:
@@ -53,7 +53,7 @@ ksocGuard:
   image:
     # -- The image to use for the ksoc-guard deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-guard).
     repository: us.gcr.io/ksoc-public/ksoc-guard
-    tag: v1.1.10
+    tag: v1.1.11
   config:
     # -- Whether to block on error.
     BLOCK_ON_ERROR: false
@@ -87,7 +87,7 @@ ksocSbom:
   image:
     # -- The image to use for the ksoc-sbom deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sbom).
     repository: us.gcr.io/ksoc-public/ksoc-sbom
-    tag: v1.1.20
+    tag: v1.1.23
   env:
     # -- Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure
     # that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment
@@ -122,7 +122,7 @@ ksocSync:
   image:
     # -- The image to use for the ksoc-sync deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sync).
     repository: us.gcr.io/ksoc-public/ksoc-sync
-    tag: v1.1.7
+    tag: v1.1.9
   env: {}
   resources:
     limits:
@@ -142,7 +142,7 @@ ksocWatch:
   image:
     # -- The image to use for the ksoc-watch deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-watch).
     repository: us.gcr.io/ksoc-public/ksoc-watch
-    tag: v1.1.20
+    tag: v1.1.21
   env:
     # -- Whether to trigger reconciliation at startup.
     RECONCILIATION_AT_START: false
@@ -177,7 +177,7 @@ ksocNodeAgent:
   reachableVulnerabilitiesEnabled: false
   image:
     repository: us.gcr.io/ksoc-public/ksoc-node-agent
-    tag: v0.0.18
+    tag: v0.0.20
   agent:
     env:
       AGENT_LOG_LEVEL: INFO
@@ -249,13 +249,13 @@ k9:
   frontend:
     image:
       repository: us.gcr.io/ksoc-public/ksoc-frontend-agent
-      tag: v0.0.31
+      tag: v0.0.32
     # -- The interval in which the agent polls the backend for new actions.
     agentActionPollInterval: "5s"
   backend:
     image:
       repository: us.gcr.io/ksoc-public/ksoc-backend-agent
-      tag: v0.0.31
+      tag: v0.0.32
   resources:
     limits:
       cpu: 250m
