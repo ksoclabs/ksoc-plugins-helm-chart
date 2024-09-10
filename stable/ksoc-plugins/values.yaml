@@ -177,7 +177,7 @@ ksocNodeAgent:
   reachableVulnerabilitiesEnabled: false
   image:
     repository: us.gcr.io/ksoc-public/ksoc-node-agent
-    tag: v0.0.18
+    tag: v0.0.20
   agent:
     env:
       AGENT_LOG_LEVEL: INFO
