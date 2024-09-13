@@ -1,8 +1,8 @@
-# KSOC Plugins
+# RAD Security Plugins
 
 ## Introduction
 
-This chart deploys the following plugins required for the [KSOC](https://ksoc.com/) platform.
+This chart deploys the following plugins required for the [RAD Security](https://rad.security/) platform(former KSOC):
 
 - ksoc-sync
 - ksoc-watch
@@ -24,12 +24,14 @@ In this way, we can avoid the degradation of the API server, which would occur i
 
 ### ksoc-sbom plugin
 
-`ksoc-sbom` is the plugin responsible for calculating [SBOMs](https://en.wikipedia.org/wiki/Software_supply_chain) directly on the customer cluster. The plugin is run as an admission/mutating webhook, adding an image digest next to its tag if it's missing. This mutation is performed so [TOCTOU](https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use) does not impact the user. The image deployed is the image that KSOC scanned. It sees all new workloads and calculates SBOMs for them. It continuously checks the KSOC API to save time and resources to see if the SBOM is already known for any particular image digest. If not, it is being calculated and uploaded to KSOC for further processing. By default we use `cyclonedx-json` format for SBOMs, but it can be changed to `spdx-json` or `syft-json` by setting the `SBOM_FORMAT` environment variable in the `values.yaml` file.
+`ksoc-sbom` is the plugin responsible for calculating [SBOMs](https://en.wikipedia.org/wiki/Software_supply_chain) directly on the customer cluster. The plugin is run as an admission/mutating webhook, adding an image digest next to its tag if it's missing. This mutation is performed so [TOCTOU](https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use) does not impact the user. The image deployed is the image that KSOC scanned. It sees all new workloads and calculates SBOMs for them. It continuously checks the KSOC API to save time and resources to see if the SBOM is already known for any particular image digest. If not, it is being calculated and uploaded to KSOC for further processing. By default we use `cyclonedx-json` format for SBOMs, but it can be changed to `spdx-json` or `syft-json` by setting the `SBOM_FORMAT` environment variable in the `values.yaml` file. To prevent the plugin from mutating the `Pod` resource, set the `MUTATE_IMAGE` and `MUTATE_ANNOTATIONS` environment variables to `false`. If observe a performance degradation while deploying new workloads, you can improve it significantly by disabling the mutation of the image tag and annotations.
 
 ```yaml
 ksocSbom:
   env:
     SBOM_FORMAT: cyclonedx-json
+    MUTATE_IMAGE: true
+    MUTATE_ANNOTATIONS: false
 ```
 
 ### ksoc-guard plugin
@@ -497,7 +499,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSbom.env.MUTATE_IMAGE | bool | `true` | Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment reconciler requires a strict image tag match. |
 | ksocSbom.env.SBOM_FORMAT | string | `"cyclonedx-json"` | The format of the generated SBOM. Currently we support: syft-json,cyclonedx-json,spdx-json |
 | ksocSbom.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-sbom"` | The image to use for the ksoc-sbom deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sbom). |
-| ksocSbom.image.tag | string | `"v1.1.23"` |  |
+| ksocSbom.image.tag | string | `"v1.1.26"` |  |
 | ksocSbom.nodeSelector | object | `{}` |  |
 | ksocSbom.podAnnotations | object | `{}` |  |
 | ksocSbom.resources.limits.cpu | string | `"1000m"` |  |
