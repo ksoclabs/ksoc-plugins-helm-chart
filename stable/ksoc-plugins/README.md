@@ -1,8 +1,8 @@
-# KSOC Plugins
+# RAD Security Plugins
 
 ## Introduction
 
-This chart deploys the following plugins required for the [KSOC](https://ksoc.com/) platform.
+This chart deploys the following plugins required for the [RAD Security](https://rad.security/) platform(former KSOC):
 
 - ksoc-sync
 - ksoc-watch
@@ -14,22 +14,24 @@ These plugins perform several different tasks, which will be explained below.
 
 ### ksoc-sync plugin
 
-`ksoc-sync` is the plugin component synchronising Kubernetes resources to the customer cluster. Currently, only the `GuardPolicy` CRD is supported, but the mechanism is extensible and allows KSOC to sync different resource types in the future. The plugin fetches resources from the KSOC API. After executing them on the customer's cluster, the execution statuses are reported to the KSOC API via HTTP calls. By default, the interval between the fetches is 60 seconds.
+`ksoc-sync` is the plugin component synchronising Kubernetes resources to the customer cluster. Currently, only the `GuardPolicy` CRD is supported, but the mechanism is extensible and allows RAD Security to sync different resource types in the future. The plugin fetches resources from the RAD Security API. After executing them on the customer's cluster, the execution statuses are reported to the RAD Security API via HTTP calls. By default, the interval between the fetches is 60 seconds.
 
 ### ksoc-watch plugin
 
-`ksoc-watch` is the plugin component responsible for syncing cluster state back to Ksoc. On startup, a controller is created that follows the [Kubernetes Informer](https://pkg.go.dev/k8s.io/client-go/informers) pattern via the [SharedIndexInformer](https://pkg.go.dev/k8s.io/client-go@v0.26.0/tools/cache#SharedIndexInformer:~:text=type%20SharedIndexInformer-,%C2%B6,-type%20SharedIndexInformer%20interface) to target the resource types that we are interested in individually.
+`ksoc-watch` is the plugin component responsible for syncing cluster state back to RAD Security. On startup, a controller is created that follows the [Kubernetes Informer](https://pkg.go.dev/k8s.io/client-go/informers) pattern via the [SharedIndexInformer](https://pkg.go.dev/k8s.io/client-go@v0.26.0/tools/cache#SharedIndexInformer:~:text=type%20SharedIndexInformer-,%C2%B6,-type%20SharedIndexInformer%20interface) to target the resource types that we are interested in individually.
 The first action of the service is to upload the entire inventory of the cluster. Once this inventory is up-to-date, the plugin tracks events only generated when we detect a change in the object (or resource) state.
-In this way, we can avoid the degradation of the API server, which would occur if we were to poll for resources. Automatic reconciliation is run every 24h by default in case any delete events are lost and prevent KSOC from keeping track of stale objects.
+In this way, we can avoid the degradation of the API server, which would occur if we were to poll for resources. Automatic reconciliation is run every 24h by default in case any delete events are lost and prevent RAD Security from keeping track of stale objects.
 
 ### ksoc-sbom plugin
 
-`ksoc-sbom` is the plugin responsible for calculating [SBOMs](https://en.wikipedia.org/wiki/Software_supply_chain) directly on the customer cluster. The plugin is run as an admission/mutating webhook, adding an image digest next to its tag if it's missing. This mutation is performed so [TOCTOU](https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use) does not impact the user. The image deployed is the image that KSOC scanned. It sees all new workloads and calculates SBOMs for them. It continuously checks the KSOC API to save time and resources to see if the SBOM is already known for any particular image digest. If not, it is being calculated and uploaded to KSOC for further processing. By default we use `cyclonedx-json` format for SBOMs, but it can be changed to `spdx-json` or `syft-json` by setting the `SBOM_FORMAT` environment variable in the `values.yaml` file.
+`ksoc-sbom` is the plugin responsible for calculating [SBOMs](https://en.wikipedia.org/wiki/Software_supply_chain) directly on the customer cluster. The plugin is run as an admission/mutating webhook, adding an image digest next to its tag if it's missing. This mutation is performed so [TOCTOU](https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use) does not impact the user. The image deployed is the image that RAD Security scanned. It sees all new workloads and calculates SBOMs for them. It continuously checks the RAD Security API to save time and resources to see if the SBOM is already known for any particular image digest. If not, it is being calculated and uploaded to RAD Security for further processing. By default we use `cyclonedx-json` format for SBOMs, but it can be changed to `spdx-json` or `syft-json` by setting the `SBOM_FORMAT` environment variable in the `values.yaml` file. To prevent the plugin from mutating the `Pod` resource, set the `MUTATE_IMAGE` and `MUTATE_ANNOTATIONS` environment variables to `false`. If observe a performance degradation while deploying new workloads, you can improve it significantly by disabling the mutation of the image tag and annotations.
 
 ```yaml
 ksocSbom:
   env:
     SBOM_FORMAT: cyclonedx-json
+    MUTATE_IMAGE: true
+    MUTATE_ANNOTATIONS: false
 ```
 
 ### ksoc-guard plugin
@@ -43,7 +45,7 @@ ksocGuard:
     BLOCK_ON_POLICY_VIOLATION: true
 ```
 
-If admission is blocked, it can be seen in the KSOC application under the Events tab for the specific cluster. Finally, the plugin also acts as a mutating webhook that simply takes the `AdmissionReview.UID` and adds it as an annotation (`ksoc-guard/admission: xxx`). In the case of a blocked object, this gives KSOC an identifier to track what would otherwise be an ephemeral event.
+If admission is blocked, it can be seen in the RAD Security application under the Events tab for the specific cluster. Finally, the plugin also acts as a mutating webhook that simply takes the `AdmissionReview.UID` and adds it as an annotation (`ksoc-guard/admission: xxx`). In the case of a blocked object, this gives RAD Security an identifier to track what would otherwise be an ephemeral event.
 
 ### ksoc-runtime plugin
 
@@ -54,7 +56,7 @@ ksocRuntime:
   enabled: true
 ```
 
-When `ksoc-runtime` is enabled an additional deployment can be seen. There is also a `DaemonSet` that deploys an eBPF pod on each node to gather the run-time information.  For more information on the `ksoc-runtime` plugin, please see the [KSOC Runtime documentation](https://docs.ksoc.com/docs/ksoc-runtime-1).
+When `ksoc-runtime` is enabled an additional deployment can be seen. There is also a `DaemonSet` that deploys an eBPF pod on each node to gather the run-time information.  For more information on the `ksoc-runtime` plugin, please see the [RAD Security Runtime documentation](https://docs.rad.security/docs/ksoc-runtime-1).
 
 ### k9 plugin
 `k9` is a plugin that responds in-cluster to commands from the Rad Security platform. The plugin will poll the Rad Security backend, and does not require any ingress to the cluster.  The plugin is not enabled by default. Individual capabilities must be opted-into by the user, and the plugin will only respond to commands that are explicitly enabled.  To enable a capability, please enable the plugin with `enabled: true` and set the capabilities you wish to enable to `true` in your values file.
@@ -79,7 +81,7 @@ Label Pod: Allows the plugin to label a pod in the cluster.
 
 The remainder of this page assumes the following:
 
-- An Account in KSOC already exists
+- An Account in RAD Security already exists
 - The user has obtained the `base64AccessKey` and `base64SecretKey` values required for the installation via the UI or the API
 - The user has kubectl installed
 - The user has Helm v3 installed
@@ -90,7 +92,7 @@ The remainder of this page assumes the following:
 
 ### 1. Install cert-manager
 
-[cert-manager](https://github.com/cert-manager/cert-manager) must be installed, as KSOC deploys [Admission Controllers](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)  that create certificates to secure their communication with the Kubernetes API. At present KSOC only supports cert-manager as the means of creating these certificates.
+[cert-manager](https://github.com/cert-manager/cert-manager) must be installed, as RAD Security deploys [Admission Controllers](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)  that create certificates to secure their communication with the Kubernetes API. At present RAD Security only supports cert-manager as the means of creating these certificates.
 
 You can check if cert-manager is installed using the command below:
 
@@ -133,22 +135,22 @@ cert-manager-cainjector-757dd96b8b-hlqgp 	 1/1 	   Running   0      	1m
 cert-manager-webhook-854656c6ff-b4zqp    	 1/1 	   Running   0      	1m
 ```
 
-### 3. Configure KSOC helm repository
+### 3. Configure RAD Security helm repository
 
-To install the KSOC plugins Helm chart, we need to configure access to the KSOC helm repository using the commands below:
+To install the RAD Security plugins Helm chart, we need to configure access to the KSOC helm repository using the commands below:
 
 ```bash
 helm repo add ksoc https://charts.ksoc.com/stable
 helm repo update
 ```
 
-If you already had KSOC's Helm chart installed, it is recommended to update it.
+If you already had RAD Security's Helm chart installed, it is recommended to update it.
 
 ```bash
 helm repo update ksoc
 ```
 
-Verify the KSOC plugins Helm chart has been installed:
+Verify the RAD Security plugins Helm chart has been installed:
 
 ```bash
 helm search repo ksoc
@@ -164,7 +166,7 @@ ksoc/ksoc-plugins        	1.6.3        	           	A Helm chart to run the KSOC
 
 ### 4. Create cluster-specific values file
 
-Next, we need to create a values file called `values.yaml` with the following content that includes the [base64AccessKeyId and base64SecretKey](https://docs.ksoc.com/docs/installation#add-cluster):
+Next, we need to create a values file called `values.yaml` with the following content that includes the [base64AccessKeyId and base64SecretKey](https://docs.rad.security/docs/installation#add-cluster):
 
 ```yaml
 ksoc:
@@ -173,13 +175,13 @@ ksoc:
   clusterName: "please add a name here"
 ```
 
-You can manually create the file or use `values.yaml`file downloaded from the KSOC UI.
+You can manually create the file or use `values.yaml`file downloaded from the RAD Security UI.
 
-**NOTE:** Be sure to set the `clusterName` value with a descriptive name of the cluster where you will be installing KSOC.
+**NOTE:** Be sure to set the `clusterName` value with a descriptive name of the cluster where you will be installing RAD Security.
 
 #### 4.1 Recommended installation
 
-By default, a secret is created as part of our Helm chart, which we use to securely connect to KSOC. However, it is highly recommended that this secret is created outside of the helm installation and is just referenced in the Helm values.
+By default, a secret is created as part of our Helm chart, which we use to securely connect to RAD Security. However, it is highly recommended that this secret is created outside of the helm installation and is just referenced in the Helm values.
 
 The structure of the secret is as follows:
 
@@ -202,7 +204,7 @@ ksoc:
   accessKeySecretNameOverride: "ksoc-access-key"
 ```
 
-KSOC’s ksoc-guard plugin integrates with the Kubernetes admission controller. All admission controller communications require TLS. KSOC’s Helm chart installs and ksoc-guard utilizes Let’s Encrypt to automate the issuance and renewal of certificates using the cert-manager add-on.
+RAD Security ksoc-guard plugin integrates with the Kubernetes admission controller. All admission controller communications require TLS. RAD Security Helm chart installs and ksoc-guard utilizes Let’s Encrypt to automate the issuance and renewal of certificates using the cert-manager add-on.
 
 ### 5. Installing the KSOC plugins
 
@@ -252,11 +254,11 @@ ksoc-runtime-ds-snx8b           2/2     Running   0          1m
 ksoc-runtime-ds-wvh8n           2/2     Running   0          1m
 ```
 
-If you don't see all the pods running within 2 minutes, please check the [Installation Troubleshooting](https://docs.ksoc.com/docs/installation-troubleshooting) page or contact KSOC support.
+If you don't see all the pods running within 2 minutes, please check the [Installation Troubleshooting](https://docs.rad.security/docs/installation-troubleshooting) page or contact RAD Security support.
 
 ## Custom Resources support
 
-`ksoc-watch` plugin optionally supports ingestion of _Custom Resources_ to the KSOC platform. To use it
+`ksoc-watch` plugin optionally supports ingestion of _Custom Resources_ to the RAD Security platform. To use it
 set `ksocWatch.ingestCustomResources` to `true` and configure `customResourceRules` in `values.yaml`.
 
 For example, in order to ingest `your.com/ResourceA`, `your.com/ResourceB` and `your.com/ResourceC` `values.yaml` should include:
@@ -347,13 +349,13 @@ ksocNodeAgent:
 
 ## Upgrading the Chart
 
-Typically, we advise maintaining the most current versions of plugins. However, our [KSOC](https://ksoc.com) plugins are designed to support upgrades between any two versions, with certain exceptions as outlined in our Helm chart changelog which you can access [here](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=changelog).
+Typically, we advise maintaining the most current versions of plugins. However, our [RAD Security](https://rad.security) plugins are designed to support upgrades between any two versions, with certain exceptions as outlined in our Helm chart changelog which you can access [here](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=changelog).
 
 The plugin image versions included in the Helm chart are collectively tested as a unified set. Individual plugin image versions are not tested in isolation for upgrades. It is strongly advised to upgrade the entire Helm chart as a complete package to ensure compatibility and stability.
 
 ### Workflow
 
-To upgrade the version of the [KSOC](https://ksoc.com) plugin's helm chart on your cluster, please follow the steps below.
+To upgrade the version of the [RAD Security](https://rad.security) plugin's helm chart on your cluster, please follow the steps below.
 
 1\. **Fetch the Latest Chart Version:** Acquire the most recent `ksoc-plugins` chart by running the following commands in your terminal
 
@@ -380,7 +382,7 @@ helm list -n ksoc
 
 ### Helm chart changelog and updates
 
-For full disclosure and to ensure you are kept up-to-date, we document every change, improvement, and correction in our detailed changelog for each version release. We encourage you to consult the changelog regularly to stay informed about the latest developments and understand the specifics of each update. Access the changelog for the [KSOC](https://ksoc.com) plugins Helm chart at this [link](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=changelog).
+For full disclosure and to ensure you are kept up-to-date, we document every change, improvement, and correction in our detailed changelog for each version release. We encourage you to consult the changelog regularly to stay informed about the latest developments and understand the specifics of each update. Access the changelog for the [RAD Security](https://rad.security) plugins Helm chart at this [link](https://artifacthub.io/packages/helm/ksoc/ksoc-plugins?modal=changelog).
 
 ## Uninstalling the Chart
 
@@ -497,7 +499,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSbom.env.MUTATE_IMAGE | bool | `true` | Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment reconciler requires a strict image tag match. |
 | ksocSbom.env.SBOM_FORMAT | string | `"cyclonedx-json"` | The format of the generated SBOM. Currently we support: syft-json,cyclonedx-json,spdx-json |
 | ksocSbom.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-sbom"` | The image to use for the ksoc-sbom deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sbom). |
-| ksocSbom.image.tag | string | `"v1.1.23"` |  |
+| ksocSbom.image.tag | string | `"v1.1.26"` |  |
 | ksocSbom.nodeSelector | object | `{}` |  |
 | ksocSbom.podAnnotations | object | `{}` |  |
 | ksocSbom.resources.limits.cpu | string | `"1000m"` |  |
