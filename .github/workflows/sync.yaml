@@ -10,7 +10,7 @@ jobs:
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.29.4
+    container: us.gcr.io/ksoc-public/kubernetes-toolkit:1.31.1
     steps:
       - name: clone repo
         uses: actions/checkout@v4
