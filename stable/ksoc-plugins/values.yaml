@@ -177,10 +177,10 @@ ksocWatch:
 
 ksocNodeAgent:
   enabled: false
-  reachableVulnerabilitiesEnabled: false
+  reachableVulnerabilitiesEnabled: true
   image:
     repository: us.gcr.io/ksoc-public/ksoc-node-agent
-    tag: v0.0.20
+    tag: v0.0.21
   agent:
     env:
       AGENT_LOG_LEVEL: INFO
