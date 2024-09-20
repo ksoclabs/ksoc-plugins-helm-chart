@@ -8,10 +8,10 @@ metadata:
     app_name: ksoc-guard
     app_version: {{ .Values.ksocGuard.image.tag | quote }}
     maintained_by: ksoc
+  {{- with .Values.ksocGuard.serviceAccountAnnotations }}
   annotations:
-    {{- with .Values.ksocGuard.serviceAccountAnnotations }}
 {{ toYaml . | indent 4 }}
-    {{- end }}
+  {{- end }}
 automountServiceAccountToken: false
 
 ---

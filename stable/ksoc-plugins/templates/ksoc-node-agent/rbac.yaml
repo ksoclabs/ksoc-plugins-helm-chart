@@ -8,10 +8,10 @@ metadata:
     app_name: ksoc-node-agent
     app_version: {{ .Values.ksocNodeAgent.image.tag | quote }}
     maintained_by: ksoc
+  {{- with .Values.ksocNodeAgent.serviceAccountAnnotations }}
   annotations:
-    {{- with .Values.ksocNodeAgent.serviceAccountAnnotations }}
 {{ toYaml . | indent 4 }}
-    {{- end }}
+  {{- end }}
 automountServiceAccountToken: false
 
 ---
