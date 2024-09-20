@@ -8,6 +8,10 @@ metadata:
     app_name: ksoc-sync
     app_version: {{ .Values.ksocSync.image.tag | quote }}
     maintained_by: ksoc
+  {{- with .Values.ksocSync.serviceAccountAnnotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+  {{- end }}
 automountServiceAccountToken: false
 
 ---

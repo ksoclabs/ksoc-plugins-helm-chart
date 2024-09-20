@@ -81,6 +81,7 @@ ksocGuard:
     timeoutSeconds: 10
   nodeSelector: {}
   tolerations: []
+  serviceAccountAnnotations: {}
 
 ksocSbom:
   enabled: true
@@ -136,6 +137,7 @@ ksocSync:
   podAnnotations: {}
   nodeSelector: {}
   tolerations: []
+  serviceAccountAnnotations: {}
 
 ksocWatch:
   enabled: true
@@ -171,6 +173,7 @@ ksocWatch:
   customResourceRules:
     allowlist: []
     denylist: []
+  serviceAccountAnnotations: {}
 
 ksocNodeAgent:
   enabled: false
@@ -239,6 +242,7 @@ ksocNodeAgent:
       maxUnavailable: 1
       # -- The maximum number of pods that can be scheduled above the desired number of pods. Can be an absolute number or percent, e.g. `5` or `"10%"`
       maxSurge: 0
+  serviceAccountAnnotations: {}
 
   # -- K9 is an in-cluster response plugin.  It will request any queued commands from
   # -- the Rad Security backend, and execute them in the cluster.  Each capability must
@@ -273,6 +277,7 @@ k9:
     enableLabelPod: false
   tolerations: []
   nodeSelector: {}
+  serviceAccountAnnotations: {}
 
 # Toggles support for Openshift. Please note that functionality is limited at the moment.
 openshift:

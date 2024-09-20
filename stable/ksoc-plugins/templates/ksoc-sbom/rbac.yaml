@@ -8,10 +8,10 @@ metadata:
     app_name: ksoc-sbom
     app_version: {{ .Values.ksocSbom.image.tag | quote }}
     maintained_by: ksoc
-    annotations:
-    {{- with .Values.ksocSbom.serviceAccountAnnotations }}
-{{ toYaml . | indent 6 }}
-    {{- end }}
+  {{- with .Values.ksocSbom.serviceAccountAnnotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+  {{- end }}
 automountServiceAccountToken: false
 
 ---
