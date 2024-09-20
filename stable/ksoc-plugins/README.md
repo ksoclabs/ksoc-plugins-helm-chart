@@ -417,6 +417,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | k9.resources.requests.cpu | string | `"100m"` |  |
 | k9.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | k9.resources.requests.memory | string | `"128Mi"` |  |
+| k9.serviceAccountAnnotations | object | `{}` |  |
 | k9.tolerations | list | `[]` |  |
 | ksoc.accessKeySecretNameOverride | string | `""` | The name of the custom secret containing Access Key. |
 | ksoc.apiKey | string | `""` | The combined API key to authenticate with KSOC |
@@ -454,6 +455,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.resources.requests.cpu | string | `"100m"` |  |
 | ksocGuard.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocGuard.resources.requests.memory | string | `"100Mi"` |  |
+| ksocGuard.serviceAccountAnnotations | object | `{}` |  |
 | ksocGuard.tolerations | list | `[]` |  |
 | ksocGuard.webhook.objectSelector | object | `{}` |  |
 | ksocGuard.webhook.timeoutSeconds | int | `10` |  |
@@ -489,6 +491,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.nodeName | string | `""` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
 | ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `false` |  |
+| ksocNodeAgent.serviceAccountAnnotations | object | `{}` |  |
 | ksocNodeAgent.tolerations | list | `[]` |  |
 | ksocNodeAgent.updateStrategy.rollingUpdate.maxSurge | int | `0` | The maximum number of pods that can be scheduled above the desired number of pods. Can be an absolute number or percent, e.g. `5` or `"10%"` |
 | ksocNodeAgent.updateStrategy.rollingUpdate.maxUnavailable | int | `1` | The maximum number of pods that can be unavailable during the update. Can be an absolute number or percent, e.g.  `5` or `"10%"` |
@@ -523,6 +526,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSync.resources.requests.cpu | string | `"100m"` |  |
 | ksocSync.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocSync.resources.requests.memory | string | `"128Mi"` |  |
+| ksocSync.serviceAccountAnnotations | object | `{}` |  |
 | ksocSync.tolerations | list | `[]` |  |
 | ksocWatch.customResourceRules | object | `{"allowlist":[],"denylist":[]}` | Rules for Custom Resource ingestion containing allow- and denylists of rules specifying `apiGroups` and `resources`. E.g. `allowlist: apiGroups: ["custom.com"], resources: ["someResource", "otherResoure"]` Wildcards (`*`) can be used to match all. `customResourceRules.denylist` sets resources that should not be ingested. It has a priority over `customResourceRules.allowlist` to  deny resources allowed using a wildcard (`*`) match.  E.g. you can use `allowlist: apiGroups: ["custom.com"], resources: ["*"], denylist: apiGroups: ["custom.com"], resources: "excluded"` to ingest all resources within `custom.com` group but `excluded`. |
 | ksocWatch.enabled | bool | `true` |  |
@@ -538,6 +542,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocWatch.resources.requests.cpu | string | `"100m"` |  |
 | ksocWatch.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocWatch.resources.requests.memory | string | `"128Mi"` |  |
+| ksocWatch.serviceAccountAnnotations | object | `{}` |  |
 | ksocWatch.tolerations | list | `[]` |  |
 | openshift.enabled | bool | `false` |  |
 | priorityClass.description | string | `"The priority class for KSOC components"` |  |

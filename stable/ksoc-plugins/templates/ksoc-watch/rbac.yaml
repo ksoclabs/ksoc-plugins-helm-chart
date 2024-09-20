@@ -8,6 +8,10 @@ metadata:
     app_name: ksoc-watch
     app_version: {{ .Values.ksocWatch.image.tag | quote }}
     maintained_by: ksoc
+  annotations:
+    {{- with .Values.ksocWatch.serviceAccountAnnotations }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
 automountServiceAccountToken: false
 
 ---
