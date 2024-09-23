@@ -46,6 +46,32 @@ spec:
         - command:
             - micro-agent
           env:
+            - name: AGENT_AGENT_VERSION
+              value: {{ .Values.ksocNodeAgent.image.tag | quote }}
+            - name: AGENT_CHART_VERSION
+              value: {{ .Chart.Version }}
+            - name: AGENT_KSOC_API_URL
+              value: {{ .Values.ksoc.apiUrl }}
+            - name: AGENT_KSOC_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: AGENT_KSOC_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: access-key-id
+            - name: AGENT_KSOC_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: secret-key
             - name: HOST_ROOT
               value: /host
             {{- with .Values.ksocNodeAgent.agent.collectors }}
@@ -154,6 +180,32 @@ spec:
         - command:
             - micro-exporter
           env:
+            - name: EXPORTER_AGENT_VERSION
+              value: {{ .Values.ksocNodeAgent.image.tag | quote }}
+            - name: EXPORTER_CHART_VERSION
+              value: {{ .Chart.Version }}
+            - name: EXPORTER_KSOC_API_URL
+              value: {{ .Values.ksoc.apiUrl }}
+            - name: EXPORTER_KSOC_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: EXPORTER_KSOC_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: access-key-id
+            - name: EXPORTER_KSOC_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{ if .Values.ksoc.accessKeySecretNameOverride -}}
+                  name: {{ .Values.ksoc.accessKeySecretNameOverride }}
+                  {{ else -}}
+                  name: ksoc-access-key
+                  {{ end -}}
+                  key: secret-key
             - name: EXPORTER_PROVIDER_STDOUT_ENABLED
               value: "false"
             - name: EXPORTER_PROVIDER_KSOC_API_ENABLED
@@ -197,7 +249,9 @@ spec:
           volumeMounts:
             - mountPath: /tmp
               name: unix-socket
-
+            - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              name: api-token
+              readOnly: true
       dnsPolicy: ClusterFirst
       {{ if .Values.ksocNodeAgent.nodeName -}}
       nodeName: {{ .Values.ksocNodeAgent.nodeName }}

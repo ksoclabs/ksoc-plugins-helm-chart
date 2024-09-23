@@ -8,7 +8,7 @@ This chart deploys the following plugins required for the [RAD Security](https:/
 - ksoc-watch
 - ksoc-sbom
 - ksoc-guard
-- ksoc-runtime
+- ksoc-node-agent
 
 These plugins perform several different tasks, which will be explained below.
 
@@ -47,16 +47,39 @@ ksocGuard:
 
 If admission is blocked, it can be seen in the RAD Security application under the Events tab for the specific cluster. Finally, the plugin also acts as a mutating webhook that simply takes the `AdmissionReview.UID` and adds it as an annotation (`ksoc-guard/admission: xxx`). In the case of a blocked object, this gives RAD Security an identifier to track what would otherwise be an ephemeral event.
 
-### ksoc-runtime plugin
+### ksoc-node-agent plugin
 
-`ksoc-runtime` utilizes system-level probes in order to analyze what is happening at the process level on each node, enabling KSOC to detect in real-time events that may indicate a security breach is occurring. It is not enabled by default. To enable this, please set the following in your values file.
+`ksoc-node-agent` is the plugin responsible for gathering runtime information from the nodes in the cluster. The plugin is not enabled by default. To enable the plugin, set the `enabled` value to `true` in your values file.
 
 ```yaml
-ksocRuntime:
+ksocNodeAgent:
   enabled: true
 ```
 
-When `ksoc-runtime` is enabled an additional deployment can be seen. There is also a `DaemonSet` that deploys an eBPF pod on each node to gather the run-time information.  For more information on the `ksoc-runtime` plugin, please see the [RAD Security Runtime documentation](https://docs.rad.security/docs/ksoc-runtime-1).
+When `ksoc-node-agent` is enabled an additional daemonset can be seen in the cluster. The daemonset is responsible for collecting runtime information from the nodes in the cluster. The information collected includes the following:
+
+- Process information
+- Network information
+- Filesystem information
+- Container information
+
+By default plugin uses `containerd` as a container runtime. If you are using `docker` container runtime, you can enable it by switching the collector to `docker` in the `values.yaml` file.
+
+```yaml
+ksocNodeAgent:
+  enabled: true
+  collectors:
+    docker:
+      enabled: false
+      socket: /run/docker.sock
+    containerd:
+      enabled: true
+      socket: /run/containerd/containerd.sock
+```
+
+Each plugin pod contains `agent` and `exporter` containers. The `agent` container is responsible for collecting runtime information from the nodes in the cluster. The `exporter` container is responsible for exporting the collected information to the RAD Security platform.
+
+The information collected is sent to the RAD Security platform for further processing. For more information on the `ksoc-node-agent` plugin, please see the [RAD Security Runtime documentation](https://docs.rad.security/docs/ksoc-node-agent)
 
 ### k9 plugin
 `k9` is a plugin that responds in-cluster to commands from the Rad Security platform. The plugin will poll the Rad Security backend, and does not require any ingress to the cluster.  The plugin is not enabled by default. Individual capabilities must be opted-into by the user, and the plugin will only respond to commands that are explicitly enabled.  To enable a capability, please enable the plugin with `enabled: true` and set the capabilities you wish to enable to `true` in your values file.
@@ -236,23 +259,18 @@ ksoc-guard-86959f7544-96hbl     1/1     Running   0          1m
 ksoc-sbom-664bf566dc-bxm5c      1/1     Running   0          1m
 ksoc-sync-769cd7c6fc-cxczq      1/1     Running   0          1m
 ksoc-watch-7bf4d7b6b9-kqblh     1/1     Running   0          1m
-
 ```
 
-If you have enabled the `ksoc-runtime` plugin you should also see the following pods in a state of Running:
+If you have enabled the `ksoc-node-agent` plugin you should also see the following pods in a state of Running:
 
 ```bash
-NAME                            READY   STATUS    RESTARTS   AGE
-ksoc-runtime-6c854b998c-7jjzg   1/1     Running   0          1m
-ksoc-runtime-6c854b998c-p45g6   1/1     Running   0          1m
-ksoc-runtime-6c854b998c-pmgtf   1/1     Running   0          1m
-
-# The number of pods below should equal the number of nodes in your cluster
-ksoc-runtime-ds-m44z5           2/2     Running   0          1m
-ksoc-runtime-ds-nb9cq           2/2     Running   0          1m
-ksoc-runtime-ds-snx8b           2/2     Running   0          1m
-ksoc-runtime-ds-wvh8n           2/2     Running   0          1m
+NAME                    READY   STATUS    RESTARTS   AGE
+ksoc-node-agent-7jjzg   2/2     Running   0          1m
+ksoc-node-agent-p45g6   2/2     Running   0          1m
+ksoc-node-agent-pmgtf   2/2     Running   0          1m
 ```
+
+The number of pods below should equal the number of nodes in your cluster
 
 If you don't see all the pods running within 2 minutes, please check the [Installation Troubleshooting](https://docs.rad.security/docs/installation-troubleshooting) page or contact RAD Security support.
 
@@ -445,7 +463,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.config.LOG_LEVEL | string | `"info"` | The log level to use. |
 | ksocGuard.enabled | bool | `true` |  |
 | ksocGuard.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-guard"` | The image to use for the ksoc-guard deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-guard). |
-| ksocGuard.image.tag | string | `"v1.1.11"` |  |
+| ksocGuard.image.tag | string | `"v1.1.12"` |  |
 | ksocGuard.nodeSelector | object | `{}` |  |
 | ksocGuard.podAnnotations | object | `{}` |  |
 | ksocGuard.replicas | int | `1` |  |
@@ -487,10 +505,10 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.exporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocNodeAgent.exporter.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-node-agent"` |  |
-| ksocNodeAgent.image.tag | string | `"v0.0.20"` |  |
+| ksocNodeAgent.image.tag | string | `"v0.0.21"` |  |
 | ksocNodeAgent.nodeName | string | `""` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
-| ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `false` |  |
+| ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `true` |  |
 | ksocNodeAgent.serviceAccountAnnotations | object | `{}` |  |
 | ksocNodeAgent.tolerations | list | `[]` |  |
 | ksocNodeAgent.updateStrategy.rollingUpdate.maxSurge | int | `0` | The maximum number of pods that can be scheduled above the desired number of pods. Can be an absolute number or percent, e.g. `5` or `"10%"` |
