@@ -463,7 +463,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.config.LOG_LEVEL | string | `"info"` | The log level to use. |
 | ksocGuard.enabled | bool | `true` |  |
 | ksocGuard.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-guard"` | The image to use for the ksoc-guard deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-guard). |
-| ksocGuard.image.tag | string | `"v1.1.11"` |  |
+| ksocGuard.image.tag | string | `"v1.1.12"` |  |
 | ksocGuard.nodeSelector | object | `{}` |  |
 | ksocGuard.podAnnotations | object | `{}` |  |
 | ksocGuard.replicas | int | `1` |  |
