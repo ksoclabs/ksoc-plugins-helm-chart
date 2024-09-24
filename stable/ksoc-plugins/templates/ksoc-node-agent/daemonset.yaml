@@ -54,6 +54,10 @@ spec:
               value: {{ .Values.ksoc.apiUrl }}
             - name: AGENT_KSOC_NAMESPACE
               value: {{ .Release.Namespace }}
+            {{- if .Values.ksoc.awsSecretId }}
+            - name: RAD_AWS_SECRET_ID
+              value: {{ .Values.ksoc.awsSecretId }}
+            {{- else }}
             - name: AGENT_KSOC_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -72,6 +76,7 @@ spec:
                   name: ksoc-access-key
                   {{ end -}}
                   key: secret-key
+            {{- end }}
             - name: HOST_ROOT
               value: /host
             {{- with .Values.ksocNodeAgent.agent.collectors }}
@@ -188,6 +193,10 @@ spec:
               value: {{ .Values.ksoc.apiUrl }}
             - name: EXPORTER_KSOC_NAMESPACE
               value: {{ .Release.Namespace }}
+            {{- if .Values.ksoc.awsSecretId }}
+            - name: RAD_AWS_SECRET_ID
+              value: {{ .Values.ksoc.awsSecretId }}
+            {{- else }}
             - name: EXPORTER_KSOC_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -206,12 +215,6 @@ spec:
                   name: ksoc-access-key
                   {{ end -}}
                   key: secret-key
-            - name: EXPORTER_PROVIDER_STDOUT_ENABLED
-              value: "false"
-            - name: EXPORTER_PROVIDER_KSOC_API_ENABLED
-              value: "true"
-            - name: EXPORTER_PROVIDER_KSOC_API_URL
-              value: {{ .Values.ksoc.apiUrl }}
             - name: EXPORTER_PROVIDER_KSOC_API_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -230,6 +233,13 @@ spec:
                   name: ksoc-access-key
                   {{ end -}}
                   key: secret-key
+            {{- end }}
+            - name: EXPORTER_PROVIDER_STDOUT_ENABLED
+              value: "false"
+            - name: EXPORTER_PROVIDER_KSOC_API_ENABLED
+              value: "true"
+            - name: EXPORTER_PROVIDER_KSOC_API_URL
+              value: {{ .Values.ksoc.apiUrl }}
             {{ if .Values.ksocNodeAgent.exporter.execFilters -}}
             {{- $filters := printf "execFilters: %s" (.Values.ksocNodeAgent.exporter.execFilters | toJson ) -}}
             - name: EXPORTER_EXEC_FILTERS

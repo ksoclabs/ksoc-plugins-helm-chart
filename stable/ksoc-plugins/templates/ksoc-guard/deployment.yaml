@@ -77,7 +77,12 @@ spec:
               value: {{ .Values.ksoc.apiUrl }}
             - name: KSOC_NAMESPACE
               value: {{ .Release.Namespace }}
+            {{- if .Values.ksoc.awsSecretId }}
+            - name: RAD_AWS_SECRET_ID
+              value: {{ .Values.ksoc.awsSecretId }}
+            {{- else }}
 {{ include "ksoc-plugins.access-key-env-secret" . | indent 12 }}
+            {{- end }}
             - name: INSTALL_CRDS
               value: "true"
             {{- range $key, $value := .Values.ksocGuard.config }}

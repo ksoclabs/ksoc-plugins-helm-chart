@@ -87,7 +87,12 @@ ksoc-bootstrap initContainer
       value: {{ .Values.ksoc.clusterName }}
     - name: KSOC_NAMESPACE
       value: {{ .Release.Namespace }}
+    {{- if .Values.ksoc.awsSecretId }}
+    - name: RAD_AWS_SECRET_ID
+      value: {{ .Values.ksoc.awsSecretId }}
+    {{- else }}
 {{ include "ksoc-plugins.access-key-env-secret" . | indent 4 }}
+    {{- end }}
   volumeMounts:
   - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
     name: api-token
