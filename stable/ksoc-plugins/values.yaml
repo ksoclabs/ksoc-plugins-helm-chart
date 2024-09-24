@@ -8,8 +8,8 @@ ksoc:
   # -- The secret key part of the Access Key used in this cluster (base64).
   base64SecretKey: ""
   # -- The Secret Name or Secret ARN containing the Access Key. If provided, plugins try to read the Access Key from the AWS Secret Manager.
-  # -- Plugins expect following keys in the secret: `access-key-id` and `secret-key`. If the secret is not found, the plugin falls back to the `base64AccessKeyId` and `base64SecretKey` values.
-  # -- If `awsSecretId` is provided service accounts needs to have access to the secret in AWS, via IRSA or EKS Pod Identity.
+  # Plugins expect following keys in the secret: `access-key-id` and `secret-key`. If the secret is not found, the plugin falls back to the `base64AccessKeyId` and `base64SecretKey` values.
+  # If `awsSecretId` is provided service accounts needs to have access to the secret in AWS, via IRSA or EKS Pod Identity.
   awsSecretId: ""
   # -- The name of the cluster you want displayed in KSOC.
   clusterName: ""

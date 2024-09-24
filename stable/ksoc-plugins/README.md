@@ -483,7 +483,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksoc.accessKeySecretNameOverride | string | `""` | The name of the custom secret containing Access Key. |
 | ksoc.apiKey | string | `""` | The combined API key to authenticate with KSOC |
 | ksoc.apiUrl | string | `"https://api.ksoc.com"` | The base URL for the KSOC API. |
-| ksoc.awsSecretId | string | `""` | If `awsSecretId` is provided service accounts needs to have access to the secret in AWS, via IRSA or EKS Pod Identity. |
+| ksoc.awsSecretId | string | `""` | The Secret Name or Secret ARN containing the Access Key. If provided, plugins try to read the Access Key from the AWS Secret Manager. Plugins expect following keys in the secret: `access-key-id` and `secret-key`. If the secret is not found, the plugin falls back to the `base64AccessKeyId` and `base64SecretKey` values. If `awsSecretId` is provided service accounts needs to have access to the secret in AWS, via IRSA or EKS Pod Identity. |
 | ksoc.base64AccessKeyId | string | `""` | The ID of the Access Key used in this cluster (base64). |
 | ksoc.base64SecretKey | string | `""` | The secret key part of the Access Key used in this cluster (base64). |
 | ksoc.clusterName | string | `""` | The name of the cluster you want displayed in KSOC. |
