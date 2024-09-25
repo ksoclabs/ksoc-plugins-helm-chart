@@ -97,7 +97,12 @@ spec:
             value: {{ .Values.ksoc.apiUrl }}
           - name: KSOC_NAMESPACE
             value: {{ .Release.Namespace }}
+          {{- if .Values.ksoc.awsSecretId }}
+          - name: RAD_AWS_SECRET_ID
+            value: {{ .Values.ksoc.awsSecretId }}
+          {{- else }}
 {{ include "ksoc-plugins.access-key-env-secret" . | indent 10 }}
+          {{- end }}
           - name: AGENT_ACTION_POLL_INTERVAL
             value: {{ .Values.k9.frontend.agentActionPollInterval }}
           - name: AGENT_DEPLOYMENT_NAMESPACE

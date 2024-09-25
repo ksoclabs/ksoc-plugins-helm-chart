@@ -7,6 +7,10 @@ ksoc:
   base64AccessKeyId: ""
   # -- The secret key part of the Access Key used in this cluster (base64).
   base64SecretKey: ""
+  # -- The Secret Name or Secret ARN containing the Access Key. If provided, plugins try to read the Access Key from the AWS Secret Manager.
+  # Plugins expect following keys in the secret: `access-key-id` and `secret-key`. If the secret is not found, the plugin falls back to the `base64AccessKeyId` and `base64SecretKey` values.
+  # If `awsSecretId` is provided service accounts needs to have access to the secret in AWS, via IRSA or EKS Pod Identity.
+  awsSecretId: ""
   # -- The name of the cluster you want displayed in KSOC.
   clusterName: ""
   # -- The name of the custom secret containing Access Key.
@@ -33,7 +37,7 @@ ksocBootstrapper:
   image:
     # -- The image to use for the ksoc-bootstrapper deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-bootstrapper).
     repository: us.gcr.io/ksoc-public/ksoc-bootstrapper
-    tag: v1.1.7
+    tag: v1.1.8
   env: {}
   resources:
     limits:
@@ -53,7 +57,7 @@ ksocGuard:
   image:
     # -- The image to use for the ksoc-guard deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-guard).
     repository: us.gcr.io/ksoc-public/ksoc-guard
-    tag: v1.1.12
+    tag: v1.1.13
   config:
     # -- Whether to block on error.
     BLOCK_ON_ERROR: false
@@ -88,7 +92,7 @@ ksocSbom:
   image:
     # -- The image to use for the ksoc-sbom deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sbom).
     repository: us.gcr.io/ksoc-public/ksoc-sbom
-    tag: v1.1.26
+    tag: v1.1.27
   env:
     # -- Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure
     # that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment
@@ -123,7 +127,7 @@ ksocSync:
   image:
     # -- The image to use for the ksoc-sync deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-sync).
     repository: us.gcr.io/ksoc-public/ksoc-sync
-    tag: v1.1.9
+    tag: v1.1.10
   env: {}
   resources:
     limits:
@@ -144,7 +148,7 @@ ksocWatch:
   image:
     # -- The image to use for the ksoc-watch deployment (located at https://console.cloud.google.com/gcr/images/ksoc-public/us/ksoc-watch).
     repository: us.gcr.io/ksoc-public/ksoc-watch
-    tag: v1.1.21
+    tag: v1.1.22
   env:
     # -- Whether to trigger reconciliation at startup.
     RECONCILIATION_AT_START: false
@@ -180,7 +184,7 @@ ksocNodeAgent:
   reachableVulnerabilitiesEnabled: true
   image:
     repository: us.gcr.io/ksoc-public/ksoc-node-agent
-    tag: v0.0.21
+    tag: v0.0.22
   agent:
     env:
       AGENT_LOG_LEVEL: INFO
@@ -253,13 +257,13 @@ k9:
   frontend:
     image:
       repository: us.gcr.io/ksoc-public/ksoc-frontend-agent
-      tag: v0.0.32
+      tag: v0.0.33
     # -- The interval in which the agent polls the backend for new actions.
     agentActionPollInterval: "5s"
   backend:
     image:
       repository: us.gcr.io/ksoc-public/ksoc-backend-agent
-      tag: v0.0.32
+      tag: v0.0.33
   resources:
     limits:
       cpu: 250m

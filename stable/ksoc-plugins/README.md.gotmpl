@@ -198,7 +198,7 @@ ksoc:
   clusterName: "please add a name here"
 ```
 
-You can manually create the file or use `values.yaml`file downloaded from the RAD Security UI.
+You can manually create the file or use `values.yaml` file downloaded from the RAD Security UI.
 
 **NOTE:** Be sure to set the `clusterName` value with a descriptive name of the cluster where you will be installing RAD Security.
 
@@ -228,6 +228,49 @@ ksoc:
 ```
 
 RAD Security ksoc-guard plugin integrates with the Kubernetes admission controller. All admission controller communications require TLS. RAD Security Helm chart installs and ksoc-guard utilizes Let’s Encrypt to automate the issuance and renewal of certificates using the cert-manager add-on.
+
+#### 4.2 AWS Secret Manager
+
+If you are using AWS Secret Manager to store your access key, you can use the `awsSecretId` parameter to specify the secret ID. Secret ID could be the name of the secret or the full ARN. The service accounts need to have access to the secret in AWS, via IRSA or EKS Pod Identity. There is no need to provide `base64AccessKeyId` and `base64SecretKey` in this case.
+
+```yaml
+ksoc:
+  awsSecretId: "arn:aws:secretsmanager:us-west-2:123456789012:secret:my-secret
+```
+
+Format of the secret in AWS Secret Manager:
+
+```json
+{
+  "access-key-id": "value copied from the RAD Security UI, decoded from base64",
+  "secret-key": "value copied from the RAD Security UI, decoded from base64"
+}
+```
+
+If IRSA is used, following `serviceAccountAnnotations` should be added to the `values.yaml` file:
+
+```yaml
+ksocGuard:
+  serviceAccountAnnotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/role-name-which-can-read-secrets
+ksocSbom:
+  serviceAccountAnnotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/role-name-which-can-read-secrets
+ksocSync:
+  serviceAccountAnnotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/role-name-which-can-read-secrets
+ksocWatch:
+  serviceAccountAnnotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/role-name-which-can-read-secrets
+k9:
+  enabled: true
+  serviceAccountAnnotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/role-name-which-can-read-secrets
+ksocNodeAgent:
+  enabled: true
+  serviceAccountAnnotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/role-name-which-can-read-secrets
+```
 
 ### 5. Installing the KSOC plugins
 
