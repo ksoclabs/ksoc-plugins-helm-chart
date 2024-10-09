@@ -63,18 +63,22 @@ When `ksoc-node-agent` is enabled an additional daemonset can be seen in the clu
 - Filesystem information
 - Container information
 
-By default plugin uses `containerd` as a container runtime. If you are using `docker` container runtime, you can enable it by switching the collector to `docker` in the `values.yaml` file.
+By default the plugin uses `containerd` as a container runtime. If you are using `docker` or `crio-o` as your container runtime, you can enable it by configuring collectors in the `values.yaml` file.
 
 ```yaml
 ksocNodeAgent:
   enabled: true
-  collectors:
-    docker:
-      enabled: false
-      socket: /run/docker.sock
-    containerd:
-      enabled: true
-      socket: /run/containerd/containerd.sock
+  agent:
+    collectors:
+      containerd:
+        enabled: true
+        socket: /run/containerd/containerd.sock
+      crio:
+        enabled: false
+        socket: /run/crio/crio.sock
+      docker:
+        enabled: false
+        socket: /run/docker.sock
 ```
 
 Each plugin pod contains `agent` and `exporter` containers. The `agent` container is responsible for collecting runtime information from the nodes in the cluster. The `exporter` container is responsible for exporting the collected information to the RAD Security platform.
@@ -521,8 +525,10 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.tolerations | list | `[]` |  |
 | ksocGuard.webhook.objectSelector | object | `{}` |  |
 | ksocGuard.webhook.timeoutSeconds | int | `10` |  |
-| ksocNodeAgent.agent.collectors.containerd.enabled | bool | `true` |  |
+| ksocNodeAgent.agent.collectors.containerd.enabled | string | `nil` |  |
 | ksocNodeAgent.agent.collectors.containerd.socket | string | `"/run/containerd/containerd.sock"` |  |
+| ksocNodeAgent.agent.collectors.crio.enabled | string | `nil` |  |
+| ksocNodeAgent.agent.collectors.crio.socket | string | `"/run/crio/crio.sock"` |  |
 | ksocNodeAgent.agent.collectors.docker.enabled | bool | `false` |  |
 | ksocNodeAgent.agent.collectors.docker.socket | string | `"/run/docker.sock"` |  |
 | ksocNodeAgent.agent.collectors.runtimePath | string | `""` |  |
@@ -530,7 +536,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.agent.env.AGENT_TRACER_IGNORE_NAMESPACES | string | `"cert-manager,\nksoc,\nkube-node-lease,\nkube-public,\nkube-system\n"` |  |
 | ksocNodeAgent.agent.eventQueueSize | int | `20000` |  |
 | ksocNodeAgent.agent.grpcServerBatchSize | int | `2000` |  |
-| ksocNodeAgent.agent.hostPID | bool | `false` |  |
+| ksocNodeAgent.agent.hostPID | string | `nil` |  |
 | ksocNodeAgent.agent.mounts.volumeMounts | list | `[]` |  |
 | ksocNodeAgent.agent.mounts.volumes | list | `[]` |  |
 | ksocNodeAgent.agent.resources.limits.cpu | string | `"200m"` |  |
@@ -549,7 +555,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.exporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocNodeAgent.exporter.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.image.repository | string | `"us.gcr.io/ksoc-public/ksoc-node-agent"` |  |
-| ksocNodeAgent.image.tag | string | `"v0.0.22"` |  |
+| ksocNodeAgent.image.tag | string | `"v0.0.26"` |  |
 | ksocNodeAgent.nodeName | string | `""` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
 | ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `true` |  |

@@ -1,14 +1,11 @@
 {{- if and .Values.openshift .Values.openshift.enabled -}}
+{{- if .Values.ksocNodeAgent.enabled }}
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
-  name: rad-scc
+  name: rad-node-agent-scc
 allowHostDirVolumePlugin: true
-allowPrivilegedContainer: true
-allowHostIPC: true
-allowHostNetwork: true
 allowHostPID: true
-allowHostPorts: true
 allowedCapabilities:
   - SYS_ADMIN
   - SYSLOG
@@ -17,29 +14,46 @@ allowedCapabilities:
   - IPC_LOCK
   - NET_ADMIN
   - NET_RAW
-requiredDropCapabilities: null
-fsGroup:
-  type: RunAsAny
-groups: []
-priority: 0
 readOnlyRootFilesystem: true
 runAsUser:
   type: RunAsAny
-seLinuxContext:
-  type: RunAsAny
-supplementalGroups:
-  type: RunAsAny
+priority: 0
 seccompProfiles:
   - "*"
+seLinuxContext:
+  type: RunAsAny
 users:
   - system:serviceaccount:{{ .Release.Namespace }}:ksoc-node-agent
+volumes:
+  - "*"
+{{- end }}
+
+---
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: rad-shared-scc
+readOnlyRootFilesystem: true
+priority: 1
+runAsUser:
+  type: MustRunAsRange
+  uidRangeMin: 65534
+  uidRangeMax: 65534
+requiredDropCapabilities:
+  - ALL
+seccompProfiles:
+  - "*"
+seLinuxContext:
+  type: RunAsAny
+users:
+  - system:serviceaccount:{{ .Release.Namespace }}:agent-ksoc-k9
   - system:serviceaccount:{{ .Release.Namespace }}:ksoc-guard
   - system:serviceaccount:{{ .Release.Namespace }}:ksoc-sbom
   - system:serviceaccount:{{ .Release.Namespace }}:ksoc-sync
   - system:serviceaccount:{{ .Release.Namespace }}:ksoc-watch
 volumes:
-  - downwardAPI
-  - emptyDir
-  - hostPath
-  - secret
+  - "*"
+
+---
+
 {{- end -}}

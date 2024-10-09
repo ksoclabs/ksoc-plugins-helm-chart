@@ -40,6 +40,16 @@ spec:
       - name: agent-be
         image: "{{.Values.k9.backend.image.repository}}:{{.Values.k9.backend.image.tag}}"
         imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65534
+          runAsGroup: 65534
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
         resources:
 {{ toYaml .Values.k9.resources | indent 10 }}
         env:
@@ -90,6 +100,16 @@ spec:
       - name: agent-fe
         image: "{{.Values.k9.frontend.image.repository}}:{{.Values.k9.frontend.image.tag}}"
         imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65534
+          runAsGroup: 65534
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
         resources:
 {{ toYaml .Values.k9.resources | indent 10 }}
         env:
