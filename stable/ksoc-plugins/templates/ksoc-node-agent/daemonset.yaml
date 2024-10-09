@@ -1,4 +1,5 @@
 {{- if and .Values.ksocNodeAgent .Values.ksocNodeAgent.enabled -}}
+{{- $openshiftEnabled := and .Values.openshift .Values.openshift.enabled }}
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
@@ -39,7 +40,8 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.workloads.imagePullSecretName }}
       {{- end }}
-      hostPID: {{ .Values.ksocNodeAgent.agent.hostPID }}
+      # hostPID is enabled by default when running on openshift
+      hostPID: {{ (quote .Values.ksocNodeAgent.agent.hostPID | empty) | ternary $openshiftEnabled .Values.ksocNodeAgent.agent.hostPID }}
       initContainers:
 {{ include "ksoc-plugins.bootstrap-initcontainer" . | indent 8 }}
       containers:
@@ -79,24 +81,32 @@ spec:
             {{- end }}
             - name: HOST_ROOT
               value: /host
+
+
             {{- with .Values.ksocNodeAgent.agent.collectors }}
-            - name: AGENT_TRACER_COLLECTOR_DOCKER_ENABLED
-              value: {{ .docker.enabled | quote }}
-            {{- if .docker.enabled }}
-            - name: AGENT_TRACER_COLLECTOR_DOCKER_SOCKET
-              value: {{ .docker.socket | quote }}
-            {{- end }}
+            # containerd is enabled by default unless running on OpenShift.
             - name: AGENT_TRACER_COLLECTOR_CONTAINERD_ENABLED
-              value: {{ .containerd.enabled | quote }}
-            {{- if .containerd.enabled }}
+              value: {{ (quote .containerd.enabled | empty) | ternary (not $openshiftEnabled) .containerd.enabled | quote }}
             - name: AGENT_TRACER_COLLECTOR_CONTAINERD_SOCKET
               value: {{ .containerd.socket | quote }}
-            {{- end }}
+
+            # crio is enabled by default when running on OpenShift.
+            - name: AGENT_TRACER_COLLECTOR_CRIO_ENABLED
+              value: {{ (quote .crio.enabled | empty) | ternary $openshiftEnabled .crio.enabled | quote}}
+            - name: AGENT_TRACER_COLLECTOR_CRIO_SOCKET
+              value: {{ .crio.socket | quote }}
+
+            - name: AGENT_TRACER_COLLECTOR_DOCKER_ENABLED
+              value: {{ .docker.enabled | quote }}
+            - name: AGENT_TRACER_COLLECTOR_DOCKER_SOCKET
+              value: {{ .docker.socket | quote }}
+
             {{- if .runtimePath }}
             - name: RUNTIME_PATH
               value: {{ .runtimePath | quote }}
             {{- end }}
             {{- end }}
+
             - name: AGENT_NODE_NAME
               valueFrom:
                 fieldRef:
@@ -272,7 +282,6 @@ spec:
         {{- end }}
       restartPolicy: Always
       automountServiceAccountToken: false
-      serviceAccount: ksoc-node-agent
       serviceAccountName: ksoc-node-agent
       terminationGracePeriodSeconds: 30
       tolerations:
