@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.7.1
+version: 1.8.0
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -16,9 +16,9 @@ annotations:
   artifacthub.io/category: security
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Disable OCI enrichement in Node Agent
-  artifacthub.io/containsSecurityUpdates: "false"
+    - kind: added
+      description: Changed container registry to public.ecr.aws/n8h5y2v5/rad-security
+  artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/links: |
     - name: source
       url: https://github.com/ksoclabs/ksoc-plugins-helm-chart

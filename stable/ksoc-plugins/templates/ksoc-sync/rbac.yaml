@@ -43,7 +43,7 @@ metadata:
 rules:
   - apiGroups: [""]
     resources: ["configmaps"]
-    resourceNames: [ "ksoc-guard-dynamic-configuration", "ksoc-sbom-dynamic-configuration", "ksoc-sync-dynamic-configuration", "ksoc-watch-dynamic-configuration" ]
+    resourceNames: [ "rad-guard-dynamic-configuration", "rad-sbom-dynamic-configuration", "rad-sync-dynamic-configuration", "rad-watch-dynamic-configuration", "rad-runtime-dynamic-configuration", "rad-runtime-exporter-dynamic-configuration" ]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
 ---
