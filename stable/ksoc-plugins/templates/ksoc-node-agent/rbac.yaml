@@ -57,17 +57,17 @@ metadata:
     app_version: {{ .Values.ksocNodeAgent.image.tag | quote }}
     maintained_by: ksoc
 rules:
-  - apiGroups: [""]
-    resources: ["pods"]
+  - apiGroups: ["apps"]
+    resources: ["daemonsets", "deployments", "replicasets", "statefulsets", "jobs", "cronjobs"]
+    verbs: ["get", "watch", "list"]
+
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
     verbs: ["get", "watch", "list"]
 
   - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "watch", "list"]
-
-  - apiGroups: [ "" ]
-    resources: [ "nodes" ]
-    verbs: [ "get", "watch", "list" ]
+    resources: ["configmaps", "pods", "nodes", "services"]
+    verbs: ["get", "watch", "list" ]
 
 ---
 
@@ -130,6 +130,7 @@ subjects:
     namespace: {{ .Release.Namespace }}
 
 ---
+
 
 {{- end }}
 {{- end }}
