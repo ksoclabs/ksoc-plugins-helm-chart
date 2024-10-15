@@ -98,6 +98,7 @@ k9:
     enableGetLogs: true
     enableLabelPod: true
 ```
+
 Terminate Pod: Allows the plugin to terminate a pod in the cluster.
 Terminate Namespace: Allows the plugin to terminate a namespace in the cluster.
 Quarantine: Allows the plugin to quarantine a pod in the cluster via a NetworkPolicy to prevent it from communicating over the network.
