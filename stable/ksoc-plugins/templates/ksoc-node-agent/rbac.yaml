@@ -28,7 +28,7 @@ metadata:
 rules:
   - apiGroups: [""]
     resources: ["configmaps"]
-    resourceNames: [ "ksoc-node-agent-dynamic-configuration", "ksoc-node-agent-exporter-dynamic-configuration" ]
+    resourceNames: [ "rad-runtime-dynamic-configuration", "rad-runtime-exporter-dynamic-configuration" ]
     verbs: ["get", "list", "watch"]
 
 ---

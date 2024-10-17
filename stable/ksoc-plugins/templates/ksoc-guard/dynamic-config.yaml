@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ksoc-guard-dynamic-configuration
+  name: rad-guard-dynamic-configuration
   namespace: {{ .Release.Namespace }}
   labels:
     app_name: ksoc-guard

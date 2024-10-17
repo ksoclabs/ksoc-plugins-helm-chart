@@ -43,7 +43,7 @@ metadata:
 rules:
   - apiGroups: [""]
     resources: ["configmaps"]
-    resourceNames: [ "ksoc-watch-dynamic-configuration" ]
+    resourceNames: [ "rad-watch-dynamic-configuration" ]
     verbs: ["get", "list", "watch"]
 
 ---

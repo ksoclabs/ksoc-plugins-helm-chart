@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ksoc-node-agent-dynamic-configuration
+  name: rad-runtime-dynamic-configuration
   namespace: {{ .Release.Namespace }}
   labels:
     app_name: ksoc-node-agent
@@ -15,7 +15,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ksoc-node-agent-exporter-dynamic-configuration
+  name: rad-runtime-exporter-dynamic-configuration
   namespace: {{ .Release.Namespace }}
   labels:
     app_name: ksoc-node-agent
