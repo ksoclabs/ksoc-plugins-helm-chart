@@ -127,7 +127,7 @@ ksocSync:
   image:
     # -- The image to use for the ksoc-sync deployment
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-sync
-    tag: v1.1.11
+    tag: v1.1.13
   env: {}
   resources:
     limits:

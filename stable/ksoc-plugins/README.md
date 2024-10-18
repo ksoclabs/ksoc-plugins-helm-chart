@@ -586,7 +586,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSync.enabled | bool | `true` |  |
 | ksocSync.env | object | `{}` |  |
 | ksocSync.image.repository | string | `"public.ecr.aws/n8h5y2v5/rad-security/rad-sync"` | The image to use for the ksoc-sync deployment |
-| ksocSync.image.tag | string | `"v1.1.11"` |  |
+| ksocSync.image.tag | string | `"v1.1.13"` |  |
 | ksocSync.nodeSelector | object | `{}` |  |
 | ksocSync.podAnnotations | object | `{}` |  |
 | ksocSync.resources.limits.cpu | string | `"200m"` |  |
