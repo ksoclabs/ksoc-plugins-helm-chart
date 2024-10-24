@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.8.1
+version: 1.9.0
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: added
-      description: Bump ksoc-sync to use only namespace where it is deployed
+      description: Adds a new version of Node Agent with built-in secrets scanner
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
