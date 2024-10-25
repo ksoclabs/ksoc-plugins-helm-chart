@@ -512,7 +512,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.config.LOG_LEVEL | string | `"info"` | The log level to use. |
 | ksocGuard.enabled | bool | `true` |  |
 | ksocGuard.image.repository | string | `"public.ecr.aws/n8h5y2v5/rad-security/rad-guard"` | The image to use for the ksoc-guard deployment |
-| ksocGuard.image.tag | string | `"v1.1.14"` |  |
+| ksocGuard.image.tag | string | `"v1.1.15"` |  |
 | ksocGuard.nodeSelector | object | `{}` |  |
 | ksocGuard.podAnnotations | object | `{}` |  |
 | ksocGuard.replicas | int | `1` |  |
