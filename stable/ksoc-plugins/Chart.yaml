@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.9.1
+version: 1.9.2
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -16,8 +16,8 @@ annotations:
   artifacthub.io/category: security
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
-    - kind: added
-      description: Adds a support for opa policies from 'ksoc' and 'rad' packages
+    - kind: fixed
+      description: Sets the correct priority class for the node-agent daemonset.
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
