@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ksoc-plugins
-version: 1.9.3
+version: 1.9.4
 description: A Helm chart to run the KSOC plugins
 home: https://ksoc.com
 icon: https://ksoc.com/hubfs/Ksoc-logo.svg
@@ -17,7 +17,7 @@ annotations:
   # Possible kind options are added, changed, deprecated, removed, fixed and security.
   artifacthub.io/changes: |
     - kind: added
-      description: Add documentation for the `IMAGE_PULL_SECRETS` config value in 'rad-sbom' component.
+      description: Add possibility to check and generate SBOMs for latests images in the container registry.
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/links: |
     - name: source
