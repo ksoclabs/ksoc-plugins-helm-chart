@@ -6,7 +6,7 @@ metadata:
   name: ksoc-high-priority
 value: 1000000
 globalDefault: false
-description: "This priority class should be used for node agent only."
+description: "Priority class used by node-agent."
 
 ---
 
@@ -282,6 +282,7 @@ spec:
       nodeSelector:
 {{ toYaml . | indent 8 }}
         {{- end }}
+      priorityClassName: ksoc-high-priority
       restartPolicy: Always
       automountServiceAccountToken: false
       serviceAccountName: ksoc-node-agent
