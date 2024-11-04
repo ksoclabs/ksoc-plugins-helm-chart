@@ -92,7 +92,7 @@ ksocSbom:
   image:
     # -- The image to use for the ksoc-sbom deployment
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-sbom
-    tag: v1.1.28
+    tag: v1.1.30
   env:
     # -- Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure
     # that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment
