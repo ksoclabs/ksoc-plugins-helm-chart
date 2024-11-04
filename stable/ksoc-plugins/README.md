@@ -566,6 +566,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.updateStrategy.rollingUpdate.maxUnavailable | int | `1` | The maximum number of pods that can be unavailable during the update. Can be an absolute number or percent, e.g.  `5` or `"10%"` |
 | ksocNodeAgent.updateStrategy.type | string | `"RollingUpdate"` |  |
 | ksocSbom.enabled | bool | `true` |  |
+| ksocSbom.env.IMAGE_PULL_SECRETS | string | `""` | Comma separated list of image pull secrets to use to pull container images. Important: The secrets must be created in the same namespace as the rad-sbom deployment. By default 'rad-sbom' tries to read imagePullSecrets from the manifest spec, but additionally, you can specify the secrets here. If you use AWS ECR private registry, we recommend to use EKS Pod Identity or IRSA to add access to "rad-sbom" to the ECR registry. |
 | ksocSbom.env.LOG_LEVEL | string | `"info"` | The log level to use.  Options are trace, debug, info, warn, error |
 | ksocSbom.env.MUTATE_ANNOTATIONS | bool | `false` | Whether to mutate the annotations in pod spec by adding images digests. Annotations can be used to track image digests in addition to, or instead of the image tag mutation. |
 | ksocSbom.env.MUTATE_IMAGE | bool | `true` | Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment reconciler requires a strict image tag match. |

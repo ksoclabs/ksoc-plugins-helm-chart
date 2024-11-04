@@ -103,6 +103,11 @@ ksocSbom:
     MUTATE_ANNOTATIONS: false
     # -- The format of the generated SBOM. Currently we support: syft-json,cyclonedx-json,spdx-json
     SBOM_FORMAT: cyclonedx-json
+    # -- Comma separated list of image pull secrets to use to pull container images. Important: The secrets must be created in the
+    # same namespace as the rad-sbom deployment. By default 'rad-sbom' tries to read imagePullSecrets from the manifest spec, but
+    # additionally, you can specify the secrets here.
+    # If you use AWS ECR private registry, we recommend to use EKS Pod Identity or IRSA to add access to "rad-sbom" to the ECR registry.
+    IMAGE_PULL_SECRETS: ""
     # -- The log level to use.  Options are trace, debug, info, warn, error
     LOG_LEVEL: info
   resources:
