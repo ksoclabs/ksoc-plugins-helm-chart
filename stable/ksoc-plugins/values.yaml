@@ -92,7 +92,7 @@ ksocSbom:
   image:
     # -- The image to use for the ksoc-sbom deployment
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-sbom
-    tag: v1.1.28
+    tag: v1.1.30
   env:
     # -- Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure
     # that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment
@@ -108,6 +108,12 @@ ksocSbom:
     # additionally, you can specify the secrets here.
     # If you use AWS ECR private registry, we recommend to use EKS Pod Identity or IRSA to add access to "rad-sbom" to the ECR registry.
     IMAGE_PULL_SECRETS: ""
+    # -- Experimental: Whether to check for the latest image in the container registry and generate SBOM for it.
+    # If deployed image has tag with semver format, rad-sbom tries to get the newest image, newest minor version, or newest patch version.
+    # If the tag is not in semver format, rad-sbom tries to get the newest image from the container registry based on the tag time.
+    # Please be aware that time-based algorithm requires many requests to the container registry and may be slow. It works only if
+    # credentials are provided. Please note that this feature is experimental and may not work with all container registries.
+    SBOM_CHECK_LATEST: false
     # -- The log level to use.  Options are trace, debug, info, warn, error
     LOG_LEVEL: info
   resources:
