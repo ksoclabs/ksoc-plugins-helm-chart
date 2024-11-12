@@ -556,7 +556,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.exporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocNodeAgent.exporter.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.image.repository | string | `"public.ecr.aws/n8h5y2v5/rad-security/rad-runtime"` |  |
-| ksocNodeAgent.image.tag | string | `"v0.1.3"` |  |
+| ksocNodeAgent.image.tag | string | `"v0.1.4"` |  |
 | ksocNodeAgent.nodeName | string | `""` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
 | ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `true` |  |
