@@ -12,7 +12,7 @@ jobs:
     if: startsWith(github.head_ref, 'renovate') == false
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Modify Helm Chart For AWS Marketplace
       run: ./scripts/modify_chart_for_aws_marketplace.sh
