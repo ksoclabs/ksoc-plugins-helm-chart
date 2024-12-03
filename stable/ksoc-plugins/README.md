@@ -495,7 +495,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksoc.seccompProfile | object | `{"enabled":true}` | Enable seccompProfile for all KSOC pods |
 | ksocBootstrapper.env | object | `{}` |  |
 | ksocBootstrapper.image.repository | string | `"public.ecr.aws/n8h5y2v5/rad-security/rad-bootstrapper"` | The image to use for the ksoc-bootstrapper deployment |
-| ksocBootstrapper.image.tag | string | `"v1.1.9"` |  |
+| ksocBootstrapper.image.tag | string | `"v1.1.10"` |  |
 | ksocBootstrapper.nodeSelector | object | `{}` |  |
 | ksocBootstrapper.podAnnotations | object | `{}` |  |
 | ksocBootstrapper.resources.limits.cpu | string | `"100m"` |  |
@@ -512,7 +512,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocGuard.config.LOG_LEVEL | string | `"info"` | The log level to use. |
 | ksocGuard.enabled | bool | `true` |  |
 | ksocGuard.image.repository | string | `"public.ecr.aws/n8h5y2v5/rad-security/rad-guard"` | The image to use for the ksoc-guard deployment |
-| ksocGuard.image.tag | string | `"v1.1.15"` |  |
+| ksocGuard.image.tag | string | `"v1.1.16"` |  |
 | ksocGuard.nodeSelector | object | `{}` |  |
 | ksocGuard.podAnnotations | object | `{}` |  |
 | ksocGuard.replicas | int | `1` |  |
@@ -556,7 +556,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocNodeAgent.exporter.resources.requests.ephemeral-storage | string | `"100Mi"` |  |
 | ksocNodeAgent.exporter.resources.requests.memory | string | `"128Mi"` |  |
 | ksocNodeAgent.image.repository | string | `"public.ecr.aws/n8h5y2v5/rad-security/rad-runtime"` |  |
-| ksocNodeAgent.image.tag | string | `"v0.1.4"` |  |
+| ksocNodeAgent.image.tag | string | `"v0.1.5"` |  |
 | ksocNodeAgent.nodeName | string | `""` |  |
 | ksocNodeAgent.nodeSelector | object | `{}` |  |
 | ksocNodeAgent.reachableVulnerabilitiesEnabled | bool | `true` |  |
@@ -573,7 +573,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSbom.env.SBOM_CHECK_LATEST | bool | `false` | Experimental: Whether to check for the latest image in the container registry and generate SBOM for it. If deployed image has tag with semver format, rad-sbom tries to get the newest image, newest minor version, or newest patch version. If the tag is not in semver format, rad-sbom tries to get the newest image from the container registry based on the tag time. Please be aware that time-based algorithm requires many requests to the container registry and may be slow. It works only if credentials are provided. Please note that this feature is experimental and may not work with all container registries. |
 | ksocSbom.env.SBOM_FORMAT | string | `"cyclonedx-json"` | The format of the generated SBOM. Currently we support: syft-json,cyclonedx-json,spdx-json |
 | ksocSbom.image.repository | string | `"public.ecr.aws/n8h5y2v5/rad-security/rad-sbom"` | The image to use for the ksoc-sbom deployment |
-| ksocSbom.image.tag | string | `"v1.1.30"` |  |
+| ksocSbom.image.tag | string | `"v1.1.31"` |  |
 | ksocSbom.nodeSelector | object | `{}` |  |
 | ksocSbom.podAnnotations | object | `{}` |  |
 | ksocSbom.resources.limits.cpu | string | `"1000m"` |  |
@@ -588,7 +588,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSync.enabled | bool | `true` |  |
 | ksocSync.env | object | `{}` |  |
 | ksocSync.image.repository | string | `"public.ecr.aws/n8h5y2v5/rad-security/rad-sync"` | The image to use for the ksoc-sync deployment |
-| ksocSync.image.tag | string | `"v1.1.13"` |  |
+| ksocSync.image.tag | string | `"v1.1.14"` |  |
 | ksocSync.nodeSelector | object | `{}` |  |
 | ksocSync.podAnnotations | object | `{}` |  |
 | ksocSync.resources.limits.cpu | string | `"200m"` |  |
@@ -603,7 +603,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocWatch.enabled | bool | `true` |  |
 | ksocWatch.env.RECONCILIATION_AT_START | bool | `false` | Whether to trigger reconciliation at startup. |
 | ksocWatch.image.repository | string | `"public.ecr.aws/n8h5y2v5/rad-security/rad-watch"` | The image to use for the ksoc-watch deployment |
-| ksocWatch.image.tag | string | `"v1.1.23"` |  |
+| ksocWatch.image.tag | string | `"v1.1.24"` |  |
 | ksocWatch.ingestCustomResources | bool | `false` | If set will allow ingesting Custom Resources specified in `customResourceRules` |
 | ksocWatch.nodeSelector | object | `{}` |  |
 | ksocWatch.podAnnotations | object | `{}` |  |
