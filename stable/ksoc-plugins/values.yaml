@@ -37,7 +37,7 @@ ksocBootstrapper:
   image:
     # -- The image to use for the ksoc-bootstrapper deployment
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-bootstrapper
-    tag: v1.1.9
+    tag: v1.1.10
   env: {}
   resources:
     limits:
@@ -57,7 +57,7 @@ ksocGuard:
   image:
     # -- The image to use for the ksoc-guard deployment
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-guard
-    tag: v1.1.15
+    tag: v1.1.16
   config:
     # -- Whether to block on error.
     BLOCK_ON_ERROR: false
@@ -92,7 +92,7 @@ ksocSbom:
   image:
     # -- The image to use for the ksoc-sbom deployment
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-sbom
-    tag: v1.1.30
+    tag: v1.1.31
   env:
     # -- Whether to mutate the image in pod spec by adding digest at the end. By default, digests are added to images to ensure
     # that the image that runs in the cluster matches the digest of the build.  Disable this if your continuous deployment
@@ -138,7 +138,7 @@ ksocSync:
   image:
     # -- The image to use for the ksoc-sync deployment
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-sync
-    tag: v1.1.13
+    tag: v1.1.14
   env: {}
   resources:
     limits:
@@ -159,7 +159,7 @@ ksocWatch:
   image:
     # -- The image to use for the ksoc-watch deployment
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-watch
-    tag: v1.1.23
+    tag: v1.1.24
   env:
     # -- Whether to trigger reconciliation at startup.
     RECONCILIATION_AT_START: false
@@ -195,7 +195,7 @@ ksocNodeAgent:
   reachableVulnerabilitiesEnabled: true
   image:
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-runtime
-    tag: v0.1.4
+    tag: v0.1.5
   agent:
     env:
       AGENT_LOG_LEVEL: INFO
