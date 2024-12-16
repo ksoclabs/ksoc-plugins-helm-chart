@@ -573,7 +573,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ksocSbom.env.SBOM_CHECK_LATEST | bool | `false` | Experimental: Whether to check for the latest image in the container registry and generate SBOM for it. If deployed image has tag with semver format, rad-sbom tries to get the newest image, newest minor version, or newest patch version. If the tag is not in semver format, rad-sbom tries to get the newest image from the container registry based on the tag time. Please be aware that time-based algorithm requires many requests to the container registry and may be slow. It works only if credentials are provided. Please note that this feature is experimental and may not work with all container registries. |
 | ksocSbom.env.SBOM_FORMAT | string | `"cyclonedx-json"` | The format of the generated SBOM. Currently we support: syft-json,cyclonedx-json,spdx-json |
 | ksocSbom.image.repository | string | `"public.ecr.aws/n8h5y2v5/rad-security/rad-sbom"` | The image to use for the ksoc-sbom deployment |
-| ksocSbom.image.tag | string | `"v1.1.31"` |  |
+| ksocSbom.image.tag | string | `"v1.1.32"` |  |
 | ksocSbom.nodeSelector | object | `{}` |  |
 | ksocSbom.podAnnotations | object | `{}` |  |
 | ksocSbom.resources.limits.cpu | string | `"1000m"` |  |
