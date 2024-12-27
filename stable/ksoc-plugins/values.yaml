@@ -274,7 +274,7 @@ k9:
   frontend:
     image:
       repository: us.gcr.io/ksoc-public/ksoc-frontend-agent
-      tag: v0.0.33
+      tag: v0.0.34
     # -- The interval in which the agent polls the backend for new actions.
     agentActionPollInterval: "5s"
   backend:
