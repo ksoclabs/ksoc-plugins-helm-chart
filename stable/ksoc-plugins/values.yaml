@@ -273,14 +273,14 @@ k9:
   replicas: 1
   frontend:
     image:
-      repository: us.gcr.io/ksoc-public/ksoc-frontend-agent
-      tag: v0.0.33
+      repository: public.ecr.aws/n8h5y2v5/rad-security/rad-k9-frontend-agent
+      tag: v0.0.37
     # -- The interval in which the agent polls the backend for new actions.
     agentActionPollInterval: "5s"
   backend:
     image:
-      repository: us.gcr.io/ksoc-public/ksoc-backend-agent
-      tag: v0.0.33
+      repository: public.ecr.aws/n8h5y2v5/rad-security/rad-k9-backend-agent
+      tag: v0.0.37
   resources:
     limits:
       cpu: 250m
