@@ -57,7 +57,7 @@ ksocGuard:
   image:
     # -- The image to use for the ksoc-guard deployment
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-guard
-    tag: v1.1.17
+    tag: v1.1.28
   config:
     # -- Whether to block on error.
     BLOCK_ON_ERROR: false
