@@ -280,7 +280,7 @@ k9:
   backend:
     image:
       repository: public.ecr.aws/n8h5y2v5/rad-security/rad-k9-backend-agent
-      tag: v0.0.37
+      tag: v0.0.41
   resources:
     limits:
       cpu: 250m
