@@ -159,7 +159,7 @@ ksocWatch:
   image:
     # -- The image to use for the ksoc-watch deployment
     repository: public.ecr.aws/n8h5y2v5/rad-security/rad-watch
-    tag: v1.1.25
+    tag: v1.1.50
   env:
     # -- Whether to trigger reconciliation at startup.
     RECONCILIATION_AT_START: false
